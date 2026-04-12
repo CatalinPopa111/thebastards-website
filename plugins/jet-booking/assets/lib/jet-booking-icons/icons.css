@@ -1,0 +1,42 @@
+@font-face {
+	font-family: 'JetBooking-widget';
+	src: url('fonts/JetBooking-widget.eot?ip2fjh');
+	src: url('fonts/JetBooking-widget.eot?ip2fjh#iefix') format('embedded-opentype'),
+	url('fonts/JetBooking-widget.ttf?ip2fjh') format('truetype'),
+	url('fonts/JetBooking-widget.woff?ip2fjh') format('woff'),
+	url('fonts/JetBooking-widget.svg?ip2fjh#JetBooking-widget') format('svg');
+	font-weight: normal;
+	font-style: normal;
+	font-display: block;
+}
+
+[class *= "jet-booking-icon-"] {
+	/* use !important to prevent issues with browser extensions that change fonts */
+	font-family: 'JetBooking-widget' !important;
+	speak: never;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.jet-booking-icon-settings-configurations:before {
+	content: "\e901";
+}
+
+.jet-booking-icon-settings-schedule:before {
+	content: "\e902";
+}
+
+.jet-booking-icon-availability-calendar:before {
+	content: "\e900";
+}
+
+.category-jetbooking .bricks-add-element .element-icon {
+	font-size: 26px;
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "jet-booking/settings-schedule",
+  "title": "Settings Schedule",
+  "category": "jet-booking",
+  "description": "This widget provides a settings schedule panel, allowing users to customize booking-related options.",
+  "keywords": [
+    "booking",
+    "settings",
+    "schedule"
+  ],
+  "version": "1.0.0",
+  "textdomain": "jet-booking",
+  "attributes": {
+    "showTimepickerControls": {
+      "type": "boolean",
+      "default": true
+    },
+    "showRulesControls": {
+      "type": "boolean",
+      "default": true
+    },
+    "showDaysOffControls": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "editorScript": [
+    "file:./index.js",
+    "jet-booking-widgets"
+  ],
+  "viewScript": "jet-booking-widgets",
+  "editorStyle": "jet-booking-widgets",
+  "viewStyle": [
+    "jet-booking-widgets",
+    "wp-components"
+  ]
+}

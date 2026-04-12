@@ -1,0 +1,40 @@
+[22-Sep-2024 11:27:54 Europe/Bucharest] PHP Warning:  Undefined global variable $wp_version in /home/bastard/public_html/wp-content/themes/kadence/functions.php on line 17
+[22-Sep-2024 11:27:54 Europe/Bucharest] PHP Fatal error:  Uncaught Error: Call to undefined function get_template_directory() in /home/bastard/public_html/wp-content/themes/kadence/functions.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/bastard/public_html/wp-content/themes/kadence/functions.php on line 18
+[24-Dec-2024 05:28:00 Europe/Bucharest] PHP Warning:  Undefined global variable $wp_version in /home/bastard/public_html/wp-content/themes/kadence/functions.php on line 17
+[24-Dec-2024 05:28:00 Europe/Bucharest] PHP Fatal error:  Uncaught Error: Call to undefined function get_template_directory() in /home/bastard/public_html/wp-content/themes/kadence/functions.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/bastard/public_html/wp-content/themes/kadence/functions.php on line 18
+[22-Feb-2025 01:21:25 Europe/Bucharest] PHP Warning:  Undefined global variable $wp_version in /home/bastard/public_html/wp-content/themes/kadence/functions.php on line 17
+[22-Feb-2025 01:21:25 Europe/Bucharest] PHP Fatal error:  Uncaught Error: Call to undefined function get_template_directory() in /home/bastard/public_html/wp-content/themes/kadence/functions.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/bastard/public_html/wp-content/themes/kadence/functions.php on line 18
+[22-Feb-2025 03:23:03 Europe/Bucharest] PHP Warning:  Undefined global variable $wp_version in /home/bastard/public_html/wp-content/themes/kadence/functions.php on line 17
+[22-Feb-2025 03:23:03 Europe/Bucharest] PHP Fatal error:  Uncaught Error: Call to undefined function get_template_directory() in /home/bastard/public_html/wp-content/themes/kadence/functions.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/bastard/public_html/wp-content/themes/kadence/functions.php on line 18
+[23-Feb-2025 12:40:55 Europe/Bucharest] PHP Warning:  Undefined global variable $wp_version in /home/bastard/public_html/wp-content/themes/kadence/functions.php on line 17
+[23-Feb-2025 12:40:55 Europe/Bucharest] PHP Fatal error:  Uncaught Error: Call to undefined function get_template_directory() in /home/bastard/public_html/wp-content/themes/kadence/functions.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/bastard/public_html/wp-content/themes/kadence/functions.php on line 18
+[04-Dec-2025 15:59:53 Europe/Bucharest] PHP Warning:  Undefined global variable $wp_version in /home/bastard/public_html/wp-content/themes/kadence/functions.php on line 17
+[04-Dec-2025 15:59:53 Europe/Bucharest] PHP Fatal error:  Uncaught Error: Call to undefined function get_template_directory() in /home/bastard/public_html/wp-content/themes/kadence/functions.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/bastard/public_html/wp-content/themes/kadence/functions.php on line 18
+[26-Mar-2026 04:34:26 Europe/Bucharest] PHP Warning:  Undefined global variable $wp_version in /home/bastard/public_html/wp-content/themes/kadence/functions.php on line 17
+[26-Mar-2026 04:34:26 Europe/Bucharest] PHP Fatal error:  Uncaught Error: Call to undefined function get_template_directory() in /home/bastard/public_html/wp-content/themes/kadence/functions.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/bastard/public_html/wp-content/themes/kadence/functions.php on line 18
+[11-Apr-2026 12:53:08 Europe/Bucharest] PHP Warning:  Undefined global variable $wp_version in /home/bastard/public_html/wp-content/themes/kadence/functions.php on line 17
+[11-Apr-2026 12:53:08 Europe/Bucharest] PHP Fatal error:  Uncaught Error: Call to undefined function get_template_directory() in /home/bastard/public_html/wp-content/themes/kadence/functions.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/bastard/public_html/wp-content/themes/kadence/functions.php on line 18

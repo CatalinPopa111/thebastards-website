@@ -1,0 +1,5 @@
+uploads/
+cache/
+upgrade/
+*.log
+.DS_Store

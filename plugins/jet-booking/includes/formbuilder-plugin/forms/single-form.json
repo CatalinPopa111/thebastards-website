@@ -1,0 +1,9 @@
+{
+	"post_title": "Single Page Booking Form",
+	"post_content": "<!-- wp:jet-forms\/hidden-field {\"name\":\"room_id\"} \/-->\n\n<!-- wp:jet-forms\/text-field {\"label\":\"Your e-mail\",\"name\":\"your_email\",\"required\":true,\"className\":\" jet-sm-gb-wrapper jet-sm-gb-3f1a86d5-3f24-424f-bf7e-8fb701732c1c\",\"blockID\":\"jet-sm-gb-3f1a86d5-3f24-424f-bf7e-8fb701732c1c\"} \/-->\n\n<!-- wp:jet-forms\/text-field {\"label\":\"Your name\",\"name\":\"your_name\",\"required\":true,\"className\":\" jet-sm-gb-wrapper jet-sm-gb-ab6ff960-1188-496c-8950-d11f129ad7b5\",\"blockID\":\"jet-sm-gb-ab6ff960-1188-496c-8950-d11f129ad7b5\"} \/-->\n\n<!-- wp:jet-forms\/text-field {\"label\":\"Phone Number\",\"name\":\"phone_number\",\"required\":true,\"className\":\" jet-sm-gb-wrapper jet-sm-gb-0d0059fa-4eb7-41b1-9d07-1a797a63a2b0\",\"blockID\":\"jet-sm-gb-0d0059fa-4eb7-41b1-9d07-1a797a63a2b0\"} \/-->\n\n<!-- wp:jet-forms\/check-in-out {\"cio_field_layout\":\"single\",\"cio_fields_position\":\"list\",\"first_field_label\":\"Check In:\",\"second_field_label\":\"Check Out:\",\"label\":\"Check In\/Check Out\",\"name\":\"_dates\",\"required\":true,\"blockID\":\"jet-sm-gb-74084bec-c207-48d0-aa92-e996e1fea0fa\"} \/-->\n\n<!-- wp:jet-forms\/submit-field {\"blockID\":\"jet-sm-gb-d6e6c22c-bb47-4bc7-a695-7329facc9c83\"} \/-->",
+	"post_status": "publish",
+	"meta_input": {
+		"_jf_args": "{\"submit_type\":\"ajax\",\"required_mark\":\"\",\"fields_layout\":\"row\",\"enable_progress\":null}",
+		"_jf_actions": "[{\"type\":\"apartment_booking\",\"id\":6659,\"settings\":{\"apartment_booking\":{\"booking_apartment_field\":\"room_id\",\"booking_dates_field\":\"_dates\"}}}]"
+	}
+}

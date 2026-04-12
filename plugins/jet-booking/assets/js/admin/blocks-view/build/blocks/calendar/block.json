@@ -1,0 +1,75 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "jet-booking/calendar",
+  "title": "Booking Availability Calendar",
+  "category": "jet-booking",
+  "description": "Availability calendar that allows user to select a booking date range.",
+  "keywords": [
+    "booking",
+    "calendar",
+    "date",
+    "range",
+    "picker"
+  ],
+  "version": "1.0.0",
+  "textdomain": "jet-booking",
+  "attributes": {
+    "select_dates": {
+      "type": "boolean",
+      "default": true
+    },
+    "scroll_to_form": {
+      "type": "boolean",
+      "default": false
+    },
+    "calendarTextColor": {
+      "type": "string",
+      "default": "#aaa"
+    },
+    "calendarBackgroundColor": {
+      "type": "string",
+      "default": "#fff"
+    },
+    "daysTextColor": {
+      "type": "string",
+      "default": "#333"
+    },
+    "daysBackgroundColor": {
+      "type": "string",
+      "default": "#fff"
+    },
+    "currentDayTextColor": {
+      "type": "string",
+      "default": "#333"
+    },
+    "currentDayBackgroundColor": {
+      "type": "string",
+      "default": "#ffe684"
+    },
+    "selectedEdgesTextColor": {
+      "type": "string",
+      "default": "#fff"
+    },
+    "selectedEdgesBackgroundColor": {
+      "type": "string",
+      "default": "#49e"
+    },
+    "selectedTraceTextColor": {
+      "type": "string",
+      "default": "#333"
+    },
+    "selectedTraceBackgroundColor": {
+      "type": "string",
+      "default": "#9cdbf7"
+    }
+  },
+  "example": {
+    "attributes": {
+      "isPreview": true
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "jquery-date-range-picker-styles",
+  "style": "file:./index.css"
+}

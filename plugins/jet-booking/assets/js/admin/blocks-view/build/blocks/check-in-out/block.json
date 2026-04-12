@@ -1,0 +1,155 @@
+{
+  "apiVersion": 3,
+  "name": "jet-forms/check-in-out",
+  "title": "Check-in/check-out dates",
+  "category": "jet-form-builder-fields",
+  "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"46\" height=\"54\" viewBox=\"0 0 46 54\" fill=\"none\">\n<path d=\"M7.29289 27.2071C6.90237 26.8166 6.90237 26.1834 7.29289 25.7929C7.68342 25.4024 8.31658 25.4024 8.70711 25.7929L10 27.0858L11.2929 25.7929C11.6834 25.4024 12.3166 25.4024 12.7071 25.7929C13.0976 26.1834 13.0976 26.8166 12.7071 27.2071L11.4142 28.5L12.7071 29.7929C13.0976 30.1834 13.0976 30.8166 12.7071 31.2071C12.3166 31.5976 11.6834 31.5976 11.2929 31.2071L10 29.9142L8.70711 31.2071C8.31658 31.5976 7.68342 31.5976 7.29289 31.2071C6.90237 30.8166 6.90237 30.1834 7.29289 29.7929L8.58579 28.5L7.29289 27.2071Z\" fill=\"currentColor\"></path>\n<path d=\"M21.7071 25.7929C21.3166 25.4024 20.6834 25.4024 20.2929 25.7929C19.9024 26.1834 19.9024 26.8166 20.2929 27.2071L21.5858 28.5L20.2929 29.7929C19.9024 30.1834 19.9024 30.8166 20.2929 31.2071C20.6834 31.5976 21.3166 31.5976 21.7071 31.2071L23 29.9142L24.2929 31.2071C24.6834 31.5976 25.3166 31.5976 25.7071 31.2071C26.0976 30.8166 26.0976 30.1834 25.7071 29.7929L24.4142 28.5L25.7071 27.2071C26.0976 26.8166 26.0976 26.1834 25.7071 25.7929C25.3166 25.4024 24.6834 25.4024 24.2929 25.7929L23 27.0858L21.7071 25.7929Z\" fill=\"currentColor\"></path>\n<path d=\"M33.2929 27.2071C32.9024 26.8166 32.9024 26.1834 33.2929 25.7929C33.6834 25.4024 34.3166 25.4024 34.7071 25.7929L36 27.0858L37.2929 25.7929C37.6834 25.4024 38.3166 25.4024 38.7071 25.7929C39.0976 26.1834 39.0976 26.8166 38.7071 27.2071L37.4142 28.5L38.7071 29.7929C39.0976 30.1834 39.0976 30.8166 38.7071 31.2071C38.3166 31.5976 37.6834 31.5976 37.2929 31.2071L36 29.9142L34.7071 31.2071C34.3166 31.5976 33.6834 31.5976 33.2929 31.2071C32.9024 30.8166 32.9024 30.1834 33.2929 29.7929L34.5858 28.5L33.2929 27.2071Z\" fill=\"currentColor\"></path>\n<path d=\"M36 39.0858L34.7071 37.7929C34.3166 37.4024 33.6834 37.4024 33.2929 37.7929C32.9024 38.1834 32.9024 38.8166 33.2929 39.2071L34.5858 40.5L33.2929 41.7929C32.9024 42.1834 32.9024 42.8166 33.2929 43.2071C33.6834 43.5976 34.3166 43.5976 34.7071 43.2071L36 41.9142L37.2929 43.2071C37.6834 43.5976 38.3166 43.5976 38.7071 43.2071C39.0976 42.8166 39.0976 42.1834 38.7071 41.7929L37.4142 40.5L38.7071 39.2071C39.0976 38.8166 39.0976 38.1834 38.7071 37.7929C38.3166 37.4024 37.6834 37.4024 37.2929 37.7929L36 39.0858Z\" fill=\"currentColor\"></path>\n<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M19 37.5C19 36.9477 19.4477 36.5 20 36.5H26C26.5523 36.5 27 36.9477 27 37.5V43.5C27 44.0523 26.5523 44.5 26 44.5H20C19.4477 44.5 19 44.0523 19 43.5V37.5ZM21 42.5V38.5H25V42.5H21Z\" fill=\"currentColor\"></path>\n  <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M7 36.5C6.44772 36.5 6 36.9477 6 37.5V43.5C6 44.0523 6.44772 44.5 7 44.5H13C13.5523 44.5 14 44.0523 14 43.5V37.5C14 36.9477 13.5523 36.5 13 36.5H7ZM8 38.5V42.5H12V38.5H8Z\" fill=\"currentColor\"></path>\n<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M10 1.5C10 0.947715 9.55229 0.5 9 0.5C8.44771 0.5 8 0.947715 8 1.5V3.5L4 3.5C1.79086 3.5 0 5.29086 0 7.5V49.5C0 51.7091 1.79086 53.5 4 53.5H42C44.2091 53.5 46 51.7091 46 49.5V7.5C46 5.29086 44.2091 3.5 42 3.5L38 3.5V1.5C38 0.947715 37.5523 0.5 37 0.5C36.4477 0.5 36 0.947715 36 1.5V3.5L10 3.5V1.5ZM2 17.5L2 7.5C2 6.39543 2.89543 5.5 4 5.5H8V7.5C8 8.05228 8.44771 8.5 9 8.5C9.55229 8.5 10 8.05228 10 7.5V5.5L36 5.5V7.5C36 8.05228 36.4477 8.5 37 8.5C37.5523 8.5 38 8.05228 38 7.5V5.5H42C43.1046 5.5 44 6.39543 44 7.5V17.5H2ZM2 19.5V49.5C2 50.6046 2.89543 51.5 4 51.5H42C43.1046 51.5 44 50.6046 44 49.5V19.5H2Z\" fill=\"currentColor\"></path>\n</svg>",
+  "keywords": [
+    "field",
+    "check-in-out",
+    "check_in_out",
+    "booking",
+    "apartment"
+  ],
+  "textdomain": "jet-form-builder",
+  "supports": {
+    "customClassName": false,
+    "html": false,
+    "jetStyle": {
+      "--jfb-daterangepicker-container-text": [
+        ".date-picker-wrapper",
+        "color",
+        "text"
+      ],
+      "--jfb-daterangepicker-container-bg": [
+        ".date-picker-wrapper",
+        "color",
+        "background"
+      ],
+      "--jfb-daterangepicker-days-text": [
+        ".day",
+        "color",
+        "text"
+      ],
+      "--jfb-daterangepicker-days-bg": [
+        ".day",
+        "color",
+        "background"
+      ],
+      "--jfb-daterangepicker-current-day-text": [
+        ".real-today",
+        "color",
+        "text"
+      ],
+      "--jfb-daterangepicker-current-day-bg": [
+        ".real-today",
+        "color",
+        "background"
+      ],
+      "--jfb-daterangepicker-edges-text": [
+        ".first-date-selected, .last-date-selected",
+        "color",
+        "text"
+      ],
+      "--jfb-daterangepicker-edges-bg": [
+        ".first-date-selected, .last-date-selected",
+        "color",
+        "background"
+      ],
+      "--jfb-daterangepicker-trace-text": [
+        ".hovering, .checked",
+        "color",
+        "text"
+      ],
+      "--jfb-daterangepicker-trace-bg": [
+        ".hovering, .checked",
+        "color",
+        "background"
+      ]
+    }
+  },
+  "example": {
+    "attributes": {
+      "isPreview": true
+    }
+  },
+  "attributes": {
+    "cio_field_layout": {
+      "type": "string",
+      "default": ""
+    },
+    "cio_fields_position": {
+      "type": "string",
+      "default": ""
+    },
+    "first_field_label": {
+      "type": "string",
+      "default": ""
+    },
+    "first_field_placeholder": {
+      "type": "string",
+      "default": ""
+    },
+    "second_field_label": {
+      "type": "string",
+      "default": ""
+    },
+    "second_field_placeholder": {
+      "type": "string",
+      "default": ""
+    },
+    "cio_fields_format": {
+      "type": "string",
+      "default": ""
+    },
+    "cio_fields_separator": {
+      "type": "string",
+      "default": ""
+    },
+    "start_of_week": {
+      "type": "string",
+      "default": ""
+    },
+    "label": {
+      "type": "string",
+      "default": ""
+    },
+    "name": {
+      "type": "string",
+      "default": "field_name"
+    },
+    "desc": {
+      "type": "string",
+      "default": ""
+    },
+    "default": {
+      "type": "string",
+      "default": ""
+    },
+    "required": {
+      "type": "boolean",
+      "default": false
+    },
+    "add_prev": {
+      "type": "boolean",
+      "default": false
+    },
+    "prev_label": {
+      "type": "string",
+      "default": ""
+    },
+    "visibility": {
+      "type": "string",
+      "default": ""
+    },
+    "class_name": {
+      "type": "string",
+      "default": ""
+    },
+    "className": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "style": "file:./index.css"
+}

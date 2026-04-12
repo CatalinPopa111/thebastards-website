@@ -1,0 +1,215 @@
+[class*="jet-abaf-"],
+[class*="jet-abaf-"] .components-disabled {
+	> .components-base-control {
+		&:not(:last-child) {
+			margin-bottom: 20px;
+		}
+
+		&:not(.components-select-control, .components-toggle-control) {
+			> .components-base-control__field {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+
+				> * {
+					flex: 1;
+					max-width: calc(50% - 5px);
+				}
+			}
+		}
+
+		&.components-select-control,
+		&.components-toggle-control {
+			.components-flex {
+				gap: 10px;
+
+				> * {
+					flex: 1;
+				}
+			}
+		}
+
+		.components-base-control__field .components-text-control__input,
+		.components-select-control .components-select-control__input {
+			height: auto;
+		}
+
+		&.components-toggle-control {
+			.components-flex {
+				flex-direction: row-reverse;
+			}
+
+			.components-toggle-control__help {
+				margin: 0;
+				text-decoration: inherit;
+			}
+		}
+
+		.components-complex-control__children {
+			display: flex;
+			flex-direction: column;
+			gap: 5px;
+		}
+
+		.components-paired-control {
+			display: flex;
+			gap: 5px;
+
+			> * {
+				max-width: 100px;
+			}
+		}
+
+		.components-text-control__input[type="time"] {
+			max-width: 100px;
+		}
+
+		.components-base-control__label,
+		label.components-base-control__label,
+		label.components-input-control__label,
+		label.components-toggle-control__label {
+			color: initial;
+			font-size: initial;
+			font-weight: initial;
+			line-height: initial;
+			text-transform: none;
+			margin: 0;
+		}
+
+		.components-base-control__help {
+			margin: 0;
+			max-width: calc(50% - 5px);
+
+			@media screen and ( max-width: 768px ) {
+				max-width: 100%;
+			}
+		}
+	}
+
+	.components-booking-rules-control {
+		.components-grid {
+			&:first-child {
+				font-size: initial;
+				color: initial;
+			}
+
+			&:nth-child( even ) {
+				background-color: #f6f7f7;
+			}
+		}
+
+		.components-item svg {
+			display: block;
+		}
+	}
+
+	div.components-days-off-control {
+		&__add-days {
+			margin-bottom: 20px;
+
+			&-actions {
+				justify-content: flex-end;
+				gap: 10px;
+
+				.components-button {
+					box-shadow: none;
+					height: auto;
+
+					&:hover {
+						box-shadow: none;
+					}
+				}
+			}
+			
+			.components-base-control__label {
+				text-transform: initial;
+			}
+
+			.components-panel__row {
+				gap: 10px;
+
+				.components-base-control:first-child {
+					flex: 1;
+				}
+			}
+		}
+
+		.components-panel__body {
+			border: none;
+
+			&-toggle {
+				background-color: initial;
+				color: initial;
+			}
+		}
+
+		.components-base-control__help {
+			margin: 0 0 20px 0;
+		}
+
+		.components-card__header {
+			border-bottom: none;
+
+			.components-base-control,
+			.components-text {
+				flex: 1;
+			}
+
+			.components-button {
+				height: auto;
+				width: auto;
+			}
+		}
+
+		.components-card__footer > * {
+			flex: 1;
+		}
+
+		@media screen and ( max-width: 768px ) {
+			&__add-days {
+				.components-panel__row:not( .components-days-off-control__add-days-actions ) {
+					flex-wrap: wrap;
+					gap: 0;
+
+					.components-base-control:first-child {
+						flex: 1 1 100%;
+					}
+				}
+			}
+
+			&__days-list {
+				grid-template-columns: repeat( 1, 1fr );
+			}
+		}
+	}
+
+	.components-actions-control {
+		display: flex;
+		margin-top: 40px;
+
+		.components-button {
+			height: auto;
+		}
+	}
+
+	.components-notice-list {
+		position: fixed;
+		bottom: 20px;
+		right: 20px;
+		max-width: 450px;
+		min-width: 250px;
+		z-index: 9999;
+
+		.components-notice {
+			border: none;
+
+			&:not(:last-child) {
+				margin-bottom: 10px;
+			}
+
+			&__content {
+				margin: 0;
+			}
+		}
+	}
+}

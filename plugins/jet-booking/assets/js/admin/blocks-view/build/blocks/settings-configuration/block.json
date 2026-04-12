@@ -1,0 +1,39 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "jet-booking/settings-configuration",
+  "title": "Settings Configuration",
+  "category": "jet-booking",
+  "description": "This widget provides a settings configuration panel, allowing users to customize booking-related options.",
+  "keywords": [
+    "booking",
+    "settings",
+    "configuration"
+  ],
+  "version": "1.0.0",
+  "textdomain": "jet-booking",
+  "attributes": {
+    "showPeriodControls": {
+      "type": "boolean",
+      "default": true
+    },
+    "showRangeControls": {
+      "type": "boolean",
+      "default": true
+    },
+    "showUIControls": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "editorScript": [
+    "file:./index.js",
+    "jet-booking-widgets"
+  ],
+  "viewScript": "jet-booking-widgets",
+  "editorStyle": "jet-booking-widgets",
+  "viewStyle": [
+    "jet-booking-widgets",
+    "wp-components"
+  ]
+}

@@ -1,0 +1,532 @@
+0000.000 (0) Opened log file at time: Tue, 24 Mar 2026 23:17:11 +0000 on https://thebastards.ro
+0000.001 (0) UpdraftPlus WordPress backup plugin (https://updraftplus.com): 1.26.2 WP: 6.9.4 PHP: 8.2.30 (litespeed, Linux server-0365.whmpanels.com 4.18.0-348.23.1.lve.el8.x86_64 #1 SMP Wed Apr 27 06:58:00 EDT 2022 x86_64) MySQL: 10.3.32-MariaDB (max packet size=1073741824) WPLANG: ro_RO Server: LiteSpeed safe_mode: 0 max_execution_time: 900 memory_limit: 2048M (used: 13.1M | 14M) multisite: N openssl: OpenSSL 1.1.1w  11 Sep 2023 mcrypt: Y LANG:  WP Proxy: disabled ZipArchive::addFile: Y
+0000.001 (0) Free space on disk containing Updraft's temporary directory: 196910.5 MB
+0000.003 (0) Tasks: Backup files: 1 (schedule: unset) Backup DB: 1 (schedule: unset)
+0000.005 (0) Semaphore (fd, wp4u_options) being initialised
+0000.006 (0) Requesting semaphore lock (fd) (apparently not via scheduler)
+0000.007 (0) Set semaphore last lock (fd) time to 2026-03-24 23:17:11
+0000.008 (0) Semaphore lock (fd) complete
+0000.009 (0) Backup run: resumption=0, nonce=e32914010ff3, file_nonce=e32914010ff3 begun at=1774394231 (0s ago), job type=backup
+0000.010 (0) Scheduling a resumption (1) after 300 seconds (1774394531) in case this run gets aborted
+0000.028 (0) Checking if we have a zip executable available
+0000.029 (0) Creation of backups of directories: beginning
+0000.031 (0) Beginning creation of dump of plugins (split every: 400 MB)
+0000.223 (0) Total entities for the zip file: 2905 directories, 12369 files (0 skipped as non-modified), 180.6 MB
+0000.229 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 100 files added (on-disk size: 0 KB)
+0000.232 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 200 files added (on-disk size: 0 KB)
+0000.235 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 300 files added (on-disk size: 0 KB)
+0000.237 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 400 files added (on-disk size: 0 KB)
+0000.239 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 500 files added (on-disk size: 0 KB)
+0000.242 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 600 files added (on-disk size: 0 KB)
+0000.245 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 700 files added (on-disk size: 0 KB)
+0000.248 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 800 files added (on-disk size: 0 KB)
+0000.250 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 900 files added (on-disk size: 0 KB)
+0000.253 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 1000 files added (on-disk size: 0 KB)
+0000.253 (0) Adding batch to zip file (UpdraftPlus_ZipArchive): over 1000 files added on this batch (7.4 MB, 12369 files batched, 1001 (1001) added so far); re-opening (prior size: 0 KB)
+0000.724 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 1100 files added (on-disk size: 3592.1 KB)
+0000.727 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 1200 files added (on-disk size: 3592.1 KB)
+0000.729 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 1300 files added (on-disk size: 3592.1 KB)
+0000.732 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 1400 files added (on-disk size: 3592.1 KB)
+0000.734 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 1500 files added (on-disk size: 3592.1 KB)
+0000.737 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 1600 files added (on-disk size: 3592.1 KB)
+0000.739 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 1700 files added (on-disk size: 3592.1 KB)
+0000.742 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 1800 files added (on-disk size: 3592.1 KB)
+0000.744 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 1900 files added (on-disk size: 3592.1 KB)
+0000.746 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 2000 files added (on-disk size: 3592.1 KB)
+0000.747 (0) Adding batch to zip file (UpdraftPlus_ZipArchive): over 1000 files added on this batch (13.8 MB, 12369 files batched, 1001 (2002) added so far); re-opening (prior size: 3592.1 KB)
+0001.456 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 2100 files added (on-disk size: 7162.8 KB)
+0001.459 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 2200 files added (on-disk size: 7162.8 KB)
+0001.461 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 2300 files added (on-disk size: 7162.8 KB)
+0001.462 (0) Adding batch to zip file (UpdraftPlus_ZipArchive): over 25 MB added on this batch (25.3 MB, 12369 files batched, 320 (2322) added so far); re-opening (prior size: 7162.8 KB)
+0002.954 (0) A useful amount of data was added after this amount of zip processing: 1.9 s (normalised: 1.9 s, rate: 13442.1 KB/s)
+0002.955 (0) Performance is good - will increase the amount of data we attempt to batch (time=1.9304230213165, normalised_time=1.9044643205929, max_time=2.9543340206146, data points known=1, old_max_bytes=26214400, new_max_bytes=82588262)
+0002.973 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 2400 files added (on-disk size: 12461.8 KB)
+0002.976 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 2500 files added (on-disk size: 12461.8 KB)
+0002.979 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 2600 files added (on-disk size: 12461.8 KB)
+0002.983 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 2700 files added (on-disk size: 12461.8 KB)
+0002.988 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 2800 files added (on-disk size: 12461.8 KB)
+0002.993 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 2900 files added (on-disk size: 12461.8 KB)
+0002.998 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 3000 files added (on-disk size: 12461.8 KB)
+0003.003 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 3100 files added (on-disk size: 12461.8 KB)
+0003.008 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 3200 files added (on-disk size: 12461.8 KB)
+0003.013 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 3300 files added (on-disk size: 12461.8 KB)
+0003.015 (0) Adding batch to zip file (UpdraftPlus_ZipArchive): over 1000 files added on this batch (27.8 MB, 12369 files batched, 1001 (3323) added so far); re-opening (prior size: 12461.8 KB)
+0004.936 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 3400 files added (on-disk size: 21049.4 KB)
+0004.939 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 3500 files added (on-disk size: 21049.4 KB)
+0004.941 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 3600 files added (on-disk size: 21049.4 KB)
+0004.944 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 3700 files added (on-disk size: 21049.4 KB)
+0004.946 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 3800 files added (on-disk size: 21049.4 KB)
+0004.949 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 3900 files added (on-disk size: 21049.4 KB)
+0004.951 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 4000 files added (on-disk size: 21049.4 KB)
+0004.954 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 4100 files added (on-disk size: 21049.4 KB)
+0004.956 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 4200 files added (on-disk size: 21049.4 KB)
+0004.959 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 4300 files added (on-disk size: 21049.4 KB)
+0004.960 (0) Adding batch to zip file (UpdraftPlus_ZipArchive): over 1000 files added on this batch (8.8 MB, 12369 files batched, 1001 (4324) added so far); re-opening (prior size: 21049.4 KB)
+0005.592 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 4400 files added (on-disk size: 23773.9 KB)
+0005.597 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 4500 files added (on-disk size: 23773.9 KB)
+0005.600 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 4600 files added (on-disk size: 23773.9 KB)
+0005.603 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 4700 files added (on-disk size: 23773.9 KB)
+0005.605 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 4800 files added (on-disk size: 23773.9 KB)
+0005.608 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 4900 files added (on-disk size: 23773.9 KB)
+0005.610 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 5000 files added (on-disk size: 23773.9 KB)
+0005.612 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 5100 files added (on-disk size: 23773.9 KB)
+0005.615 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 5200 files added (on-disk size: 23773.9 KB)
+0005.617 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 5300 files added (on-disk size: 23773.9 KB)
+0005.619 (0) Adding batch to zip file (UpdraftPlus_ZipArchive): over 1000 files added on this batch (13.3 MB, 12369 files batched, 1001 (5325) added so far); re-opening (prior size: 23773.9 KB)
+0006.436 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 5400 files added (on-disk size: 31196.9 KB)
+0006.438 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 5500 files added (on-disk size: 31196.9 KB)
+0006.441 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 5600 files added (on-disk size: 31196.9 KB)
+0006.443 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 5700 files added (on-disk size: 31196.9 KB)
+0006.446 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 5800 files added (on-disk size: 31196.9 KB)
+0006.448 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 5900 files added (on-disk size: 31196.9 KB)
+0006.451 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 6000 files added (on-disk size: 31196.9 KB)
+0006.454 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 6100 files added (on-disk size: 31196.9 KB)
+0006.456 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 6200 files added (on-disk size: 31196.9 KB)
+0006.459 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 6300 files added (on-disk size: 31196.9 KB)
+0006.460 (0) Adding batch to zip file (UpdraftPlus_ZipArchive): over 1000 files added on this batch (15.8 MB, 12369 files batched, 1001 (6326) added so far); re-opening (prior size: 31196.9 KB)
+0007.719 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 6400 files added (on-disk size: 34888.5 KB)
+0007.722 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 6500 files added (on-disk size: 34888.5 KB)
+0007.724 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 6600 files added (on-disk size: 34888.5 KB)
+0007.727 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 6700 files added (on-disk size: 34888.5 KB)
+0007.729 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 6800 files added (on-disk size: 34888.5 KB)
+0007.732 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 6900 files added (on-disk size: 34888.5 KB)
+0007.734 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 7000 files added (on-disk size: 34888.5 KB)
+0007.737 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 7100 files added (on-disk size: 34888.5 KB)
+0007.739 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 7200 files added (on-disk size: 34888.5 KB)
+0007.742 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 7300 files added (on-disk size: 34888.5 KB)
+0007.743 (0) Adding batch to zip file (UpdraftPlus_ZipArchive): over 1000 files added on this batch (15.8 MB, 12369 files batched, 1001 (7327) added so far); re-opening (prior size: 34888.5 KB)
+0008.980 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 7400 files added (on-disk size: 40722 KB)
+0008.982 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 7500 files added (on-disk size: 40722 KB)
+0008.985 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 7600 files added (on-disk size: 40722 KB)
+0008.987 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 7700 files added (on-disk size: 40722 KB)
+0008.990 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 7800 files added (on-disk size: 40722 KB)
+0008.992 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 7900 files added (on-disk size: 40722 KB)
+0008.995 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 8000 files added (on-disk size: 40722 KB)
+0008.998 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 8100 files added (on-disk size: 40722 KB)
+0009.000 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 8200 files added (on-disk size: 40722 KB)
+0009.003 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 8300 files added (on-disk size: 40722 KB)
+0009.004 (0) Adding batch to zip file (UpdraftPlus_ZipArchive): over 1000 files added on this batch (3.2 MB, 12369 files batched, 1001 (8328) added so far); re-opening (prior size: 40722 KB)
+0009.310 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 8400 files added (on-disk size: 41817.4 KB)
+0009.313 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 8500 files added (on-disk size: 41817.4 KB)
+0009.316 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 8600 files added (on-disk size: 41817.4 KB)
+0009.319 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 8700 files added (on-disk size: 41817.4 KB)
+0009.321 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 8800 files added (on-disk size: 41817.4 KB)
+0009.324 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 8900 files added (on-disk size: 41817.4 KB)
+0009.326 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 9000 files added (on-disk size: 41817.4 KB)
+0009.329 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 9100 files added (on-disk size: 41817.4 KB)
+0009.332 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 9200 files added (on-disk size: 41817.4 KB)
+0009.334 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 9300 files added (on-disk size: 41817.4 KB)
+0009.336 (0) Adding batch to zip file (UpdraftPlus_ZipArchive): over 1000 files added on this batch (5.2 MB, 12369 files batched, 1001 (9329) added so far); re-opening (prior size: 41817.4 KB)
+0009.755 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 9400 files added (on-disk size: 43282.6 KB)
+0009.758 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 9500 files added (on-disk size: 43282.6 KB)
+0009.760 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 9600 files added (on-disk size: 43282.6 KB)
+0009.763 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 9700 files added (on-disk size: 43282.6 KB)
+0009.765 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 9800 files added (on-disk size: 43282.6 KB)
+0009.768 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 9900 files added (on-disk size: 43282.6 KB)
+0009.770 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 10000 files added (on-disk size: 43282.6 KB)
+0009.773 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 10100 files added (on-disk size: 43282.6 KB)
+0009.776 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 10200 files added (on-disk size: 43282.6 KB)
+0009.778 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 10300 files added (on-disk size: 43282.6 KB)
+0009.779 (0) Adding batch to zip file (UpdraftPlus_ZipArchive): over 1000 files added on this batch (11 MB, 12369 files batched, 1001 (10330) added so far); re-opening (prior size: 43282.6 KB)
+0010.531 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 10400 files added (on-disk size: 46034.5 KB)
+0010.534 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 10500 files added (on-disk size: 46034.5 KB)
+0010.536 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 10600 files added (on-disk size: 46034.5 KB)
+0010.539 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 10700 files added (on-disk size: 46034.5 KB)
+0010.541 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 10800 files added (on-disk size: 46034.5 KB)
+0010.544 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 10900 files added (on-disk size: 46034.5 KB)
+0010.546 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 11000 files added (on-disk size: 46034.5 KB)
+0010.549 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 11100 files added (on-disk size: 46034.5 KB)
+0010.551 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 11200 files added (on-disk size: 46034.5 KB)
+0010.554 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 11300 files added (on-disk size: 46034.5 KB)
+0010.556 (0) Adding batch to zip file (UpdraftPlus_ZipArchive): over 1000 files added on this batch (24.8 MB, 12369 files batched, 1001 (11331) added so far); re-opening (prior size: 46034.5 KB)
+0012.675 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 11400 files added (on-disk size: 53135.4 KB)
+0012.678 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 11500 files added (on-disk size: 53135.4 KB)
+0012.681 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 11600 files added (on-disk size: 53135.4 KB)
+0012.684 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 11700 files added (on-disk size: 53135.4 KB)
+0012.687 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 11800 files added (on-disk size: 53135.4 KB)
+0012.690 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 11900 files added (on-disk size: 53135.4 KB)
+0012.694 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 12000 files added (on-disk size: 53135.4 KB)
+0012.698 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 12100 files added (on-disk size: 53135.4 KB)
+0012.701 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 12200 files added (on-disk size: 53135.4 KB)
+0012.704 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.tmp: 12300 files added (on-disk size: 53135.4 KB)
+0012.706 (0) Adding batch to zip file (UpdraftPlus_ZipArchive): over 1000 files added on this batch (7.6 MB, 12369 files batched, 1001 (12332) added so far); re-opening (prior size: 53135.4 KB)
+0013.723 (0) Creating zip file manifest (backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.list-temp.tmp)
+0013.755 (0) Successfully created zip file manifest (size: 1068403)
+0014.269 (0) Created plugins zip (0) - 55723.3 KB in 14.2 s (3914 KB/s) (sha1: 448d0fa72b3066c4a849a08d2265486bb54613b2, sha256: fa863f50c2f6ac6e1aeb3e4fa0ecafe8555d737c4b90d575eba42e8100b82261)
+0014.277 (0) Cloud backup selection (1/1): none with instance (1/1) (last)
+0014.278 (0) No remote despatch: user chose no remote backup service
+0014.278 (0) Recording as successfully uploaded: backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip
+0014.279 (0) Deleting zip manifest (backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip.list.tmp)
+0014.281 (0) Retain: beginning examination of existing backup sets; user setting: retain_files=2, retain_db=2
+0014.281 (0) Number of backup sets in history: 0; groups (db): 1
+0014.282 (0) Number of backup sets in history: 0; groups (files): 1
+0014.282 (0) Retain: saving new backup history (sets now: 0) and finishing retain operation
+0014.285 (0) Beginning creation of dump of themes (split every: 400 MB)
+0014.304 (0) Total entities for the zip file: 162 directories, 944 files (0 skipped as non-modified), 19.1 MB
+0014.306 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-themes.zip.tmp: 100 files added (on-disk size: 0 KB)
+0014.309 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-themes.zip.tmp: 200 files added (on-disk size: 0 KB)
+0014.311 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-themes.zip.tmp: 300 files added (on-disk size: 0 KB)
+0014.314 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-themes.zip.tmp: 400 files added (on-disk size: 0 KB)
+0014.316 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-themes.zip.tmp: 500 files added (on-disk size: 0 KB)
+0014.318 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-themes.zip.tmp: 600 files added (on-disk size: 0 KB)
+0014.321 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-themes.zip.tmp: 700 files added (on-disk size: 0 KB)
+0014.323 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-themes.zip.tmp: 800 files added (on-disk size: 0 KB)
+0014.326 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-themes.zip.tmp: 900 files added (on-disk size: 0 KB)
+0015.088 (0) Creating zip file manifest (backup_2026-03-24-2317_The_Bastards_e32914010ff3-themes.zip.list-temp.tmp)
+0015.091 (0) Successfully created zip file manifest (size: 66539)
+0015.211 (0) Created themes zip (0) - 12956.7 KB in 0.9 s (14006.7 KB/s) (sha1: 993bba1168d9ef2abd933ec5ce92fa9fb6345587, sha256: bff8d7ba29ae332a06c6994bf143a6ed78dd5a5f5302a8696ca550d96f54da24)
+0015.213 (0) Cloud backup selection (1/1): none with instance (1/1) (last)
+0015.214 (0) No remote despatch: user chose no remote backup service
+0015.214 (0) Recording as successfully uploaded: backup_2026-03-24-2317_The_Bastards_e32914010ff3-themes.zip
+0015.215 (0) Deleting zip manifest (backup_2026-03-24-2317_The_Bastards_e32914010ff3-themes.zip.list.tmp)
+0015.216 (0) Retain: beginning examination of existing backup sets; user setting: retain_files=2, retain_db=2
+0015.217 (0) Number of backup sets in history: 0; groups (db): 1
+0015.218 (0) Number of backup sets in history: 0; groups (files): 1
+0015.218 (0) Retain: saving new backup history (sets now: 0) and finishing retain operation
+0015.220 (0) Exclusion option setting (uploads): backup*,*backups,backwpup*,wp-clone,snapshots,wp-staging
+0015.221 (0) Looking for candidates to backup in: /home/bastard/public_html/wp-content/uploads
+0015.221 (0) finding files: elementor: adding to list (1)
+0015.222 (0) finding files: 2021: adding to list (2)
+0015.222 (0) finding files: jet-smart-filters: adding to list (3)
+0015.223 (0) finding files: 2023: adding to list (4)
+0015.223 (0) finding files: 2026: adding to list (5)
+0015.223 (0) finding files: 2024: adding to list (6)
+0015.224 (0) finding files: kadence_starter_templates: adding to list (7)
+0015.224 (0) finding files: 2025: adding to list (8)
+0015.224 (0) finding files: jet-engine-forms: adding to list (9)
+0015.225 (0) finding files: wpseo-redirects: adding to list (10)
+0015.225 (0) Beginning creation of dump of uploads (split every: 400 MB)
+0015.235 (0) Total entities for the zip file: 53 directories, 542 files (0 skipped as non-modified), 68.8 MB
+0015.237 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-uploads.zip.tmp: 100 files added (on-disk size: 0 KB)
+0015.239 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-uploads.zip.tmp: 200 files added (on-disk size: 0 KB)
+0015.242 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-uploads.zip.tmp: 300 files added (on-disk size: 0 KB)
+0015.244 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-uploads.zip.tmp: 400 files added (on-disk size: 0 KB)
+0015.246 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-uploads.zip.tmp: 500 files added (on-disk size: 0 KB)
+0015.636 (0) Creating zip file manifest (backup_2026-03-24-2317_The_Bastards_e32914010ff3-uploads.zip.list-temp.tmp)
+0015.638 (0) Successfully created zip file manifest (size: 33637)
+0016.318 (0) Created uploads zip (0) - 69623.5 KB in 1.1 s (63739.3 KB/s) (sha1: 64871d38c3dcd5b4fdd78b5d7f823057a8ac9c9e, sha256: 67cbdafcc50454520cbdab0077257acdc176c27af08ba2511b1d3413ffb439db)
+0016.321 (0) Cloud backup selection (1/1): none with instance (1/1) (last)
+0016.321 (0) No remote despatch: user chose no remote backup service
+0016.321 (0) Recording as successfully uploaded: backup_2026-03-24-2317_The_Bastards_e32914010ff3-uploads.zip
+0016.322 (0) Deleting zip manifest (backup_2026-03-24-2317_The_Bastards_e32914010ff3-uploads.zip.list.tmp)
+0016.323 (0) Retain: beginning examination of existing backup sets; user setting: retain_files=2, retain_db=2
+0016.324 (0) Number of backup sets in history: 0; groups (db): 1
+0016.324 (0) Number of backup sets in history: 0; groups (files): 1
+0016.325 (0) Retain: saving new backup history (sets now: 0) and finishing retain operation
+0016.326 (0) No backup of mu-plugins: excluded by user's options
+0016.328 (0) Beginning backup of other directories found in the content directory (index: 0)
+0016.328 (0) Exclusion option setting (others): upgrade,cache,updraft,backup*,*backups,mysql.sql,debug.log
+0016.328 (0) Looking for candidates to backup in: /home/bastard/public_html/wp-content
+0016.329 (0) finding files: 99backup: adding to list (1)
+0016.329 (0) finding files: plugins: skipping: this is the plugins directory
+0016.330 (0) finding files: languages: adding to list (2)
+0016.330 (0) finding files: themes: skipping: this is the themes directory
+0016.330 (0) finding files: uploads: skipping: this is the uploads directory
+0016.331 (0) finding files: upgrade: skipping: excluded by options
+0016.331 (0) finding files: updraft: skipping: this is the updraft directory
+0016.332 (0) finding files: index.php: adding to list (3)
+0016.332 (0) finding files: cache: skipping: excluded by options
+0016.332 (0) finding files: upgrade-temp-backup: adding to list (4)
+0016.337 (0) Total entities for the zip file: 19 directories, 241 files (0 skipped as non-modified), 103.4 MB
+0016.338 (0) Adding batch to zip file (UpdraftPlus_ZipArchive): over 78.8 MB added on this batch (81.7 MB, 241 files batched, 23 (23) added so far); re-opening (prior size: 0 KB)
+0016.604 (0) A useful amount of data was added after this amount of zip processing: 0.6 s (normalised: 0.6 s, rate: 143936.7 KB/s)
+0016.606 (0) Performance is good - will increase the amount of data we attempt to batch (time=0.58107304573059, normalised_time=0.56033373441432, max_time=16.604953050613, data points known=1, old_max_bytes=82588262, new_max_bytes=209715200)
+0016.608 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-others.zip.tmp: 100 files added (on-disk size: 83644 KB)
+0016.610 (0) Zip: backup_2026-03-24-2317_The_Bastards_e32914010ff3-others.zip.tmp: 200 files added (on-disk size: 83644 KB)
+0017.334 (0) Creating zip file manifest (backup_2026-03-24-2317_The_Bastards_e32914010ff3-others.zip.list-temp.tmp)
+0017.336 (0) Successfully created zip file manifest (size: 18524)
+0018.258 (0) Created others zip (0) - 101948.6 KB in 1.9 s (52969.1 KB/s) (sha1: a408202c100cb6dcc9e5c02c794df9a6c8e7df18, sha256: f6b83b98cf0d9b5fb6134afcf76a26af867314cbe7fdfd52a65139eb7fb1d2dd)
+0018.261 (0) Cloud backup selection (1/1): none with instance (1/1) (last)
+0018.261 (0) No remote despatch: user chose no remote backup service
+0018.262 (0) Recording as successfully uploaded: backup_2026-03-24-2317_The_Bastards_e32914010ff3-others.zip
+0018.262 (0) Deleting zip manifest (backup_2026-03-24-2317_The_Bastards_e32914010ff3-others.zip.list.tmp)
+0018.263 (0) Retain: beginning examination of existing backup sets; user setting: retain_files=2, retain_db=2
+0018.264 (0) Number of backup sets in history: 0; groups (db): 1
+0018.264 (0) Number of backup sets in history: 0; groups (files): 1
+0018.265 (0) Retain: saving new backup history (sets now: 0) and finishing retain operation
+0018.268 (0) Saving backup status to database (elements: 8)
+0018.269 (0) Beginning creation of database dump (WordPress DB)
+0018.270 (0) SQL compatibility mode is: NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+0018.275 (0) Table wp4u_options: Total expected rows (via COUNT): 430
+0018.276 (0) Table is relatively small; fetch_rows will thus be: 500 (allow_further_reductions=1, is_first_fetch=1, known_bigger_than_table=1)
+0018.314 (0) Table wp4u_options: Rows added in this batch (next record: 185167): 426 (uncompressed bytes in this segment=1358612) in 0.04 seconds
+0018.317 (0) Table wp4u_options: finishing file(s) (2, 191.6 KB)
+0018.319 (0) Table wp4u_users: Total expected rows (via COUNT): 9
+0018.320 (0) Table is relatively small; fetch_rows will thus be: 20 (allow_further_reductions=1, is_first_fetch=1, known_bigger_than_table=1)
+0018.321 (0) Table wp4u_users: Rows added in this batch (next record: 9): 9 (uncompressed bytes in this segment=2620) in 0.00 seconds
+0018.323 (0) Table wp4u_users: finishing file(s) (2, 1.3 KB)
+0018.326 (0) Table wp4u_usermeta: Total expected rows (via COUNT): 251
+0018.326 (0) Table is relatively small; fetch_rows will thus be: 500 (allow_further_reductions=1, is_first_fetch=1, known_bigger_than_table=1)
+0018.329 (0) Table wp4u_usermeta: Rows added in this batch (next record: 273): 251 (uncompressed bytes in this segment=22334) in 0.00 seconds
+0018.331 (0) Table wp4u_usermeta: finishing file(s) (2, 6.2 KB)
+0018.334 (0) Table wp4u_actionscheduler_actions: Total expected rows (via COUNT): 62
+0018.335 (0) Table is relatively small; fetch_rows will thus be: 100 (allow_further_reductions=1, is_first_fetch=1, known_bigger_than_table=1)
+0018.336 (0) Table wp4u_actionscheduler_actions: Rows added in this batch (next record: 91): 62 (uncompressed bytes in this segment=32655) in 0.00 seconds
+0018.339 (0) Table wp4u_actionscheduler_actions: finishing file(s) (2, 2.7 KB)
+0018.341 (0) Table wp4u_actionscheduler_claims: Total expected rows (via COUNT): 0
+0018.342 (0) Table wp4u_actionscheduler_claims: Rows added in this batch (next record: -1): 0 (uncompressed bytes in this segment=639) in 0.00 seconds
+0018.344 (0) Table wp4u_actionscheduler_claims: finishing file(s) (2, 0.4 KB)
+0018.346 (0) Table wp4u_actionscheduler_groups: Total expected rows (via COUNT): 3
+0018.346 (0) Table is relatively small; fetch_rows will thus be: 20 (allow_further_reductions=1, is_first_fetch=1, known_bigger_than_table=1)
+0018.348 (0) Table wp4u_actionscheduler_groups: Rows added in this batch (next record: 3): 3 (uncompressed bytes in this segment=750) in 0.00 seconds
+0018.350 (0) Table wp4u_actionscheduler_groups: finishing file(s) (2, 0.4 KB)
+0018.352 (0) Table wp4u_actionscheduler_logs: Total expected rows (via COUNT): 182
+0018.352 (0) Table is relatively small; fetch_rows will thus be: 250 (allow_further_reductions=1, is_first_fetch=1, known_bigger_than_table=1)
+0018.354 (0) Table wp4u_actionscheduler_logs: Rows added in this batch (next record: 238): 182 (uncompressed bytes in this segment=16345) in 0.00 seconds
+0018.356 (0) Table wp4u_actionscheduler_logs: finishing file(s) (2, 2 KB)
+0018.359 (0) Table wp4u_commentmeta: Total expected rows (via COUNT): 0
+0018.360 (0) Table wp4u_commentmeta: Rows added in this batch (next record: -1): 0 (uncompressed bytes in this segment=630) in 0.00 seconds
+0018.362 (0) Table wp4u_commentmeta: finishing file(s) (2, 0.4 KB)
+0018.364 (0) Table wp4u_comments: Total expected rows (via COUNT): 0
+0018.365 (0) Table wp4u_comments: Rows added in this batch (next record: -1): 0 (uncompressed bytes in this segment=1446) in 0.00 seconds
+0018.367 (0) Table wp4u_comments: finishing file(s) (2, 0.5 KB)
+0018.370 (0) Table wp4u_e_notes: Total expected rows (via COUNT): 0
+0018.370 (0) Table wp4u_e_notes: Rows added in this batch (next record: -1): 0 (uncompressed bytes in this segment=2114) in 0.00 seconds
+0018.373 (0) Table wp4u_e_notes: finishing file(s) (2, 0.8 KB)
+0018.376 (0) Table wp4u_e_notes_users_relations: Total expected rows (via COUNT): 0
+0018.376 (0) Table wp4u_e_notes_users_relations: Rows added in this batch (next record: -1): 0 (uncompressed bytes in this segment=895) in 0.00 seconds
+0018.378 (0) Table wp4u_e_notes_users_relations: finishing file(s) (2, 0.4 KB)
+0018.381 (0) Table wp4u_links: Total expected rows (via COUNT): 0
+0018.382 (0) Table wp4u_links: Rows added in this batch (next record: -1): 0 (uncompressed bytes in this segment=1005) in 0.00 seconds
+0018.384 (0) Table wp4u_links: finishing file(s) (2, 0.4 KB)
+0018.601 (0) Table wp4u_postmeta: Total expected rows (approximate): 14287
+0019.051 (0) Table wp4u_postmeta: Rows added in this batch (next record: 18287): 11911 (uncompressed bytes in this segment=27990947) in 0.67 seconds
+0019.054 (0) Table wp4u_postmeta: finishing file(s) (2, 1785.1 KB)
+0019.062 (0) Table wp4u_posts: Total expected rows (approximate): 1622
+0019.418 (0) Table wp4u_posts: Rows added in this batch (next record: 2274): 1517 (uncompressed bytes in this segment=25704067) in 0.36 seconds
+0019.422 (0) Table wp4u_posts: finishing file(s) (2, 741 KB)
+0019.425 (0) Table wp4u_snippets: Total expected rows (via COUNT): 5
+0019.425 (0) Table is relatively small; fetch_rows will thus be: 20 (allow_further_reductions=1, is_first_fetch=1, known_bigger_than_table=1)
+0019.426 (0) Table wp4u_snippets: Rows added in this batch (next record: 5): 5 (uncompressed bytes in this segment=3886) in 0.00 seconds
+0019.429 (0) Table wp4u_snippets: finishing file(s) (2, 1.5 KB)
+0019.431 (0) Table wp4u_term_relationships: Total expected rows (approximate): 29
+0019.432 (0) Table wp4u_term_relationships: Rows added in this batch (next record: 100000): 39 (uncompressed bytes in this segment=1289) in 0.00 seconds
+0019.434 (0) Table wp4u_term_relationships: finishing file(s) (2, 0.5 KB)
+0019.437 (0) Table wp4u_term_taxonomy: Total expected rows (via COUNT): 16
+0019.437 (0) Table is relatively small; fetch_rows will thus be: 20 (allow_further_reductions=1, is_first_fetch=1, known_bigger_than_table=1)
+0019.439 (0) Table wp4u_term_taxonomy: Rows added in this batch (next record: 20): 16 (uncompressed bytes in this segment=1361) in 0.00 seconds
+0019.441 (0) Table wp4u_term_taxonomy: finishing file(s) (2, 0.5 KB)
+0019.444 (0) Table wp4u_termmeta: Total expected rows (via COUNT): 11
+0019.444 (0) Table is relatively small; fetch_rows will thus be: 20 (allow_further_reductions=1, is_first_fetch=1, known_bigger_than_table=1)
+0019.445 (0) Table wp4u_termmeta: Rows added in this batch (next record: 11): 11 (uncompressed bytes in this segment=1282) in 0.00 seconds
+0019.447 (0) Table wp4u_termmeta: finishing file(s) (2, 0.5 KB)
+0019.449 (0) Table wp4u_terms: Total expected rows (via COUNT): 16
+0019.450 (0) Table is relatively small; fetch_rows will thus be: 20 (allow_further_reductions=1, is_first_fetch=1, known_bigger_than_table=1)
+0019.450 (0) Table wp4u_terms: Rows added in this batch (next record: 20): 16 (uncompressed bytes in this segment=1170) in 0.00 seconds
+0019.452 (0) Table wp4u_terms: finishing file(s) (2, 0.6 KB)
+0019.455 (0) Table wp4u_e_events: Total expected rows (via COUNT): 2
+0019.456 (0) Table is relatively small; fetch_rows will thus be: 20 (allow_further_reductions=1, is_first_fetch=1, known_bigger_than_table=1)
+0019.456 (0) Table wp4u_e_events: Rows added in this batch (next record: 2): 2 (uncompressed bytes in this segment=1003) in 0.00 seconds
+0019.458 (0) Table wp4u_e_events: finishing file(s) (2, 0.5 KB)
+0019.460 (0) Table wp4u_e_submissions: Total expected rows (via COUNT): 0
+0019.461 (0) Table wp4u_e_submissions: Rows added in this batch (next record: -1): 0 (uncompressed bytes in this segment=2301) in 0.00 seconds
+0019.463 (0) Table wp4u_e_submissions: finishing file(s) (2, 0.7 KB)
+0019.466 (0) Table wp4u_e_submissions_actions_log: Total expected rows (via COUNT): 0
+0019.467 (0) Table wp4u_e_submissions_actions_log: Rows added in this batch (next record: -1): 0 (uncompressed bytes in this segment=1276) in 0.00 seconds
+0019.469 (0) Table wp4u_e_submissions_actions_log: finishing file(s) (2, 0.5 KB)
+0019.472 (0) Table wp4u_e_submissions_values: Total expected rows (via COUNT): 0
+0019.473 (0) Table wp4u_e_submissions_values: Rows added in this batch (next record: -1): 0 (uncompressed bytes in this segment=747) in 0.00 seconds
+0019.475 (0) Table wp4u_e_submissions_values: finishing file(s) (2, 0.4 KB)
+0019.478 (0) Table wp4u_ff_scheduled_actions: Total expected rows (via COUNT): 0
+0019.479 (0) Table wp4u_ff_scheduled_actions: Rows added in this batch (next record: -1): 0 (uncompressed bytes in this segment=1104) in 0.00 seconds
+0019.481 (0) Table wp4u_ff_scheduled_actions: finishing file(s) (2, 0.4 KB)
+0019.487 (0) Table wp4u_fluentform_entry_details: Total expected rows (via COUNT): 444
+0019.488 (0) Table is relatively small; fetch_rows will thus be: 500 (allow_further_reductions=1, is_first_fetch=1, known_bigger_than_table=1)
+0019.495 (0) Table wp4u_fluentform_entry_details: Rows added in this batch (next record: 444): 444 (uncompressed bytes in this segment=142788) in 0.01 seconds
+0019.497 (0) Table wp4u_fluentform_entry_details: finishing file(s) (2, 29.3 KB)
+0019.500 (0) Table wp4u_fluentform_form_analytics: Total expected rows (via COUNT): 0
+0019.501 (0) Table wp4u_fluentform_form_analytics: Rows added in this batch (next record: -1): 0 (uncompressed bytes in this segment=1083) in 0.00 seconds
+0019.503 (0) Table wp4u_fluentform_form_analytics: finishing file(s) (2, 0.4 KB)
+0019.507 (0) Table wp4u_fluentform_form_meta: Total expected rows (via COUNT): 30
+0019.507 (0) Table is relatively small; fetch_rows will thus be: 50 (allow_further_reductions=1, is_first_fetch=1, known_bigger_than_table=1)
+0019.509 (0) Table wp4u_fluentform_form_meta: Rows added in this batch (next record: 30): 30 (uncompressed bytes in this segment=23094) in 0.00 seconds
+0019.511 (0) Table wp4u_fluentform_form_meta: finishing file(s) (2, 3.3 KB)
+0019.515 (0) Table wp4u_fluentform_forms: Total expected rows (via COUNT): 6
+0019.516 (0) Table is relatively small; fetch_rows will thus be: 20 (allow_further_reductions=1, is_first_fetch=1, known_bigger_than_table=1)
+0019.517 (0) Table wp4u_fluentform_forms: Rows added in this batch (next record: 6): 6 (uncompressed bytes in this segment=22021) in 0.00 seconds
+0019.520 (0) Table wp4u_fluentform_forms: finishing file(s) (2, 2.1 KB)
+0019.523 (0) Table wp4u_fluentform_logs: Total expected rows (via COUNT): 0
+0019.524 (0) Table wp4u_fluentform_logs: Rows added in this batch (next record: -1): 0 (uncompressed bytes in this segment=939) in 0.00 seconds
+0019.526 (0) Table wp4u_fluentform_logs: finishing file(s) (2, 0.4 KB)
+0019.530 (0) Table wp4u_fluentform_submission_meta: Total expected rows (via COUNT): 178
+0019.530 (0) Table is relatively small; fetch_rows will thus be: 250 (allow_further_reductions=1, is_first_fetch=1, known_bigger_than_table=1)
+0019.533 (0) Table wp4u_fluentform_submission_meta: Rows added in this batch (next record: 178): 178 (uncompressed bytes in this segment=22678) in 0.00 seconds
+0019.535 (0) Table wp4u_fluentform_submission_meta: finishing file(s) (2, 4.6 KB)
+0019.541 (0) Table wp4u_fluentform_submissions: Total expected rows (via COUNT): 89
+0019.542 (0) Table is relatively small; fetch_rows will thus be: 100 (allow_further_reductions=1, is_first_fetch=1, known_bigger_than_table=1)
+0019.548 (0) Table wp4u_fluentform_submissions: Rows added in this batch (next record: 89): 89 (uncompressed bytes in this segment=167767) in 0.01 seconds
+0019.551 (0) Table wp4u_fluentform_submissions: finishing file(s) (2, 31.9 KB)
+0019.553 (0) Table wp4u_jet_apartment_bookings: Total expected rows (via COUNT): 0
+0019.554 (0) Table wp4u_jet_apartment_bookings: Rows added in this batch (next record: -1): 0 (uncompressed bytes in this segment=1074) in 0.00 seconds
+0019.556 (0) Table wp4u_jet_apartment_bookings: finishing file(s) (2, 0.4 KB)
+0019.558 (0) Table wp4u_jet_apartment_units: Total expected rows (via COUNT): 0
+0019.559 (0) Table wp4u_jet_apartment_units: Rows added in this batch (next record: -1): 0 (uncompressed bytes in this segment=648) in 0.00 seconds
+0019.561 (0) Table wp4u_jet_apartment_units: finishing file(s) (2, 0.3 KB)
+0019.564 (0) Table wp4u_jet_bookings_meta: Total expected rows (via COUNT): 0
+0019.565 (0) Table wp4u_jet_bookings_meta: Rows added in this batch (next record: -1): 0 (uncompressed bytes in this segment=631) in 0.00 seconds
+0019.567 (0) Table wp4u_jet_bookings_meta: finishing file(s) (2, 0.3 KB)
+0019.570 (0) Table wp4u_jet_post_types: Total expected rows (via COUNT): 11
+0019.570 (0) Table is relatively small; fetch_rows will thus be: 20 (allow_further_reductions=1, is_first_fetch=1, known_bigger_than_table=1)
+0019.572 (0) Table wp4u_jet_post_types: Rows added in this batch (next record: 11): 11 (uncompressed bytes in this segment=15510) in 0.00 seconds
+0019.574 (0) Table wp4u_jet_post_types: finishing file(s) (2, 3.5 KB)
+0019.576 (0) Table wp4u_jet_rel_default: Total expected rows (via COUNT): 2
+0019.577 (0) Table is relatively small; fetch_rows will thus be: 20 (allow_further_reductions=1, is_first_fetch=1, known_bigger_than_table=1)
+0019.578 (0) Table wp4u_jet_rel_default: Rows added in this batch (next record: 4): 2 (uncompressed bytes in this segment=851) in 0.00 seconds
+0019.580 (0) Table wp4u_jet_rel_default: finishing file(s) (2, 0.5 KB)
+0019.582 (0) Table wp4u_jet_smart_filters_indexer: Total expected rows (via COUNT): 0
+0019.583 (0) Table wp4u_jet_smart_filters_indexer: Rows added in this batch (next record: -1): 0 (uncompressed bytes in this segment=836) in 0.00 seconds
+0019.585 (0) Table wp4u_jet_smart_filters_indexer: finishing file(s) (2, 0.4 KB)
+0019.588 (0) Table wp4u_jet_taxonomies: Total expected rows (via COUNT): 0
+0019.588 (0) Table wp4u_jet_taxonomies: Rows added in this batch (next record: -1): 0 (uncompressed bytes in this segment=825) in 0.00 seconds
+0019.591 (0) Table wp4u_jet_taxonomies: finishing file(s) (2, 0.4 KB)
+0019.593 (0) Table wp4u_wpmailsmtp_debug_events: Total expected rows (via COUNT): 1
+0019.593 (0) Table is relatively small; fetch_rows will thus be: 20 (allow_further_reductions=1, is_first_fetch=1, known_bigger_than_table=1)
+0019.594 (0) Table wp4u_wpmailsmtp_debug_events: Rows added in this batch (next record: 1): 1 (uncompressed bytes in this segment=1042) in 0.00 seconds
+0019.596 (0) Table wp4u_wpmailsmtp_debug_events: finishing file(s) (2, 0.6 KB)
+0019.600 (0) Table wp4u_wpmailsmtp_tasks_meta: Total expected rows (via COUNT): 0
+0019.601 (0) Table wp4u_wpmailsmtp_tasks_meta: Rows added in this batch (next record: -1): 0 (uncompressed bytes in this segment=635) in 0.00 seconds
+0019.603 (0) Table wp4u_wpmailsmtp_tasks_meta: finishing file(s) (2, 0.4 KB)
+0019.606 (0) Table wp4u_yoast_indexable: Total expected rows (via COUNT): 67
+0019.606 (0) Table is relatively small; fetch_rows will thus be: 100 (allow_further_reductions=1, is_first_fetch=1, known_bigger_than_table=1)
+0019.610 (0) Table wp4u_yoast_indexable: Rows added in this batch (next record: 91): 67 (uncompressed bytes in this segment=36304) in 0.01 seconds
+0019.612 (0) Table wp4u_yoast_indexable: finishing file(s) (2, 6.2 KB)
+0019.614 (0) Table wp4u_yoast_indexable_hierarchy: Total expected rows (approximate): 64
+0019.616 (0) Table wp4u_yoast_indexable_hierarchy: Rows added in this batch (next record: 1000): 64 (uncompressed bytes in this segment=1830) in 0.00 seconds
+0019.618 (0) Table wp4u_yoast_indexable_hierarchy: finishing file(s) (2, 0.6 KB)
+0019.619 (0) Table wp4u_yoast_migrations: Total expected rows (via COUNT): 27
+0019.620 (0) Table is relatively small; fetch_rows will thus be: 50 (allow_further_reductions=1, is_first_fetch=1, known_bigger_than_table=1)
+0019.621 (0) Table wp4u_yoast_migrations: Rows added in this batch (next record: 27): 27 (uncompressed bytes in this segment=1315) in 0.00 seconds
+0019.623 (0) Table wp4u_yoast_migrations: finishing file(s) (2, 0.6 KB)
+0019.625 (0) Table wp4u_yoast_primary_term: Total expected rows (via COUNT): 0
+0019.626 (0) Table wp4u_yoast_primary_term: Rows added in this batch (next record: -1): 0 (uncompressed bytes in this segment=872) in 0.00 seconds
+0019.628 (0) Table wp4u_yoast_primary_term: finishing file(s) (2, 0.4 KB)
+0019.630 (0) Table wp4u_yoast_prominent_words: Total expected rows (via COUNT): 70
+0019.631 (0) Table is relatively small; fetch_rows will thus be: 100 (allow_further_reductions=1, is_first_fetch=1, known_bigger_than_table=1)
+0019.632 (0) Table wp4u_yoast_prominent_words: Rows added in this batch (next record: 70): 70 (uncompressed bytes in this segment=2454) in 0.00 seconds
+0019.634 (0) Table wp4u_yoast_prominent_words: finishing file(s) (2, 0.9 KB)
+0019.636 (0) Table wp4u_yoast_seo_links: Total expected rows (via COUNT): 32
+0019.637 (0) Table is relatively small; fetch_rows will thus be: 50 (allow_further_reductions=1, is_first_fetch=1, known_bigger_than_table=1)
+0019.638 (0) Table wp4u_yoast_seo_links: Rows added in this batch (next record: 768): 32 (uncompressed bytes in this segment=5169) in 0.00 seconds
+0019.640 (0) Table wp4u_yoast_seo_links: finishing file(s) (2, 1.2 KB)
+0019.641 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_options.table.tmpr185168.gz (1/46/fopen): adding to final database dump
+0019.644 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_options.table.gz (2/46/fopen): adding to final database dump
+0019.644 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_users.table.tmpr10.gz (3/46/fopen): adding to final database dump
+0019.645 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_users.table.gz (4/46/fopen): adding to final database dump
+0019.646 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_usermeta.table.tmpr274.gz (5/46/fopen): adding to final database dump
+0019.646 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_usermeta.table.gz (6/46/fopen): adding to final database dump
+0019.646 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_actionscheduler_actions.table.tmpr92.gz (7/46/fopen): adding to final database dump
+0019.647 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_actionscheduler_actions.table.gz (8/46/fopen): adding to final database dump
+0019.647 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_actionscheduler_claims.table.tmpr0.gz (9/46/fopen): adding to final database dump
+0019.648 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_actionscheduler_claims.table.gz (10/46/fopen): adding to final database dump
+0019.648 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_actionscheduler_groups.table.tmpr4.gz (11/46/fopen): adding to final database dump
+0019.648 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_actionscheduler_groups.table.gz (12/46/fopen): adding to final database dump
+0019.649 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_actionscheduler_logs.table.tmpr239.gz (13/46/fopen): adding to final database dump
+0019.649 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_actionscheduler_logs.table.gz (14/46/fopen): adding to final database dump
+0019.650 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_commentmeta.table.tmpr0.gz (15/46/fopen): adding to final database dump
+0019.650 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_commentmeta.table.gz (16/46/fopen): adding to final database dump
+0019.651 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_comments.table.tmpr0.gz (17/46/fopen): adding to final database dump
+0019.651 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_comments.table.gz (18/46/fopen): adding to final database dump
+0019.651 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_e_notes.table.tmpr0.gz (19/46/fopen): adding to final database dump
+0019.652 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_e_notes.table.gz (20/46/fopen): adding to final database dump
+0019.652 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_e_notes_users_relations.table.tmpr0.gz (21/46/fopen): adding to final database dump
+0019.653 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_e_notes_users_relations.table.gz (22/46/fopen): adding to final database dump
+0019.653 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_links.table.tmpr0.gz (23/46/fopen): adding to final database dump
+0019.653 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_links.table.gz (24/46/fopen): adding to final database dump
+0019.654 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_postmeta.table.tmpr18288.gz (25/46/fopen): adding to final database dump
+0019.673 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_postmeta.table.gz (26/46/fopen): adding to final database dump
+0019.674 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_posts.table.tmpr2275.gz (27/46/fopen): adding to final database dump
+0019.681 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_posts.table.gz (28/46/fopen): adding to final database dump
+0019.682 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_snippets.table.tmpr6.gz (29/46/fopen): adding to final database dump
+0019.682 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_snippets.table.gz (30/46/fopen): adding to final database dump
+0019.683 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_term_relationships.table.tmpr100001.gz (31/46/fopen): adding to final database dump
+0019.683 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_term_relationships.table.gz (32/46/fopen): adding to final database dump
+0019.684 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_term_taxonomy.table.tmpr21.gz (33/46/fopen): adding to final database dump
+0019.684 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_term_taxonomy.table.gz (34/46/fopen): adding to final database dump
+0019.684 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_termmeta.table.tmpr12.gz (35/46/fopen): adding to final database dump
+0019.685 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_termmeta.table.gz (36/46/fopen): adding to final database dump
+0019.685 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_terms.table.tmpr21.gz (37/46/fopen): adding to final database dump
+0019.686 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_terms.table.gz (38/46/fopen): adding to final database dump
+0019.686 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_e_events.table.tmpr3.gz (39/46/fopen): adding to final database dump
+0019.686 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_e_events.table.gz (40/46/fopen): adding to final database dump
+0019.687 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_e_submissions.table.tmpr0.gz (41/46/fopen): adding to final database dump
+0019.687 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_e_submissions.table.gz (42/46/fopen): adding to final database dump
+0019.688 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_e_submissions_actions_log.table.tmpr0.gz (43/46/fopen): adding to final database dump
+0019.688 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_e_submissions_actions_log.table.gz (44/46/fopen): adding to final database dump
+0019.688 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_e_submissions_values.table.tmpr0.gz (45/46/fopen): adding to final database dump
+0019.689 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_e_submissions_values.table.gz (46/46/fopen): adding to final database dump
+0019.689 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_ff_scheduled_actions.table.tmpr0.gz (47/46/fopen): adding to final database dump
+0019.690 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_ff_scheduled_actions.table.gz (48/46/fopen): adding to final database dump
+0019.690 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_fluentform_entry_details.table.tmpr445.gz (49/46/fopen): adding to final database dump
+0019.691 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_fluentform_entry_details.table.gz (50/46/fopen): adding to final database dump
+0019.691 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_fluentform_form_analytics.table.tmpr0.gz (51/46/fopen): adding to final database dump
+0019.692 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_fluentform_form_analytics.table.gz (52/46/fopen): adding to final database dump
+0019.692 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_fluentform_form_meta.table.tmpr31.gz (53/46/fopen): adding to final database dump
+0019.693 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_fluentform_form_meta.table.gz (54/46/fopen): adding to final database dump
+0019.693 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_fluentform_forms.table.tmpr7.gz (55/46/fopen): adding to final database dump
+0019.694 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_fluentform_forms.table.gz (56/46/fopen): adding to final database dump
+0019.694 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_fluentform_logs.table.tmpr0.gz (57/46/fopen): adding to final database dump
+0019.695 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_fluentform_logs.table.gz (58/46/fopen): adding to final database dump
+0019.695 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_fluentform_submission_meta.table.tmpr179.gz (59/46/fopen): adding to final database dump
+0019.695 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_fluentform_submission_meta.table.gz (60/46/fopen): adding to final database dump
+0019.696 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_fluentform_submissions.table.tmpr90.gz (61/46/fopen): adding to final database dump
+0019.696 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_fluentform_submissions.table.gz (62/46/fopen): adding to final database dump
+0019.697 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_jet_apartment_bookings.table.tmpr0.gz (63/46/fopen): adding to final database dump
+0019.697 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_jet_apartment_bookings.table.gz (64/46/fopen): adding to final database dump
+0019.698 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_jet_apartment_units.table.tmpr0.gz (65/46/fopen): adding to final database dump
+0019.698 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_jet_apartment_units.table.gz (66/46/fopen): adding to final database dump
+0019.699 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_jet_bookings_meta.table.tmpr0.gz (67/46/fopen): adding to final database dump
+0019.699 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_jet_bookings_meta.table.gz (68/46/fopen): adding to final database dump
+0019.699 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_jet_post_types.table.tmpr12.gz (69/46/fopen): adding to final database dump
+0019.700 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_jet_post_types.table.gz (70/46/fopen): adding to final database dump
+0019.700 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_jet_rel_default.table.tmpr5.gz (71/46/fopen): adding to final database dump
+0019.701 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_jet_rel_default.table.gz (72/46/fopen): adding to final database dump
+0019.701 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_jet_smart_filters_indexer.table.tmpr0.gz (73/46/fopen): adding to final database dump
+0019.701 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_jet_smart_filters_indexer.table.gz (74/46/fopen): adding to final database dump
+0019.702 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_jet_taxonomies.table.tmpr0.gz (75/46/fopen): adding to final database dump
+0019.702 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_jet_taxonomies.table.gz (76/46/fopen): adding to final database dump
+0019.703 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_wpmailsmtp_debug_events.table.tmpr2.gz (77/46/fopen): adding to final database dump
+0019.703 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_wpmailsmtp_debug_events.table.gz (78/46/fopen): adding to final database dump
+0019.704 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_wpmailsmtp_tasks_meta.table.tmpr0.gz (79/46/fopen): adding to final database dump
+0019.704 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_wpmailsmtp_tasks_meta.table.gz (80/46/fopen): adding to final database dump
+0019.704 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_yoast_indexable.table.tmpr92.gz (81/46/fopen): adding to final database dump
+0019.705 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_yoast_indexable.table.gz (82/46/fopen): adding to final database dump
+0019.705 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_yoast_indexable_hierarchy.table.tmpr1001.gz (83/46/fopen): adding to final database dump
+0019.706 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_yoast_indexable_hierarchy.table.gz (84/46/fopen): adding to final database dump
+0019.706 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_yoast_migrations.table.tmpr28.gz (85/46/fopen): adding to final database dump
+0019.706 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_yoast_migrations.table.gz (86/46/fopen): adding to final database dump
+0019.707 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_yoast_primary_term.table.tmpr0.gz (87/46/fopen): adding to final database dump
+0019.707 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_yoast_primary_term.table.gz (88/46/fopen): adding to final database dump
+0019.708 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_yoast_prominent_words.table.tmpr71.gz (89/46/fopen): adding to final database dump
+0019.708 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_yoast_prominent_words.table.gz (90/46/fopen): adding to final database dump
+0019.708 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_yoast_seo_links.table.tmpr769.gz (91/46/fopen): adding to final database dump
+0019.709 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db-table-wp4u_yoast_seo_links.table.gz (92/46/fopen): adding to final database dump
+0019.711 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db.gz: finished writing out complete database file (2827.5 KB)
+0019.741 (0) Total database tables backed up: 46 (backup_2026-03-24-2317_The_Bastards_e32914010ff3-db.gz, size: 2895532, sha1: 29fc76411034d919e2d443efab75976a2042dfdf, sha256: b5ff76eaa783f365c3f2e643c93784102579b80e22e1abf2fd1a0b38b05996d0)
+0019.744 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-plugins.zip: plugins: This file has already been successfully processed
+0019.744 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-themes.zip: themes: This file has already been successfully processed
+0019.745 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-uploads.zip: uploads: This file has already been successfully processed
+0019.745 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-others.zip: others: This file has already been successfully processed
+0019.745 (0) backup_2026-03-24-2317_The_Bastards_e32914010ff3-db.gz: db: This file has not yet been successfully uploaded: will queue
+0019.746 (0) Saving backup history. Total backup size: 237.4 MB
+0019.747 (0) Requesting upload of the files that have not yet been successfully uploaded (1)
+0019.749 (0) Cloud backup selection (1/1): none with instance (1/1) (last)
+0019.749 (0) No remote despatch: user chose no remote backup service
+0019.749 (0) Recording as successfully uploaded: backup_2026-03-24-2317_The_Bastards_e32914010ff3-db.gz
+0019.751 (0) Retain: beginning examination of existing backup sets; user setting: retain_files=2, retain_db=2
+0019.751 (0) Number of backup sets in history: 1; groups (db): 1
+0019.752 (0) Examining (for databases) backup set with group_id=0, nonce=e32914010ff3, datestamp=1774394231 (Mar 24 2026 23:17:11)
+0019.752 (0) This backup set is the backup set just made, so will not be deleted.
+0019.752 (0) Number of backup sets in history: 1; groups (files): 1
+0019.753 (0) Examining (for files) backup set with nonce=e32914010ff3, datestamp=1774394231 (Mar 24 2026 23:17:11)
+0019.753 (0) This backup set is the backup set just made, so will not be deleted.
+0019.753 (0) This backup set is the backup set just made, so will not be deleted.
+0019.753 (0) This backup set is the backup set just made, so will not be deleted.
+0019.753 (0) This backup set is the backup set just made, so will not be deleted.
+0019.753 (0) This backup set remains non-empty (f=1/d=1); will retain in history
+0019.754 (0) Retain: saving new backup history (sets now: 1) and finishing retain operation
+0019.755 (0) Resume backup (e32914010ff3, 0): finish run
+0019.756 (0) Decremented the semaphore (fd) by 1
+0019.757 (0) Semaphore (fd) unlocked
+0019.757 (0) There were no errors in the uploads, so the 'resume' event (1) is being unscheduled
+0019.759 (0) No email will/can be sent - the user has not configured an email address.
+0019.759 (0) The backup succeeded and is now complete
