@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cp:*)",
+      "Bash(/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code:*)",
+      "Bash(curl --user \"sftp_user@thebastards.ro:*6,GfDEiH6vhUCb7\" ftp://ftp.thebastards.ro/ --list-only)",
+      "Bash(curl --user \"sftp_user@thebastards.ro:*6,GfDEiH6vhUCb7\" \"ftp://ftp.thebastards.ro/public_html/\" --list-only)",
+      "Bash(curl --user \"sftp_user@thebastards.ro:*6,GfDEiH6vhUCb7\" \"ftp://ftp.thebastards.ro/www/\" --list-only)"
+    ]
+  }
+}
