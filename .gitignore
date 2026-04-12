@@ -3,3 +3,4 @@ cache/
 upgrade/
 *.log
 .DS_Store
+updraft/
