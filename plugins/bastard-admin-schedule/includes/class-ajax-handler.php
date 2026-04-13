@@ -147,7 +147,6 @@ class BAS_Ajax_Handler {
 					'post_title'  => "Club – {$loc_name} – {$date_str}",
 					'meta_input'  => [
 						'data-evenimentului'    => $day_ts,
-						'data-sfarsit'          => $day_ts,
 						'status-eveniment'      => 'confirmed',
 						'tipul-evenimentului'   => 'club',
 						'tip-eveniment-intern'  => 'rezidentiat',
