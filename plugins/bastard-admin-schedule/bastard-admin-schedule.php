@@ -46,23 +46,30 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
 		'1.0.0'
 	);
 
-	wp_enqueue_script(
-		'bas-alpine',
-		BAS_URL . 'assets/alpine.min.js',
-		[],
-		'3.14.1',
-		false
-	);
-
+	// bas-admin se încarcă primul (înregistrează ascultătorul alpine:init)
+	// bas-alpine depinde de bas-admin, deci se încarcă după
 	wp_enqueue_script(
 		'bas-admin',
 		BAS_URL . 'assets/admin-schedule.js',
 		[],
-		'1.0.1',
-		false
+		'1.0.2',
+		true // footer
 	);
 
-	// basData injectat inline în render() prin wp_json_encode
+	wp_enqueue_script(
+		'bas-alpine',
+		BAS_URL . 'assets/alpine.min.js',
+		[ 'bas-admin' ], // se încarcă după bas-admin
+		'3.14.1',
+		true // footer
+	);
+
+	// Injectăm basData înainte de bas-admin.js
+	wp_add_inline_script(
+		'bas-admin',
+		'window.basData = ' . wp_json_encode( BAS_Admin_Page::get_js_data() ) . ';',
+		'before'
+	);
 } );
 
 // Înregistrare acțiuni AJAX
@@ -81,9 +88,11 @@ add_action( 'wp_enqueue_scripts', function () {
 		[],
 		null
 	);
-	wp_register_style( 'bas-admin', BAS_URL . 'assets/admin-schedule.css', [ 'bas-google-fonts' ], '1.0.1' );
-	wp_register_script( 'bas-alpine', BAS_URL . 'assets/alpine.min.js', [], '3.14.1', false );
-	wp_register_script( 'bas-admin', BAS_URL . 'assets/admin-schedule.js', [], '1.0.1', false );
+	wp_register_style( 'bas-admin', BAS_URL . 'assets/admin-schedule.css', [ 'bas-google-fonts' ], '1.0.2' );
+	// bas-admin se înregistrează fără dependință de Alpine (trebuie să se încarce primul)
+	wp_register_script( 'bas-admin', BAS_URL . 'assets/admin-schedule.js', [], '1.0.2', true );
+	// bas-alpine depinde de bas-admin → se încarcă după
+	wp_register_script( 'bas-alpine', BAS_URL . 'assets/alpine.min.js', [ 'bas-admin' ], '3.14.1', true );
 } );
 
 add_shortcode( 'bas_schedule', function () {
@@ -93,9 +102,15 @@ add_shortcode( 'bas_schedule', function () {
 
 	wp_enqueue_style( 'bas-google-fonts' );
 	wp_enqueue_style( 'bas-admin' );
-	wp_enqueue_script( 'bas-alpine' );
 	wp_enqueue_script( 'bas-admin' );
-	// basData se injectează inline în HTML de render(), nu prin wp_localize_script
+	wp_enqueue_script( 'bas-alpine' );
+
+	// Injectăm basData înainte de bas-admin.js (o singură dată, WP deduplicată automat)
+	wp_add_inline_script(
+		'bas-admin',
+		'window.basData = ' . wp_json_encode( BAS_Admin_Page::get_js_data() ) . ';',
+		'before'
+	);
 
 	ob_start();
 	BAS_Admin_Page::render( false, true ); // is_frontend = true

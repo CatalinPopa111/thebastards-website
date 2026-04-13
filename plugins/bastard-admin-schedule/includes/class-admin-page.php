@@ -53,14 +53,13 @@ class BAS_Admin_Page {
 			$base_url = admin_url( 'admin.php?page=bastard-schedule&' );
 		}
 
-		$locations = get_option( 'bas_locations', [] );
-		$artists   = self::get_artists();
-		$saved     = get_option( "bas_schedule_{$year}_W{$week}", [] );
-		$events    = self::get_future_events();
+		$locations    = get_option( 'bas_locations', [] );
+		$artists      = self::get_artists();
+		$saved        = get_option( "bas_schedule_{$year}_W{$week}", [] );
+		$events       = self::get_future_events();
+		$event_types  = self::get_glossary_options( 3 );
 
-		$js_data = self::get_js_data();
 		?>
-		<script>window.basData = <?php echo wp_json_encode( $js_data ); ?>;</script>
 		<div class="bas-wrap" x-data="basSchedule()" x-init="init()">
 
 			<h1 class="bas-title">Program Săptămânal</h1>
@@ -83,7 +82,6 @@ class BAS_Admin_Page {
 									<?php echo esc_html( $day['col_label'] ); ?>
 								</th>
 							<?php endforeach; ?>
-							<th class="bas-th-delete"></th>
 						</tr>
 					</thead>
 					<tbody id="bas-calendar-body">
@@ -132,13 +130,12 @@ class BAS_Admin_Page {
 								</div>
 							</td>
 							<?php endforeach; ?>
-							<td></td>
 						</tr>
 						<?php endforeach; ?>
 
 						<?php if ( empty( $locations ) ) : ?>
 						<tr>
-							<td colspan="9" class="bas-empty">Nicio locație configurată. Adaugă prima locație cu +</td>
+							<td colspan="8" class="bas-empty">Nicio locație configurată. Adaugă prima locație cu +</td>
 						</tr>
 						<?php endif; ?>
 					</tbody>
@@ -156,7 +153,7 @@ class BAS_Admin_Page {
 
 			<div class="bas-save-bar">
 				<button class="bas-btn-secondary" @click="resetCalendar()">Resetează</button>
-				<button class="bas-btn-save" @click="saveSchedule()" :disabled="saving">
+				<button class="bas-btn-save" @click="saveSchedule()" :disabled="saving || !isDirty">
 					<span x-show="!saving">Salvează programul</span>
 					<span x-show="saving" style="display:none">Se salvează...</span>
 				</button>
@@ -182,22 +179,20 @@ class BAS_Admin_Page {
 				</thead>
 				<tbody>
 					<?php if ( empty( $events ) ) : ?>
-					<tr><td colspan="6" class="bas-empty">Nu există evenimente viitoare.</td></tr>
+					<tbody><tr><td colspan="6" class="bas-empty">Nu există evenimente viitoare.</td></tr></tbody>
 					<?php endif; ?>
 
 					<?php foreach ( $events as $ev ) :
-						$status    = $ev['status'];
-						$deletable = in_array( $status, [ 'pending', 'canceled' ], true );
+						$status = $ev['status'];
 					?>
+					<tbody x-data="{ status: '<?php echo esc_js( $status ); ?>', open: false, fields: <?php echo esc_attr( wp_json_encode( $ev['fields'] ) ); ?> }">
+
 					<tr class="bas-row bas-row-<?php echo esc_attr( $status ); ?>"
 						id="bas-ev-<?php echo esc_attr( $ev['id'] ); ?>"
 						data-event-id="<?php echo esc_attr( $ev['id'] ); ?>"
 						data-artist="<?php echo esc_attr( $ev['artist_id'] ); ?>"
 						data-type="<?php echo esc_attr( $ev['type'] ); ?>"
 						data-status="<?php echo esc_attr( $status ); ?>"
-						data-day="<?php echo esc_attr( $ev['day_index'] ?? '' ); ?>"
-						data-day-end="<?php echo esc_attr( $ev['day_end_index'] ?? '' ); ?>"
-						x-data="{ status: '<?php echo esc_js( $status ); ?>' }"
 					>
 						<td class="bas-data-cell"><?php echo esc_html( $ev['date_label'] ); ?></td>
 						<td class="bas-data-cell"><?php echo esc_html( $ev['artist_name'] ); ?></td>
@@ -214,9 +209,14 @@ class BAS_Admin_Page {
 								<option value="vacation">vacation</option>
 							</select>
 							<button class="bas-btn-save-inline"
-								@click="saveEventStatus($el.closest('tr').dataset.eventId, status)">Salvează</button>
-							<?php if ( $deletable ) : ?>
+								@click="saveEvent($el.closest('tr').dataset.eventId, status, fields, $el)">Salvează</button>
+							<button class="bas-btn-expand"
+								@click="open = !open"
+								:class="{ 'is-open': open }"
+								title="Detalii eveniment"></button>
 							<button class="bas-btn-delete-ev"
+								style="display:none"
+								x-show="['pending','canceled'].includes(status)"
 								@click="askDeleteEvent(
 									'<?php echo esc_js( $ev['id'] ); ?>',
 									'<?php echo esc_js( $ev['date_label'] ); ?>',
@@ -224,25 +224,87 @@ class BAS_Admin_Page {
 									'<?php echo esc_js( $ev['location'] ); ?>',
 									'<?php echo esc_js( $ev['type_label'] ); ?>'
 								)">✕</button>
-							<?php else: ?>
-							<button class="bas-btn-delete-ev bas-btn-delete-ev--hidden"
-								@click="askDeleteEvent(
-									'<?php echo esc_js( $ev['id'] ); ?>',
-									'<?php echo esc_js( $ev['date_label'] ); ?>',
-									'<?php echo esc_js( $ev['artist_name'] ); ?>',
-									'<?php echo esc_js( $ev['location'] ); ?>',
-									'<?php echo esc_js( $ev['type_label'] ); ?>'
-								)"
-								x-show="['pending','canceled'].includes(status)">✕</button>
-							<?php endif; ?>
 						</td>
 					</tr>
+
+					<!-- Rând detalii (expand) -->
+					<tr class="bas-detail-row" x-show="open">
+						<td colspan="6" class="bas-detail-cell">
+							<div class="bas-detail-grid">
+
+								<div class="bas-detail-field">
+									<label class="bas-detail-label">Data eveniment</label>
+									<input type="date" class="bas-detail-input" x-model="fields.data_start">
+								</div>
+								<div class="bas-detail-field">
+									<label class="bas-detail-label">Data sfârşit</label>
+									<input type="date" class="bas-detail-input" x-model="fields.data_end">
+								</div>
+								<div class="bas-detail-field">
+									<label class="bas-detail-label">Ora început</label>
+									<input type="time" class="bas-detail-input" x-model="fields.ora_inceput">
+								</div>
+
+								<div class="bas-detail-field">
+									<label class="bas-detail-label">Locaţie</label>
+									<input type="text" class="bas-detail-input" x-model="fields.locatie" placeholder="Numele locaţiei">
+								</div>
+								<div class="bas-detail-field">
+									<label class="bas-detail-label">Oraş</label>
+									<input type="text" class="bas-detail-input" x-model="fields.oras" placeholder="Oraş">
+								</div>
+								<div class="bas-detail-field">
+									<label class="bas-detail-label">Tip eveniment</label>
+									<select class="bas-detail-input" x-model="fields.tip">
+										<option value="">— selectează —</option>
+										<?php foreach ( $event_types as $opt ) : ?>
+											<option value="<?php echo esc_attr( $opt['value'] ); ?>"><?php echo esc_html( $opt['label'] ); ?></option>
+										<?php endforeach; ?>
+									</select>
+								</div>
+
+								<div class="bas-detail-field">
+									<label class="bas-detail-label">Nume client</label>
+									<input type="text" class="bas-detail-input" x-model="fields.client" placeholder="Client">
+								</div>
+								<div class="bas-detail-field">
+									<label class="bas-detail-label">Telefon</label>
+									<input type="text" class="bas-detail-input" x-model="fields.telefon" placeholder="07xx xxx xxx">
+								</div>
+								<div class="bas-detail-field">
+									<label class="bas-detail-label">Email</label>
+									<input type="email" class="bas-detail-input" x-model="fields.email" placeholder="email@exemplu.ro">
+								</div>
+
+								<div class="bas-detail-field">
+									<label class="bas-detail-label">Nr. participanţi</label>
+									<input type="text" class="bas-detail-input" x-model="fields.participanti" placeholder="ex: 200">
+								</div>
+								<div class="bas-detail-field">
+									<label class="bas-detail-label">Sonorizare</label>
+									<input type="text" class="bas-detail-input" x-model="fields.sonorizare" placeholder="da / nu / proprie">
+								</div>
+								<div class="bas-detail-field">
+									<label class="bas-detail-label">Durata prestaţie</label>
+									<input type="text" class="bas-detail-input" x-model="fields.durata" placeholder="ex: 3h">
+								</div>
+
+								<div class="bas-detail-field bas-detail-field-full">
+									<label class="bas-detail-label">Mesaj / Detalii</label>
+									<textarea class="bas-detail-textarea" x-model="fields.mesaj" rows="3" placeholder="Detalii suplimentare..."></textarea>
+								</div>
+
+							</div>
+						</td>
+					</tr>
+
+					</tbody>
 					<?php endforeach; ?>
 				</tbody>
 			</table>
 
 			<!-- Modal: adaugă locație -->
-			<div class="bas-modal-overlay" x-show="modal === 'addLocation'" x-transition @click.self="modal = null">
+			<div class="bas-modal-overlay" x-cloak x-show="modal === 'addLocation'" x-transition @click.self="modal = null">
 				<div class="bas-modal">
 					<h3>Adaugă locație nouă</h3>
 					<div class="bas-modal-field">
@@ -262,7 +324,7 @@ class BAS_Admin_Page {
 			</div>
 
 			<!-- Modal: confirmare ștergere locație -->
-			<div class="bas-modal-overlay" x-show="modal === 'deleteLocation'" x-transition @click.self="modal = null">
+			<div class="bas-modal-overlay" x-cloak x-show="modal === 'deleteLocation'" x-transition @click.self="modal = null">
 				<div class="bas-modal">
 					<h3 class="bas-danger">Confirmare ștergere locație</h3>
 					<p>Ești sigur că vrei să ștergi locația:</p>
@@ -276,7 +338,7 @@ class BAS_Admin_Page {
 			</div>
 
 			<!-- Modal: confirmare ștergere eveniment -->
-			<div class="bas-modal-overlay" x-show="modal === 'deleteEvent'" x-transition @click.self="modal = null">
+			<div class="bas-modal-overlay" x-cloak x-show="modal === 'deleteEvent'" x-transition @click.self="modal = null">
 				<div class="bas-modal">
 					<h3 class="bas-danger">Confirmare ștergere eveniment</h3>
 					<p>Ești sigur că vrei să ștergi evenimentul:</p>
@@ -329,6 +391,41 @@ class BAS_Admin_Page {
 		return $days;
 	}
 
+	private static function get_glossary_options( int $glossary_id ): array {
+		global $wpdb;
+		$row = $wpdb->get_row( $wpdb->prepare(
+			"SELECT meta_fields FROM {$wpdb->prefix}jet_post_types WHERE id = %d AND status = 'glossary'",
+			$glossary_id
+		) );
+		if ( ! $row || empty( $row->meta_fields ) ) return [];
+		$data = maybe_unserialize( $row->meta_fields );
+		if ( ! is_array( $data ) ) return [];
+		$opts = [];
+		foreach ( $data as $opt ) {
+			$value = $opt['value'] ?? '';
+			if ( $value !== '' ) {
+				$opts[] = [
+					'value' => $value,
+					'label' => $opt['label'] ?? $value,
+				];
+			}
+		}
+		return $opts;
+	}
+
+	private static function get_artist_name_map(): array {
+		$posts = get_posts( [
+			'post_type'      => 'artist',
+			'posts_per_page' => -1,
+			'post_status'    => 'publish',
+		] );
+		$map = [];
+		foreach ( $posts as $p ) {
+			$map[ $p->post_author ] = $p->post_title;
+		}
+		return $map;
+	}
+
 	private static function get_artists(): array {
 		$posts = get_posts( [
 			'post_type'      => 'artist',
@@ -340,7 +437,7 @@ class BAS_Admin_Page {
 
 		return array_map( fn( $p ) => [
 			'id'   => $p->post_author,
-			'name' => get_the_author_meta( 'display_name', $p->post_author ),
+			'name' => $p->post_title,
 		], $posts );
 	}
 
@@ -364,8 +461,9 @@ class BAS_Admin_Page {
 			],
 		] );
 
-		$months = [ 1 => 'Ian', 'Feb', 'Mar', 'Apr', 'Mai', 'Iun', 'Iul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ];
-		$events = [];
+		$months    = [ 1 => 'Ian', 'Feb', 'Mar', 'Apr', 'Mai', 'Iun', 'Iul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ];
+		$name_map  = self::get_artist_name_map();
+		$events    = [];
 
 		foreach ( $posts as $post ) {
 			$start_ts  = (int) get_post_meta( $post->ID, 'data-evenimentului', true );
@@ -397,12 +495,27 @@ class BAS_Admin_Page {
 				'id'          => $post->ID,
 				'date_label'  => $date_label,
 				'artist_id'   => $artist_id,
-				'artist_name' => get_the_author_meta( 'display_name', $artist_id ),
+				'artist_name' => $name_map[ $artist_id ] ?? get_the_author_meta( 'display_name', $artist_id ),
 				'location'    => $loc_str,
 				'client'      => $client ?: '—',
 				'type'        => strtolower( $type ),
 				'type_label'  => $type ?: '—',
 				'status'      => $status ?: 'pending',
+				'fields'      => [
+					'data_start'  => $start_ts ? date( 'Y-m-d', $start_ts ) : '',
+					'data_end'    => $end_ts   ? date( 'Y-m-d', $end_ts )   : '',
+					'ora_inceput' => (string) get_post_meta( $post->ID, 'ora-de-inceput', true ),
+					'locatie'     => (string) $location,
+					'oras'        => (string) $city,
+					'tip'         => (string) $type,
+					'client'      => (string) $client,
+					'telefon'     => (string) get_post_meta( $post->ID, 'numar-de-telefon', true ),
+					'email'       => (string) get_post_meta( $post->ID, 'adresa-de-email', true ),
+					'participanti'=> (string) get_post_meta( $post->ID, 'numar-participanti', true ),
+					'sonorizare'  => (string) get_post_meta( $post->ID, 'sonorizare-eveniment', true ),
+					'durata'      => (string) get_post_meta( $post->ID, 'durata-prestatie', true ),
+					'mesaj'       => (string) get_post_meta( $post->ID, 'mesaj-detalii', true ),
+				],
 			];
 		}
 

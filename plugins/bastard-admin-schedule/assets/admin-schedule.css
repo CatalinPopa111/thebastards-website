@@ -1,3 +1,6 @@
+/* ── Alpine cloak ─────────────────────────────────────────────── */
+[x-cloak] { display: none !important; }
+
 /* ── Reset zona admin ─────────────────────────────────────────── */
 .bas-wrap * { box-sizing: border-box; }
 .bas-wrap {
@@ -297,6 +300,9 @@
 	transition: background 0.15s;
 }
 .bas-btn-save-inline:hover { background: #FF7F1A; }
+.bas-btn-save-inline.is-saving { opacity: 0.6; cursor: not-allowed; }
+.bas-btn-save-inline.is-saved { background: #2a6e2a; }
+.bas-btn-save-inline.is-saved:hover { background: #2a6e2a; }
 .bas-btn-delete-ev {
 	background: transparent;
 	border: 1px solid #3a1a1a;
@@ -312,7 +318,107 @@
 	transition: background 0.15s, border-color 0.15s;
 }
 .bas-btn-delete-ev:hover { background: #2d0f0f; border-color: #eb5757; }
-.bas-btn-delete-ev--hidden { display: none; }
+
+/* ── Buton expand detalii ─────────────────────────────────────── */
+.bas-btn-expand {
+	background: transparent !important;
+	border: 1px solid #333 !important;
+	border-radius: 6px;
+	color: #555;
+	padding: 0;
+	cursor: pointer;
+	margin-left: 6px;
+	transition: color 0.15s, border-color 0.15s;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 26px;
+	height: 26px;
+	flex-shrink: 0;
+	box-shadow: none !important;
+	outline: none !important;
+}
+.bas-btn-expand::before {
+	content: '';
+	display: inline-block;
+	width: 0;
+	height: 0;
+	border-top: 4px solid transparent;
+	border-bottom: 4px solid transparent;
+	border-right: 6px solid currentColor;
+	transition: transform 0.2s;
+}
+.bas-btn-expand:hover { color: #fff !important; border-color: #fff !important; background: transparent !important; }
+.bas-btn-expand:focus { outline: none !important; box-shadow: none !important; }
+.bas-btn-expand.is-open { color: #555; border-color: #333 !important; background: transparent !important; }
+.bas-btn-expand.is-open::before { transform: rotate(-90deg); }
+.bas-btn-expand.is-open:hover { color: #fff !important; border-color: #fff !important; }
+
+/* ── Rând detalii expand ──────────────────────────────────────── */
+.bas-detail-row td { padding: 0; }
+.bas-detail-cell {
+	background: #0d0d0d;
+	padding: 20px 16px;
+	border-bottom: 2px solid #FF6A00;
+}
+.bas-detail-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 14px 20px;
+}
+.bas-detail-field { display: flex; flex-direction: column; }
+.bas-detail-field-full { grid-column: 1 / -1; }
+.bas-detail-label {
+	font-size: 10px;
+	color: #777;
+	font-family: 'Space Grotesk', sans-serif;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	margin-bottom: 5px;
+}
+.bas-detail-input,
+.bas-wrap input.bas-detail-input,
+.bas-wrap select.bas-detail-input,
+.bas-wrap textarea.bas-detail-input {
+	background: #141414 !important;
+	border: 1px solid #2a2a2a !important;
+	border-radius: 6px !important;
+	color: #bbb !important;
+	padding: 7px 10px !important;
+	font-family: 'Inter', sans-serif !important;
+	font-size: 12px !important;
+	width: 100% !important;
+	transition: border-color 0.15s !important;
+	appearance: none;
+	-webkit-appearance: none;
+	box-shadow: none !important;
+}
+.bas-detail-input:focus,
+.bas-wrap input.bas-detail-input:focus,
+.bas-wrap select.bas-detail-input:focus {
+	outline: none !important;
+	border-color: #FF6A00 !important;
+	color: #ddd !important;
+	box-shadow: none !important;
+}
+/* input[type=date] și input[type=time] în dark mode */
+.bas-detail-input::-webkit-calendar-picker-indicator { filter: invert(0.5); cursor: pointer; }
+.bas-detail-textarea {
+	background: #141414 !important;
+	border: 1px solid #2a2a2a !important;
+	border-radius: 6px !important;
+	color: #bbb !important;
+	padding: 7px 10px !important;
+	font-family: 'Inter', sans-serif !important;
+	font-size: 12px !important;
+	width: 100% !important;
+	resize: vertical;
+	min-height: 70px;
+	transition: border-color 0.15s;
+	box-shadow: none !important;
+}
+.bas-detail-textarea:focus { outline: none !important; border-color: #FF6A00 !important; color: #ddd !important; box-shadow: none !important; }
 
 /* ── Modals ───────────────────────────────────────────────────── */
 .bas-modal-overlay {
