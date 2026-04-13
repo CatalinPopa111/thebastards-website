@@ -17,8 +17,8 @@ require_once BAS_PATH . 'includes/class-admin-page.php';
 
 add_action( 'admin_menu', function () {
 	add_menu_page(
-		'Schedule Rezidențiat',
-		'Schedule',
+		'Program Artiști',
+		'Program Artiști',
 		'manage_options',
 		'bastard-schedule',
 		[ 'BAS_Admin_Page', 'render' ],
@@ -51,15 +51,15 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
 		BAS_URL . 'assets/alpine.min.js',
 		[],
 		'3.14.1',
-		true
+		false
 	);
 
 	wp_enqueue_script(
 		'bas-admin',
 		BAS_URL . 'assets/admin-schedule.js',
-		[ 'bas-alpine' ],
-		'1.0.0',
-		true
+		[],
+		'1.0.1',
+		false
 	);
 
 	wp_localize_script( 'bas-admin', 'basData', BAS_Admin_Page::get_js_data() );
@@ -67,3 +67,37 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
 
 // Înregistrare acțiuni AJAX
 BAS_Ajax_Handler::register();
+
+// ── Shortcode frontend [bas_schedule] ──────────────────────────
+
+// Înregistrează scripturile devreme (wp_enqueue_scripts) dacă adminul e logat
+add_action( 'wp_enqueue_scripts', function () {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+	wp_register_style(
+		'bas-google-fonts',
+		'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap',
+		[],
+		null
+	);
+	wp_register_style( 'bas-admin', BAS_URL . 'assets/admin-schedule.css', [ 'bas-google-fonts' ], '1.0.1' );
+	wp_register_script( 'bas-alpine', BAS_URL . 'assets/alpine.min.js', [], '3.14.1', false );
+	wp_register_script( 'bas-admin', BAS_URL . 'assets/admin-schedule.js', [], '1.0.1', false );
+} );
+
+add_shortcode( 'bas_schedule', function () {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return '';
+	}
+
+	wp_enqueue_style( 'bas-google-fonts' );
+	wp_enqueue_style( 'bas-admin' );
+	wp_enqueue_script( 'bas-alpine' );
+	wp_enqueue_script( 'bas-admin' );
+	wp_localize_script( 'bas-admin', 'basData', BAS_Admin_Page::get_js_data() );
+
+	ob_start();
+	BAS_Admin_Page::render( false );
+	return ob_get_clean();
+} );

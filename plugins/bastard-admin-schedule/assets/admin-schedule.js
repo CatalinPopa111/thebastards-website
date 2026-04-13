@@ -143,14 +143,17 @@ document.addEventListener('alpine:init', () => {
 				? `<div class="bas-location-city">${this.esc(loc.city)}</div>`
 				: '';
 
+			const self = this;
+
 			let html = `<td class="bas-location-label">
 				<div class="bas-location-inner">
 					<div>
 						<div class="bas-location-name">${this.esc(loc.name)}</div>
 						${cityHtml}
 					</div>
-					<button class="bas-btn-delete-loc"
-						onclick="Alpine.store && document.querySelector('[x-data]').__x.$data.askDeleteLocation('${this.esc(loc.slug)}','${this.esc(loc.name)}')"
+					<button class="bas-btn-delete-loc bas-new-del-loc"
+						data-slug="${this.esc(loc.slug)}"
+						data-name="${this.esc(loc.name)}"
 						title="Șterge locație">✕</button>
 				</div>
 			</td>`;
@@ -163,11 +166,10 @@ document.addEventListener('alpine:init', () => {
 
 				html += `<td>
 					<div class="bas-cell-inner">
-						<select class="bas-artist-select"
+						<select class="bas-artist-select bas-new-select"
 							data-day="${i}"
 							data-date="${day.date}"
-							data-key="${key}"
-							onchange="document.querySelector('[x-data]').__x.$data.onSelectChange(this)">
+							data-key="${key}">
 							<option value="">selectează</option>
 							${artistOptions}
 						</select>
@@ -179,6 +181,16 @@ document.addEventListener('alpine:init', () => {
 			html += '<td></td>';
 			tr.innerHTML = html;
 			tbody.appendChild(tr);
+
+			// Atașăm event listeners manual pe elementele noi
+			tr.querySelectorAll('.bas-new-select').forEach(sel => {
+				sel.addEventListener('change', () => self.onSelectChange(sel));
+				tr.querySelectorAll('.bas-new-select').forEach(s => s.classList.remove('bas-new-select'));
+			});
+			tr.querySelectorAll('.bas-new-del-loc').forEach(btn => {
+				btn.addEventListener('click', () => self.askDeleteLocation(btn.dataset.slug, btn.dataset.name));
+				btn.classList.remove('bas-new-del-loc');
+			});
 		},
 
 		// ── Șterge locație ─────────────────────────────────────────

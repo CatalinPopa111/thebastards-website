@@ -31,9 +31,10 @@ class BAS_Admin_Page {
 
 	// ── Render pagina ──────────────────────────────────────────────
 
-	public static function render(): void {
+	public static function render( bool $die_on_fail = true ): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( 'Acces interzis.' );
+			if ( $die_on_fail ) wp_die( 'Acces interzis.' );
+			return;
 		}
 
 		$week_offset = (int) ( $_GET['week_offset'] ?? 0 );
@@ -53,7 +54,7 @@ class BAS_Admin_Page {
 		?>
 		<div class="bas-wrap" x-data="basSchedule()" x-init="init()">
 
-			<h1 class="bas-title">Schedule Rezidențiat</h1>
+			<h1 class="bas-title">Program Săptămânal</h1>
 
 			<!-- Navigare săptămână -->
 			<div class="bas-week-nav">
@@ -147,7 +148,8 @@ class BAS_Admin_Page {
 			<div class="bas-save-bar">
 				<button class="bas-btn-secondary" @click="resetCalendar()">Resetează</button>
 				<button class="bas-btn-save" @click="saveSchedule()" :disabled="saving">
-					<span x-text="saving ? 'Se salvează...' : 'Salvează programul'"></span>
+					<span x-show="!saving">Salvează programul</span>
+					<span x-show="saving" style="display:none">Se salvează...</span>
 				</button>
 			</div>
 
