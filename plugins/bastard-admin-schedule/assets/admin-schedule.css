@@ -1,0 +1,431 @@
+/* ── Reset zona admin ─────────────────────────────────────────── */
+.bas-wrap * { box-sizing: border-box; }
+.bas-wrap {
+	background: #0E0E0E;
+	color: #fff;
+	font-family: 'Inter', sans-serif;
+	font-size: 14px;
+	padding: 24px;
+	min-height: 100vh;
+	margin-left: -20px;
+	margin-top: -10px;
+}
+#wpcontent { background: #0E0E0E; }
+
+/* ── Tipografie ───────────────────────────────────────────────── */
+.bas-title {
+	font-family: 'Space Grotesk', sans-serif;
+	font-weight: 700;
+	font-size: 22px;
+	color: #fff;
+	margin: 0 0 4px;
+}
+.bas-section-title {
+	font-family: 'Space Grotesk', sans-serif;
+	font-weight: 700;
+	font-size: 18px;
+	color: #fff;
+	margin: 36px 0 16px;
+	border-bottom: 1px solid #2a2a2a;
+	padding-bottom: 10px;
+}
+
+/* ── Navigare săptămână ───────────────────────────────────────── */
+.bas-week-nav {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	margin-bottom: 20px;
+}
+.bas-btn-nav {
+	background: #1a1a1a;
+	border: 1px solid #333;
+	border-radius: 10px;
+	color: #fff;
+	padding: 8px 14px;
+	cursor: pointer;
+	font-family: 'Space Grotesk', sans-serif;
+	font-weight: 500;
+	font-size: 13px;
+	text-decoration: none;
+	display: inline-block;
+	transition: border-color 0.15s, color 0.15s;
+}
+.bas-btn-nav:hover { border-color: #FF6A00; color: #FF6A00; }
+.bas-week-label {
+	font-family: 'Space Grotesk', sans-serif;
+	font-weight: 600;
+	font-size: 16px;
+	color: #FF6A00;
+}
+
+/* ── Calendar table ───────────────────────────────────────────── */
+.bas-table-wrap { overflow-x: auto; }
+.bas-calendar {
+	width: 100%;
+	border-collapse: collapse;
+	border-radius: 10px;
+	overflow: hidden;
+	border: 1px solid #2a2a2a;
+}
+.bas-calendar th {
+	background: #1a1a1a;
+	padding: 10px 8px;
+	font-family: 'Space Grotesk', sans-serif;
+	font-weight: 600;
+	font-size: 12px;
+	text-align: center;
+	border: 1px solid #2a2a2a;
+	color: #777;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	white-space: nowrap;
+}
+.bas-calendar th.bas-today { color: #FF6A00; }
+.bas-calendar th.bas-th-location { text-align: left; min-width: 160px; }
+.bas-calendar th.bas-th-delete { width: 30px; }
+.bas-calendar td {
+	background: #111;
+	padding: 8px;
+	border: 1px solid #2a2a2a;
+	vertical-align: middle;
+	min-width: 100px;
+}
+.bas-location-label {
+	background: #161616 !important;
+	white-space: nowrap;
+}
+.bas-location-inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+}
+.bas-location-name {
+	font-family: 'Space Grotesk', sans-serif;
+	font-weight: 600;
+	font-size: 13px;
+	color: #fff;
+}
+.bas-location-city { font-size: 11px; color: #777; margin-top: 2px; }
+
+.bas-btn-delete-loc {
+	background: transparent;
+	border: none;
+	color: #333;
+	font-size: 13px;
+	cursor: pointer;
+	padding: 2px 4px;
+	border-radius: 4px;
+	transition: color 0.15s;
+	line-height: 1;
+	flex-shrink: 0;
+}
+.bas-btn-delete-loc:hover { color: #eb5757; }
+
+/* ── Celule calendar ──────────────────────────────────────────── */
+.bas-cell-inner { position: relative; display: flex; align-items: center; }
+
+.bas-artist-select {
+	width: 100%;
+	background: #1a1a1a;
+	border: 1px solid #2a2a2a;
+	border-radius: 8px;
+	color: #777;
+	padding: 7px 10px;
+	font-family: 'Inter', sans-serif;
+	font-size: 12px;
+	cursor: pointer;
+	appearance: none;
+	-webkit-appearance: none;
+	transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.bas-artist-select:focus { outline: none; border-color: #FF6A00; }
+.bas-artist-select.is-assigned {
+	border-color: #2d5a2d;
+	background: #0f1f0f;
+	color: #6fcf6f;
+}
+.bas-artist-select.is-conflict {
+	border-color: #2d5a2d;
+	background: #0f1f0f;
+	color: #6fcf6f;
+	padding-right: 28px;
+}
+.bas-conflict-icon {
+	position: absolute;
+	right: 8px;
+	top: 50%;
+	transform: translateY(-50%);
+	color: #FF6A00;
+	font-size: 13px;
+	pointer-events: none;
+	display: none;
+}
+
+.bas-empty { color: #555; font-style: italic; padding: 20px 14px !important; text-align: center; }
+
+/* ── Buton adaugă locație ─────────────────────────────────────── */
+.bas-btn-add-location {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	margin-top: 10px;
+	background: #1a1a1a;
+	border: 1px dashed #333;
+	border-radius: 8px;
+	color: #555;
+	font-size: 20px;
+	font-weight: 300;
+	cursor: pointer;
+	transition: border-color 0.15s, color 0.15s;
+	line-height: 1;
+}
+.bas-btn-add-location:hover { border-color: #FF6A00; color: #FF6A00; }
+
+/* ── Legendă + save bar ───────────────────────────────────────── */
+.bas-legend {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 12px;
+	font-size: 12px;
+	color: #777;
+}
+.bas-legend-icon { color: #FF6A00; }
+.bas-save-bar {
+	display: flex;
+	justify-content: flex-end;
+	margin-top: 16px;
+	gap: 10px;
+}
+.bas-btn-save {
+	background: #FF6A00;
+	color: #fff;
+	border: none;
+	border-radius: 10px;
+	padding: 10px 24px;
+	font-family: 'Space Grotesk', sans-serif;
+	font-weight: 600;
+	font-size: 14px;
+	cursor: pointer;
+	transition: background 0.15s;
+}
+.bas-btn-save:hover:not(:disabled) { background: #FF7F1A; }
+.bas-btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
+.bas-btn-secondary {
+	background: transparent;
+	color: #777;
+	border: 1px solid #333;
+	border-radius: 10px;
+	padding: 10px 20px;
+	font-family: 'Space Grotesk', sans-serif;
+	font-weight: 500;
+	font-size: 14px;
+	cursor: pointer;
+}
+.bas-btn-secondary:hover { border-color: #555; color: #aaa; }
+
+/* ── Notificări ───────────────────────────────────────────────── */
+.bas-notice {
+	margin-top: 12px;
+	padding: 10px 16px;
+	border-radius: 8px;
+	font-size: 13px;
+}
+.bas-notice-success { background: #0f2d0f; border: 1px solid #2d5a2d; color: #6fcf6f; }
+.bas-notice-error   { background: #2d0f0f; border: 1px solid #5a2d2d; color: #eb5757; }
+
+/* ── Tabel evenimente ─────────────────────────────────────────── */
+.bas-events-table {
+	width: 100%;
+	border-collapse: collapse;
+	border-radius: 10px;
+	overflow: hidden;
+}
+.bas-events-table th {
+	background: #1a1a1a;
+	padding: 10px 14px;
+	font-family: 'Space Grotesk', sans-serif;
+	font-weight: 600;
+	font-size: 12px;
+	text-align: left;
+	color: #777;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	border-bottom: 1px solid #2a2a2a;
+}
+.bas-events-table td {
+	padding: 12px 14px;
+	border-bottom: 1px solid #1a1a1a;
+	font-size: 13px;
+	vertical-align: middle;
+}
+.bas-events-table tr:hover td { background: #131313; }
+
+/* Culori text per status */
+.bas-row-confirmed .bas-data-cell { color: #ffffff; }
+.bas-row-pending   .bas-data-cell { color: #777777; }
+.bas-row-canceled  .bas-data-cell { color: #525252; }
+.bas-row-vacation  .bas-data-cell { color: #FF6A00; }
+
+/* ── Status cell ──────────────────────────────────────────────── */
+.bas-status-cell { white-space: nowrap; }
+.bas-status-select {
+	background: #1a1a1a;
+	border: 1px solid #333;
+	border-radius: 8px;
+	color: #fff;
+	padding: 5px 8px;
+	font-size: 12px;
+	font-family: 'Space Grotesk', sans-serif;
+	cursor: pointer;
+}
+.bas-btn-save-inline {
+	background: #FF6A00;
+	color: #fff;
+	border: none;
+	border-radius: 6px;
+	padding: 5px 12px;
+	font-size: 12px;
+	font-family: 'Space Grotesk', sans-serif;
+	font-weight: 600;
+	cursor: pointer;
+	margin-left: 6px;
+	transition: background 0.15s;
+}
+.bas-btn-save-inline:hover { background: #FF7F1A; }
+.bas-btn-delete-ev {
+	background: transparent;
+	border: 1px solid #3a1a1a;
+	color: #eb5757;
+	border-radius: 6px;
+	padding: 5px 9px;
+	font-size: 12px;
+	font-family: 'Space Grotesk', sans-serif;
+	font-weight: 700;
+	cursor: pointer;
+	margin-left: 6px;
+	line-height: 1;
+	transition: background 0.15s, border-color 0.15s;
+}
+.bas-btn-delete-ev:hover { background: #2d0f0f; border-color: #eb5757; }
+.bas-btn-delete-ev--hidden { display: none; }
+
+/* ── Modals ───────────────────────────────────────────────────── */
+.bas-modal-overlay {
+	position: fixed;
+	inset: 0;
+	background: rgba(0,0,0,0.75);
+	z-index: 99999;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.bas-modal {
+	background: #1a1a1a;
+	border: 1px solid #2a2a2a;
+	border-radius: 10px;
+	padding: 28px 32px;
+	max-width: 420px;
+	width: 100%;
+}
+.bas-modal h3 {
+	font-family: 'Space Grotesk', sans-serif;
+	font-weight: 700;
+	font-size: 16px;
+	margin: 0 0 16px;
+	color: #fff;
+}
+.bas-modal h3.bas-danger { color: #eb5757; }
+.bas-modal p {
+	color: #aaa;
+	font-size: 13px;
+	line-height: 1.6;
+	margin-bottom: 6px;
+}
+.bas-modal p strong { color: #fff; }
+.bas-modal-highlight {
+	font-family: 'Space Grotesk', sans-serif;
+	font-weight: 600;
+	color: #fff !important;
+	font-size: 14px !important;
+	margin-top: 8px !important;
+}
+.bas-modal-warning {
+	color: #eb5757 !important;
+	font-size: 12px !important;
+	margin-top: 10px !important;
+}
+.bas-modal-error {
+	color: #eb5757;
+	font-size: 12px;
+	margin-top: 8px;
+}
+.bas-modal-field { margin-bottom: 14px; }
+.bas-modal-field label {
+	display: block;
+	font-size: 12px;
+	color: #777;
+	font-family: 'Space Grotesk', sans-serif;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	margin-bottom: 6px;
+}
+.bas-modal-input {
+	width: 100%;
+	background: #111;
+	border: 1px solid #333;
+	border-radius: 8px;
+	color: #fff;
+	padding: 9px 12px;
+	font-family: 'Inter', sans-serif;
+	font-size: 13px;
+}
+.bas-modal-input:focus { outline: none; border-color: #FF6A00; }
+.bas-modal-actions {
+	display: flex;
+	gap: 10px;
+	margin-top: 24px;
+	justify-content: flex-end;
+}
+.bas-btn-cancel {
+	background: transparent;
+	color: #777;
+	border: 1px solid #333;
+	border-radius: 8px;
+	padding: 9px 20px;
+	font-family: 'Space Grotesk', sans-serif;
+	font-weight: 500;
+	font-size: 13px;
+	cursor: pointer;
+}
+.bas-btn-confirm {
+	background: #FF6A00;
+	color: #fff;
+	border: none;
+	border-radius: 8px;
+	padding: 9px 20px;
+	font-family: 'Space Grotesk', sans-serif;
+	font-weight: 600;
+	font-size: 13px;
+	cursor: pointer;
+}
+.bas-btn-confirm:hover:not(:disabled) { background: #FF7F1A; }
+.bas-btn-confirm:disabled { opacity: 0.6; cursor: not-allowed; }
+.bas-btn-confirm-delete {
+	background: #eb5757;
+	color: #fff;
+	border: none;
+	border-radius: 8px;
+	padding: 9px 20px;
+	font-family: 'Space Grotesk', sans-serif;
+	font-weight: 600;
+	font-size: 13px;
+	cursor: pointer;
+}
+.bas-btn-confirm-delete:hover:not(:disabled) { background: #c0392b; }
+.bas-btn-confirm-delete:disabled { opacity: 0.6; cursor: not-allowed; }
