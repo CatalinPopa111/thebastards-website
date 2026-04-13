@@ -4,3 +4,4 @@ upgrade/
 *.log
 .DS_Store
 updraft/
+.vscode/sftp.json
