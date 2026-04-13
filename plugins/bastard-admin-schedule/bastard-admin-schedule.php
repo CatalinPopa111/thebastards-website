@@ -62,7 +62,7 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
 		false
 	);
 
-	wp_localize_script( 'bas-admin', 'basData', BAS_Admin_Page::get_js_data() );
+	// basData injectat inline în render() prin wp_json_encode
 } );
 
 // Înregistrare acțiuni AJAX
@@ -95,9 +95,9 @@ add_shortcode( 'bas_schedule', function () {
 	wp_enqueue_style( 'bas-admin' );
 	wp_enqueue_script( 'bas-alpine' );
 	wp_enqueue_script( 'bas-admin' );
-	wp_localize_script( 'bas-admin', 'basData', BAS_Admin_Page::get_js_data() );
+	// basData se injectează inline în HTML de render(), nu prin wp_localize_script
 
 	ob_start();
-	BAS_Admin_Page::render( false );
+	BAS_Admin_Page::render( false, true ); // is_frontend = true
 	return ob_get_clean();
 } );

@@ -31,7 +31,7 @@ class BAS_Admin_Page {
 
 	// ── Render pagina ──────────────────────────────────────────────
 
-	public static function render( bool $die_on_fail = true ): void {
+	public static function render( bool $die_on_fail = true, bool $is_frontend = false ): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			if ( $die_on_fail ) wp_die( 'Acces interzis.' );
 			return;
@@ -44,23 +44,32 @@ class BAS_Admin_Page {
 		$week_label  = $week_days[0]['label_short'] . ' – ' . $week_days[6]['label_full'];
 		$prev_offset = $week_offset - 1;
 		$next_offset = $week_offset + 1;
-		$base_url    = admin_url( 'admin.php?page=bastard-schedule' );
+
+		// URL navigare: frontend folosește pagina curentă, admin folosește wp-admin
+		if ( $is_frontend ) {
+			$current_url = strtok( ( isset( $_SERVER['HTTPS'] ) ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], '?' );
+			$base_url    = $current_url . '?';
+		} else {
+			$base_url = admin_url( 'admin.php?page=bastard-schedule&' );
+		}
 
 		$locations = get_option( 'bas_locations', [] );
 		$artists   = self::get_artists();
 		$saved     = get_option( "bas_schedule_{$year}_W{$week}", [] );
 		$events    = self::get_future_events();
 
+		$js_data = self::get_js_data();
 		?>
+		<script>window.basData = <?php echo wp_json_encode( $js_data ); ?>;</script>
 		<div class="bas-wrap" x-data="basSchedule()" x-init="init()">
 
 			<h1 class="bas-title">Program Săptămânal</h1>
 
 			<!-- Navigare săptămână -->
 			<div class="bas-week-nav">
-				<a href="<?php echo esc_url( $base_url . '&week_offset=' . $prev_offset ); ?>" class="bas-btn-nav">← Săpt. precedentă</a>
+				<a href="<?php echo esc_url( $base_url . 'week_offset=' . $prev_offset ); ?>" class="bas-btn-nav">← Săpt. precedentă</a>
 				<span class="bas-week-label"><?php echo esc_html( $week_label ); ?></span>
-				<a href="<?php echo esc_url( $base_url . '&week_offset=' . $next_offset ); ?>" class="bas-btn-nav">Săpt. următoare →</a>
+				<a href="<?php echo esc_url( $base_url . 'week_offset=' . $next_offset ); ?>" class="bas-btn-nav">Săpt. următoare →</a>
 			</div>
 
 			<!-- Calendar -->
