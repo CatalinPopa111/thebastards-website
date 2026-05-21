@@ -451,9 +451,19 @@ class BAS_Ajax_Handler {
 			}
 		}
 
-		// ── Citim datele ÎNAINTE de update (pentru detectare tranziție status) ──
+		// ── Citim datele ÎNAINTE de update (pentru detectare tranziție + modificări) ──
 		$old_status = (string) get_post_meta( $event_id, 'status-eveniment', true );
 		$group_id   = (int)    get_post_meta( $event_id, 'bas_event_group_id', true );
+
+		// Detectăm dacă vreun câmp din meta_input s-a schimbat față de valorile curente
+		$details_changed = false;
+		foreach ( $meta_input as $meta_key => $new_val ) {
+			$old_val = (string) get_post_meta( $event_id, $meta_key, true );
+			if ( $old_val !== (string) $new_val ) {
+				$details_changed = true;
+				break;
+			}
+		}
 
 		// wp_update_post declanșează save_post → Snippet 8 (titlu), Snippet 9 (booking status)
 		wp_update_post( [
@@ -467,11 +477,14 @@ class BAS_Ajax_Handler {
 		}
 
 		// ── Email confirmare ─────────────────────────────────────────────────
-		// Trimitem dacă:
-		//   (a) statusul tocmai a devenit 'confirmed' (tranziție)
-		//   (b) era deja 'confirmed' și s-au salvat detalii actualizate
+		// Trimitem DOAR dacă:
+		//   (a) statusul tocmai a trecut la 'confirmed' (tranziție de la alt status)
+		//   (b) ERA deja 'confirmed' și cel puțin un câmp s-a modificat efectiv
 		if ( $status === 'confirmed' ) {
-			BAS_Email_Notifier::send_event_confirmed( $event_id );
+			$status_just_confirmed = ( $old_status !== 'confirmed' );
+			if ( $status_just_confirmed || $details_changed ) {
+				BAS_Email_Notifier::send_event_confirmed( $event_id );
+			}
 		}
 
 		wp_send_json_success( [
