@@ -9,6 +9,10 @@
 defined( 'ABSPATH' ) || exit;
 
 define( 'BAS_PATH', plugin_dir_path( __FILE__ ) );
+
+// ID-ul relației JetEngine: artist (parent) → evenimente (child)
+// Stocat în wp4u_jet_rel_default.rel_id — verificat în DB, mereu '8' pentru acest site.
+define( 'BAS_JET_REL_ARTIST_EVENTS', '8' );
 define( 'BAS_URL',  plugin_dir_url( __FILE__ ) );
 
 require_once BAS_PATH . 'includes/class-conflict-detector.php';
@@ -43,7 +47,7 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
 		'bas-admin',
 		BAS_URL . 'assets/admin-schedule.css',
 		[ 'bas-google-fonts' ],
-		'1.0.0'
+		'1.2.0'
 	);
 
 	// bas-admin se încarcă primul (înregistrează ascultătorul alpine:init)
@@ -52,7 +56,7 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
 		'bas-admin',
 		BAS_URL . 'assets/admin-schedule.js',
 		[],
-		'1.0.2',
+		'1.2.0',
 		true // footer
 	);
 
@@ -88,9 +92,9 @@ add_action( 'wp_enqueue_scripts', function () {
 		[],
 		null
 	);
-	wp_register_style( 'bas-admin', BAS_URL . 'assets/admin-schedule.css', [ 'bas-google-fonts' ], '1.0.2' );
+	wp_register_style( 'bas-admin', BAS_URL . 'assets/admin-schedule.css', [ 'bas-google-fonts' ], '1.1.0' );
 	// bas-admin se înregistrează fără dependință de Alpine (trebuie să se încarce primul)
-	wp_register_script( 'bas-admin', BAS_URL . 'assets/admin-schedule.js', [], '1.0.2', true );
+	wp_register_script( 'bas-admin', BAS_URL . 'assets/admin-schedule.js', [], '1.1.0', true );
 	// bas-alpine depinde de bas-admin → se încarcă după
 	wp_register_script( 'bas-alpine', BAS_URL . 'assets/alpine.min.js', [ 'bas-admin' ], '3.14.1', true );
 } );

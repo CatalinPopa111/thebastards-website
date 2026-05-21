@@ -12,6 +12,31 @@ document.addEventListener('alpine:init', () => {
 		conflicts:       {}, // { artist_id: ['YYYY-MM-DD', ...] }
 		initialSchedule: {}, // stare inițială pentru dirty tracking
 		isDirty:         false,
+		artistFilter:    0,
+
+		// Formular eveniment nou
+		newEvent: {
+			open:      false,
+			saving:    false,
+			error:     '',
+			artist_id: '',
+			status:    'pending',
+			fields: {
+				data_start:   '',
+				data_end:     '',
+				ora_inceput:  '',
+				locatie:      '',
+				oras:         '',
+				tip:          '',
+				client:       '',
+				telefon:      '',
+				email:        '',
+				participanti: '',
+				sonorizare:   '',
+				durata:       '',
+				mesaj:        '',
+			},
+		},
 
 		// ── Init ───────────────────────────────────────────────────
 		init() {
@@ -50,11 +75,9 @@ document.addEventListener('alpine:init', () => {
 			const date     = select.dataset.date;
 			const day      = select.dataset.day;
 
-			// Conflict extern: eveniment non-club în aceeași dată
 			const extDates = this.conflicts[artistId] || [];
 			if (extDates.includes(date)) return true;
 
-			// Conflict intra-calendar: același artist în altă locație aceeași zi
 			const others = document.querySelectorAll(`.bas-artist-select[data-day="${day}"]`);
 			for (const other of others) {
 				if (other !== select && parseInt(other.value) === artistId) return true;
@@ -63,9 +86,6 @@ document.addEventListener('alpine:init', () => {
 		},
 
 		getCellClass(select) {
-			// Folosit pentru :class binding — returnează string de clase
-			// Nu folosim Alpine reactive pentru selects individuale,
-			// gestionăm clasele direct în onSelectChange
 			return '';
 		},
 
@@ -89,7 +109,6 @@ document.addEventListener('alpine:init', () => {
 
 		onSelectChange(select) {
 			this.updateCellVisual(select);
-			// Re-evaluează celelalte celule din aceeași zi
 			const day = select.dataset.day;
 			document.querySelectorAll(`.bas-artist-select[data-day="${day}"]`).forEach(s => {
 				if (s !== select) this.updateCellVisual(s);
@@ -116,9 +135,8 @@ document.addEventListener('alpine:init', () => {
 				schedule: schedule,
 			}).then(() => {
 				basData.hasSavedSchedule = true;
-				this.captureInitialSchedule(); // resetăm baseline → isDirty devine false
+				this.captureInitialSchedule();
 				this.showNotice('success');
-				// Reîncărcăm pagina după 1.5s pentru a actualiza lista de evenimente
 				setTimeout(() => location.reload(), 1500);
 			}).catch(() => {
 				this.showNotice('error');
@@ -133,6 +151,84 @@ document.addEventListener('alpine:init', () => {
 				this.updateCellVisual(sel);
 			});
 			this.checkDirty();
+		},
+
+		// ── Filtru artist ──────────────────────────────────────────
+		filterEvents(artistId) {
+			this.artistFilter = artistId;
+			document.querySelectorAll('.bas-event-tbody').forEach(tbody => {
+				const rowArtistId = parseInt(tbody.dataset.artistId) || 0;
+				const visible = !artistId || rowArtistId === artistId;
+				tbody.style.display = visible ? '' : 'none';
+			});
+		},
+
+		// ── Formular eveniment nou ─────────────────────────────────
+		resetNewEvent() {
+			this.newEvent.artist_id = '';
+			this.newEvent.status    = 'pending';
+			this.newEvent.error     = '';
+			this.newEvent.fields    = {
+				data_start: '', data_end: '', ora_inceput: '',
+				locatie: '', oras: '', tip: '', client: '',
+				telefon: '', email: '', participanti: '',
+				sonorizare: '', durata: '', mesaj: '',
+			};
+		},
+
+		createEvent() {
+			if (!this.newEvent.artist_id) {
+				this.newEvent.error = 'Selectează un artist.';
+				return;
+			}
+			if (!this.newEvent.fields.data_start) {
+				this.newEvent.error = 'Data evenimentului este obligatorie.';
+				return;
+			}
+			this.newEvent.error  = '';
+			this.newEvent.saving = true;
+
+			this.ajax('bas_create_event', {
+				artist_id: this.newEvent.artist_id,
+				status:    this.newEvent.status,
+				fields:    this.newEvent.fields,
+			}).then(() => {
+				this.showNotice('success');
+				setTimeout(() => location.reload(), 1500);
+			}).catch(err => {
+				this.newEvent.error = err.message || 'Eroare la creare. Încearcă din nou.';
+			}).finally(() => {
+				this.newEvent.saving = false;
+			});
+		},
+
+		// ── Adaugă artist suplimentar la eveniment ────────────────
+		addArtistToEvent(eventId, newArtistId, btn) {
+			if (!newArtistId) return;
+
+			if (btn) btn.disabled = true;
+
+			this.ajax('bas_add_artist_to_event', {
+				event_id:       eventId,
+				new_artist_id:  newArtistId,
+			}).then(() => {
+				this.showNotice('success');
+				setTimeout(() => location.reload(), 1500);
+			}).catch(err => {
+				alert(err.message || 'Eroare la adăugarea artistului.');
+				if (btn) btn.disabled = false;
+			});
+		},
+
+		// ── Șterge un artist dintr-un grup (confirmă via modal existent) ──
+		askDeleteGroupMember(member) {
+			this.askDeleteEvent(
+				member.event_id,
+				member.date_label  || '—',
+				member.artist_name || '—',
+				member.location    || '—',
+				member.type_label  || '—'
+			);
 		},
 
 		// ── Adaugă locație ─────────────────────────────────────────
@@ -210,10 +306,8 @@ document.addEventListener('alpine:init', () => {
 			tr.innerHTML = html;
 			tbody.appendChild(tr);
 
-			// Atașăm event listeners manual pe elementele noi
 			tr.querySelectorAll('.bas-new-select').forEach(sel => {
 				sel.addEventListener('change', () => self.onSelectChange(sel));
-				// Adăugăm în initialSchedule (slot nou = gol)
 				self.initialSchedule[sel.dataset.key] = '';
 			});
 			tr.querySelectorAll('.bas-new-select').forEach(s => s.classList.remove('bas-new-select'));
@@ -256,11 +350,31 @@ document.addEventListener('alpine:init', () => {
 			}
 
 			this.ajax('bas_save_event', { event_id: eventId, status, fields })
-				.then(() => {
+				.then(data => {
 					if (row) {
 						row.dataset.status = status;
 						row.className = `bas-row bas-row-${status}`;
 					}
+
+					// ── Actualizăm artistul dacă s-a schimbat ──────
+					if (data.artist_changed && data.new_artist_name && row) {
+						// Actualizăm numele artistului în rândul principal
+						const artistCell = row.querySelector('.bas-artist-cell');
+						if (artistCell) artistCell.textContent = data.new_artist_name;
+
+						// Actualizăm data-artist pe rând
+						row.dataset.artist = data.new_artist_id;
+
+						// Actualizăm data-artist-id pe tbody (pentru filtru)
+						const tbody = row.closest('.bas-event-tbody');
+						if (tbody) tbody.dataset.artistId = data.new_artist_id;
+
+						// Re-aplicăm filtrul dacă e activ
+						if (this.artistFilter) {
+							this.filterEvents(this.artistFilter);
+						}
+					}
+
 					this.updateConflictsFromRow(row, status);
 					this.refreshAllCells();
 
@@ -289,10 +403,8 @@ document.addEventListener('alpine:init', () => {
 			if (!row) return;
 			const artistId = parseInt(row.dataset.artist);
 			const type     = row.dataset.type;
-			const day      = row.dataset.day;      // index relativ la săptămâna vizibilă
 			const date     = row.dataset.date || '';
 
-			// Tipul "club" nu generează conflicte externe niciodată
 			if (type === 'club') return;
 
 			const dates = this.conflicts[artistId] || [];
@@ -318,29 +430,30 @@ document.addEventListener('alpine:init', () => {
 				.then((data) => {
 					const row = document.getElementById(`bas-ev-${this.pendingDelete.id}`);
 					if (row) {
-						// Ridicăm conflictele generate de acest eveniment
 						const artistId = parseInt(row.dataset.artist);
 						const date     = row.dataset.date || '';
 						if (date && this.conflicts[artistId]) {
 							this.conflicts[artistId] = this.conflicts[artistId].filter(d => d !== date);
 						}
+						const tbody = row.closest('.bas-event-tbody');
 						row.style.transition = 'opacity 0.3s';
 						row.style.opacity    = '0';
-						setTimeout(() => { row.remove(); this.refreshAllCells(); }, 300);
+						setTimeout(() => {
+							if (tbody) tbody.remove();
+							else row.remove();
+							this.refreshAllCells();
+						}, 300);
 					}
 
-					// Dacă evenimentul era în calendarul săptămânii curente, resetăm celula
 					const slotKey = data?.slot_key || '';
 					if (slotKey) {
 						const prefix = `${basData.year}_W${basData.week}_`;
 						if (slotKey.startsWith(prefix)) {
-							const calKey = slotKey.slice(prefix.length); // {slug}_{day_index}
+							const calKey = slotKey.slice(prefix.length);
 							const sel = document.querySelector(`.bas-artist-select[data-key="${calKey}"]`);
 							if (sel) {
 								sel.value = '';
 								this.updateCellVisual(sel);
-								// Actualizăm și initialSchedule ca să nu blocheze butonul Salvează
-								// dacă user-ul re-selectează același artist
 								this.initialSchedule[calKey] = '';
 								this.checkDirty();
 							}
@@ -356,7 +469,6 @@ document.addEventListener('alpine:init', () => {
 		// ── AJAX helper ────────────────────────────────────────────
 		ajax(action, data = {}) {
 			const body = new URLSearchParams({ action, nonce: basData.nonce, ...data });
-			// Aplatizăm obiectele (ex: schedule)
 			for (const [k, v] of Object.entries(data)) {
 				if (typeof v === 'object' && v !== null) {
 					body.delete(k);

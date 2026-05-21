@@ -241,6 +241,218 @@
 .bas-notice-success { background: #0f2d0f; border: 1px solid #2d5a2d; color: #6fcf6f; }
 .bas-notice-error   { background: #2d0f0f; border: 1px solid #5a2d2d; color: #eb5757; }
 
+/* ── Header secțiune evenimente + filtru ─────────────────────── */
+.bas-section-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin: 36px 0 14px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #2a2a2a;
+}
+.bas-section-header .bas-section-title { margin: 0; border: none; padding: 0; }
+
+.bas-filter-bar {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+.bas-filter-label {
+	font-family: 'Space Grotesk', sans-serif;
+	font-size: 12px;
+	font-weight: 600;
+	color: #777;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	white-space: nowrap;
+}
+.bas-filter-select {
+	background: #1a1a1a;
+	border: 1px solid #333;
+	border-radius: 8px;
+	color: #fff;
+	padding: 6px 10px;
+	font-family: 'Space Grotesk', sans-serif;
+	font-size: 13px;
+	cursor: pointer;
+	min-width: 160px;
+	transition: border-color 0.15s;
+}
+.bas-filter-select:focus { outline: none; border-color: #FF6A00; }
+
+/* ── Formular adaugă eveniment ───────────────────────────────── */
+.bas-add-event-wrap {
+	margin-bottom: 20px;
+}
+.bas-btn-add-event {
+	background: transparent;
+	border: 1px dashed #FF6A00;
+	border-radius: 10px;
+	color: #FF6A00;
+	padding: 8px 18px;
+	font-family: 'Space Grotesk', sans-serif;
+	font-weight: 600;
+	font-size: 13px;
+	cursor: pointer;
+	transition: background 0.15s, color 0.15s;
+	margin-bottom: 12px;
+}
+.bas-btn-add-event:hover {
+	background: rgba(255,106,0,0.08);
+}
+.bas-add-event-form {
+	background: #0d0d0d;
+	border: 1px solid #2a2a2a;
+	border-radius: 10px;
+	padding: 20px;
+	margin-bottom: 4px;
+}
+.bas-add-event-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 14px 20px;
+	margin-bottom: 16px;
+}
+.bas-add-event-actions {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 10px;
+	padding-top: 12px;
+	border-top: 1px solid #1e1e1e;
+}
+.bas-add-event-error {
+	color: #eb5757;
+	font-size: 12px;
+	font-family: 'Inter', sans-serif;
+	margin: 0;
+	flex: 1;
+}
+
+/* ── Badge grup "+N" în lista evenimente ─────────────────────── */
+.bas-group-badge {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(255,106,0,0.15);
+	border: 1px solid rgba(255,106,0,0.4);
+	color: #FF6A00;
+	font-family: 'Space Grotesk', sans-serif;
+	font-size: 10px;
+	font-weight: 700;
+	border-radius: 20px;
+	padding: 1px 6px;
+	margin-left: 6px;
+	vertical-align: middle;
+	letter-spacing: 0.3px;
+}
+
+/* ── Secțiunea grup în detail expand ─────────────────────────── */
+.bas-group-section {
+	margin-top: 16px;
+	padding-top: 14px;
+	border-top: 1px solid #1e1e1e;
+}
+.bas-group-section-title {
+	font-family: 'Space Grotesk', sans-serif;
+	font-weight: 600;
+	font-size: 10px;
+	color: #777;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	margin-bottom: 10px;
+}
+.bas-group-members-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-bottom: 12px;
+}
+.bas-group-member-item {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	background: #161616;
+	border: 1px solid #2a2a2a;
+	border-radius: 20px;
+	padding: 4px 10px 4px 12px;
+}
+.bas-group-member-name {
+	font-size: 12px;
+	color: #aaa;
+	font-family: 'Space Grotesk', sans-serif;
+	font-weight: 500;
+}
+.bas-group-member-self {
+	color: #FF6A00 !important;
+}
+.bas-btn-remove-member {
+	background: transparent;
+	border: none;
+	color: #555;
+	font-size: 11px;
+	cursor: pointer;
+	padding: 0 2px;
+	line-height: 1;
+	transition: color 0.15s;
+}
+.bas-btn-remove-member:hover { color: #eb5757; }
+
+.bas-group-add-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+.bas-group-add-select {
+	background: #141414 !important;
+	border: 1px solid #2a2a2a !important;
+	border-radius: 6px !important;
+	color: #bbb !important;
+	padding: 7px 10px !important;
+	font-family: 'Inter', sans-serif !important;
+	font-size: 12px !important;
+	min-width: 180px;
+	flex: 1;
+	appearance: none;
+	-webkit-appearance: none;
+}
+.bas-group-add-select:focus { outline: none !important; border-color: #FF6A00 !important; }
+.bas-btn-add-artist {
+	background: transparent;
+	border: 1px solid rgba(255,106,0,0.5);
+	border-radius: 6px;
+	color: #FF6A00;
+	padding: 7px 14px;
+	font-family: 'Space Grotesk', sans-serif;
+	font-weight: 600;
+	font-size: 12px;
+	cursor: pointer;
+	white-space: nowrap;
+	transition: background 0.15s, border-color 0.15s;
+}
+.bas-btn-add-artist:hover:not(:disabled) { background: rgba(255,106,0,0.1); border-color: #FF6A00; }
+.bas-btn-add-artist:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── Artist change în detail view ────────────────────────────── */
+.bas-detail-field-artist {
+	border: 1px solid #2a2a2a;
+	border-radius: 8px;
+	padding: 8px 10px;
+	background: #111;
+}
+.bas-artist-change-label {
+	color: #FF6A00 !important;
+}
+.bas-artist-change-select {
+	border-color: rgba(255,106,0,0.3) !important;
+}
+.bas-artist-change-select:focus {
+	border-color: #FF6A00 !important;
+}
+
 /* ── Tabel evenimente ─────────────────────────────────────────── */
 .bas-events-table {
 	width: 100%;
