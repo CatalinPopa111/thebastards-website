@@ -16,6 +16,7 @@ define( 'BAS_JET_REL_ARTIST_EVENTS', '8' );
 define( 'BAS_URL',  plugin_dir_url( __FILE__ ) );
 
 require_once BAS_PATH . 'includes/class-conflict-detector.php';
+require_once BAS_PATH . 'includes/class-email-notifier.php';
 require_once BAS_PATH . 'includes/class-ajax-handler.php';
 require_once BAS_PATH . 'includes/class-admin-page.php';
 

@@ -157,6 +157,9 @@ class BAS_Ajax_Handler {
 		// Sincronizăm evenimentele CPT rezidentiat
 		self::sync_schedule_events( $year, $week, $clean, $old_schedule );
 
+		// Notificări email program săptămânal (async — nu blochează răspunsul)
+		BAS_Email_Notifier::send_weekly_schedule( $year, $week );
+
 		wp_send_json_success( [ 'message' => 'Program salvat.' ] );
 	}
 
@@ -448,8 +451,9 @@ class BAS_Ajax_Handler {
 			}
 		}
 
-		// ── Citim group_id înainte de update (post_meta va fi actualizat mai jos) ──
-		$group_id = (int) get_post_meta( $event_id, 'bas_event_group_id', true );
+		// ── Citim datele ÎNAINTE de update (pentru detectare tranziție status) ──
+		$old_status = (string) get_post_meta( $event_id, 'status-eveniment', true );
+		$group_id   = (int)    get_post_meta( $event_id, 'bas_event_group_id', true );
 
 		// wp_update_post declanșează save_post → Snippet 8 (titlu), Snippet 9 (booking status)
 		wp_update_post( [
@@ -460,6 +464,14 @@ class BAS_Ajax_Handler {
 		// ── Sincronizare grup: propagăm statusul și detaliile la toate clonele ──
 		if ( ! empty( $meta_input ) ) {
 			self::sync_group_meta( $event_id, $group_id, $meta_input );
+		}
+
+		// ── Email confirmare ─────────────────────────────────────────────────
+		// Trimitem dacă:
+		//   (a) statusul tocmai a devenit 'confirmed' (tranziție)
+		//   (b) era deja 'confirmed' și s-au salvat detalii actualizate
+		if ( $status === 'confirmed' ) {
+			BAS_Email_Notifier::send_event_confirmed( $event_id );
 		}
 
 		wp_send_json_success( [
