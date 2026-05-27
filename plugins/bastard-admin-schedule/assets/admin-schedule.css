@@ -232,16 +232,16 @@
 .bas-btn-secondary:hover { border-color: #555; color: #aaa; }
 .bas-btn-email {
 	background: transparent;
-	color: #FF6A00;
-	border: 1px solid #FF6A00;
+	color: #fff;
+	border: 1px solid #444;
 	border-radius: 10px;
 	padding: 10px 14px;
 	font-size: 16px;
 	cursor: pointer;
-	transition: background 0.15s, color 0.15s;
+	transition: border-color 0.15s, color 0.15s;
 	line-height: 1;
 }
-.bas-btn-email:hover:not(:disabled) { background: #FF6A00; color: #fff; }
+.bas-btn-email:hover:not(:disabled) { border-color: #FF6A00; color: #FF6A00; }
 .bas-btn-email:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* ── Notificări ───────────────────────────────────────────────── */
