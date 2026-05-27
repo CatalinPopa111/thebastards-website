@@ -467,9 +467,274 @@ class BAS_Email_Notifier {
 		return [ $name_map, $email_map ];
 	}
 
+	// ═══════════════════════════════════════════════════════════════
+	// EMAIL-uri cerere vacanță
+	// ═══════════════════════════════════════════════════════════════
+
+	// ── Email admin: cerere nouă cu butoane Accept / Respinge ──────
+
+	public static function send_vacation_request_to_admin( int $event_id, string $token ): void {
+		$artist_uid = (int) get_post_field( 'post_author', $event_id );
+		$start_ts   = (int) get_post_meta( $event_id, 'data-evenimentului', true );
+		$end_ts     = (int) get_post_meta( $event_id, 'data-sfarsit',       true );
+
+		[ $name_map, $email_map ] = self::build_artist_maps();
+		$artist_name = $name_map[ $artist_uid ] ?? "Artist #{$artist_uid}";
+
+		$date_start = (int) date( 'j', $start_ts ) . ' ' . self::$months_ro[ (int) date( 'n', $start_ts ) ] . ' ' . date( 'Y', $start_ts );
+		$date_end   = $end_ts && $end_ts > $start_ts
+			? ' → ' . (int) date( 'j', $end_ts ) . ' ' . self::$months_ro[ (int) date( 'n', $end_ts ) ] . ' ' . date( 'Y', $end_ts )
+			: '';
+
+		// Săptămâna vacanței
+		$dt = new DateTime();
+		$dt->setTimestamp( $start_ts );
+		$year = (int) $dt->format( 'o' );
+		$week = (int) $dt->format( 'W' );
+
+		// Link-uri Accept / Respinge
+		$base_url    = home_url( '/' );
+		$accept_url  = add_query_arg( [ 'bas_vacation' => 'accept', 'id' => $event_id, 'token' => $token ], $base_url );
+		$reject_url  = add_query_arg( [ 'bas_vacation' => 'reject', 'id' => $event_id, 'token' => $token ], $base_url );
+
+		$btn_accept = "<a href='" . esc_url( $accept_url ) . "'
+			style='display:inline-block;background:#2a6e2a;color:#fff;text-decoration:none;
+			       padding:12px 28px;border-radius:8px;font-weight:bold;font-size:14px;
+			       font-family:Arial,sans-serif;margin-right:12px;'>
+			✅ Acceptă vacanța
+		</a>";
+		$reject_btn = "<a href='" . esc_url( $reject_url ) . "'
+			style='display:inline-block;background:#8b1a1a;color:#fff;text-decoration:none;
+			       padding:12px 28px;border-radius:8px;font-weight:bold;font-size:14px;
+			       font-family:Arial,sans-serif;'>
+			🚫 Respinge cererea
+		</a>";
+
+		// Evenimente din săptămâna vacanței
+		$week_events_html = self::build_week_events_html( $year, $week, $name_map );
+
+		$content = "
+			<div style='margin-bottom:28px;'>
+				<div style='display:inline-block;background:#fff8e1;color:#e65100;
+				            font-size:12px;font-weight:bold;padding:5px 14px;
+				            border-radius:20px;margin-bottom:16px;'>
+					🏖 Cerere Vacanță Nouă
+				</div>
+				<h2 style='margin:0 0 6px;font-size:20px;color:#1a1a1a;font-weight:bold;'>
+					" . esc_html( $artist_name ) . "
+				</h2>
+				<p style='margin:0;color:#555;font-size:14px;'>
+					" . esc_html( $date_start . $date_end ) . "
+				</p>
+			</div>
+
+			<div style='margin:28px 0;text-align:center;padding:20px;
+			            background:#f9f9f9;border-radius:8px;'>
+				{$btn_accept}
+				{$reject_btn}
+			</div>
+
+			<div style='margin-top:32px;'>
+				<div style='font-size:11px;font-weight:bold;text-transform:uppercase;
+				            letter-spacing:1px;color:#aaa;border-top:1px solid #f0f0f0;
+				            padding-top:16px;margin-bottom:12px;'>
+					Toate evenimentele din săptămâna " . date( 'j', $start_ts ) . " – " . (int)date( 'j', (new DateTime())->setISODate($year,$week,7)->getTimestamp() ) . " " . self::$months_ro[ (int) date( 'n', $start_ts ) ] . "
+				</div>
+				{$week_events_html}
+			</div>
+		";
+
+		$subject = '🏖 Cerere vacanță — ' . $artist_name . ' — ' . $date_start;
+		self::send( get_option( 'admin_email' ), $subject, self::html_wrapper( $content ) );
+	}
+
+	// ── Email artist: cerere în așteptare ──────────────────────────
+
+	public static function send_vacation_pending_to_artist( int $event_id ): void {
+		$artist_uid  = (int) get_post_field( 'post_author', $event_id );
+		$start_ts    = (int) get_post_meta( $event_id, 'data-evenimentului', true );
+		$end_ts      = (int) get_post_meta( $event_id, 'data-sfarsit', true );
+		$ud          = get_userdata( $artist_uid );
+
+		if ( ! $ud || ! is_email( $ud->user_email ) ) return;
+
+		$date_start = (int) date( 'j', $start_ts ) . ' ' . self::$months_ro[ (int) date( 'n', $start_ts ) ] . ' ' . date( 'Y', $start_ts );
+		$date_end   = $end_ts && $end_ts > $start_ts
+			? ' – ' . (int) date( 'j', $end_ts ) . ' ' . self::$months_ro[ (int) date( 'n', $end_ts ) ] . ' ' . date( 'Y', $end_ts )
+			: '';
+
+		$content = "
+			<div style='display:inline-block;background:#fff8e1;color:#e65100;
+			            font-size:12px;font-weight:bold;padding:5px 14px;
+			            border-radius:20px;margin-bottom:20px;'>
+				⏳ În așteptare
+			</div>
+			<h2 style='margin:0 0 12px;font-size:20px;color:#1a1a1a;font-weight:bold;'>
+				Cererea ta de vacanță a fost trimisă
+			</h2>
+			<p style='margin:0 0 20px;color:#444;font-size:14px;line-height:1.6;'>
+				Data solicitată: <strong>" . esc_html( $date_start . $date_end ) . "</strong>
+			</p>
+			<p style='margin:0;color:#888;font-size:13px;line-height:1.6;
+			          background:#f9f9f9;padding:14px 16px;border-radius:6px;'>
+				Cererea urmează să fie aprobată de administrator. <strong>Nu trimite o solicitare nouă</strong> pentru aceeași perioadă.
+			</p>
+		";
+
+		$subject = '⏳ Cerere vacanță trimisă — ' . $date_start;
+		self::send( $ud->user_email, $subject, self::html_wrapper( $content ) );
+	}
+
+	// ── Email artist: vacanță aprobată ─────────────────────────────
+
+	public static function send_vacation_approved_to_artist( int $event_id ): void {
+		$artist_uid = (int) get_post_field( 'post_author', $event_id );
+		$start_ts   = (int) get_post_meta( $event_id, 'data-evenimentului', true );
+		$end_ts     = (int) get_post_meta( $event_id, 'data-sfarsit', true );
+		$ud         = get_userdata( $artist_uid );
+
+		if ( ! $ud || ! is_email( $ud->user_email ) ) return;
+
+		$date_start = (int) date( 'j', $start_ts ) . ' ' . self::$months_ro[ (int) date( 'n', $start_ts ) ] . ' ' . date( 'Y', $start_ts );
+		$date_end   = $end_ts && $end_ts > $start_ts
+			? ' – ' . (int) date( 'j', $end_ts ) . ' ' . self::$months_ro[ (int) date( 'n', $end_ts ) ] . ' ' . date( 'Y', $end_ts )
+			: '';
+
+		$content = "
+			<div style='display:inline-block;background:#e8f5e9;color:#2e7d32;
+			            font-size:12px;font-weight:bold;padding:5px 14px;
+			            border-radius:20px;margin-bottom:20px;'>
+				✅ Vacanță Aprobată
+			</div>
+			<h2 style='margin:0 0 12px;font-size:20px;color:#1a1a1a;font-weight:bold;'>
+				Cererea ta de vacanță a fost aprobată
+			</h2>
+			<p style='margin:0;color:#444;font-size:14px;line-height:1.6;'>
+				Perioada aprobată: <strong>" . esc_html( $date_start . $date_end ) . "</strong>
+			</p>
+		";
+
+		$subject = '✅ Vacanță aprobată — ' . $date_start;
+		self::send( $ud->user_email, $subject, self::html_wrapper( $content ) );
+	}
+
+	// ── Email artist: vacanță respinsă ─────────────────────────────
+
+	public static function send_vacation_rejected_to_artist( int $event_id ): void {
+		$artist_uid = (int) get_post_field( 'post_author', $event_id );
+		$start_ts   = (int) get_post_meta( $event_id, 'data-evenimentului', true );
+		$ud         = get_userdata( $artist_uid );
+
+		if ( ! $ud || ! is_email( $ud->user_email ) ) return;
+
+		$date_start = (int) date( 'j', $start_ts ) . ' ' . self::$months_ro[ (int) date( 'n', $start_ts ) ] . ' ' . date( 'Y', $start_ts );
+
+		$content = "
+			<div style='display:inline-block;background:#fce4e4;color:#c62828;
+			            font-size:12px;font-weight:bold;padding:5px 14px;
+			            border-radius:20px;margin-bottom:20px;'>
+				🚫 Cerere Respinsă
+			</div>
+			<h2 style='margin:0 0 12px;font-size:20px;color:#1a1a1a;font-weight:bold;'>
+				Cererea ta de vacanță nu a putut fi aprobată
+			</h2>
+			<p style='margin:0 0 16px;color:#444;font-size:14px;line-height:1.6;'>
+				Data solicitată: <strong>" . esc_html( $date_start ) . "</strong>
+			</p>
+			<p style='margin:0;color:#888;font-size:13px;line-height:1.6;
+			          background:#f9f9f9;padding:14px 16px;border-radius:6px;'>
+				Pentru mai multe detalii, contactează administratorul.
+			</p>
+		";
+
+		$subject = '🚫 Cerere vacanță respinsă — ' . $date_start;
+		self::send( $ud->user_email, $subject, self::html_wrapper( $content ) );
+	}
+
+	// ── Helper: HTML-ul cu toate evenimentele dintr-o săptămână ────
+
+	private static function build_week_events_html( int $year, int $week, array $name_map ): string {
+		$dt_mon = new DateTime();
+		$dt_mon->setISODate( $year, $week, 1 );
+		$dt_mon->setTime( 0, 0, 0 );
+		$dt_sun = clone $dt_mon;
+		$dt_sun->modify( '+6 days' )->setTime( 23, 59, 59 );
+
+		$posts = get_posts( [
+			'post_type'      => 'evenimente',
+			'posts_per_page' => -1,
+			'post_status'    => 'publish',
+			'orderby'        => 'meta_value_num',
+			'meta_key'       => 'data-evenimentului',
+			'order'          => 'ASC',
+			'meta_query'     => [
+				'relation' => 'AND',
+				[
+					'key'     => 'data-evenimentului',
+					'value'   => [ $dt_mon->getTimestamp(), $dt_sun->getTimestamp() ],
+					'compare' => 'BETWEEN',
+					'type'    => 'NUMERIC',
+				],
+				[
+					'key'     => 'status-eveniment',
+					'value'   => [ 'canceled', 'vacation_pending' ],
+					'compare' => 'NOT IN',
+				],
+			],
+		] );
+
+		if ( empty( $posts ) ) {
+			return '<p style="color:#888;font-size:13px;">Niciun eveniment în această săptămână.</p>';
+		}
+
+		$by_artist = [];
+		foreach ( $posts as $p ) {
+			$by_artist[ (int) $p->post_author ][] = $p;
+		}
+		uksort( $by_artist, fn( $a, $b ) => strcmp( $name_map[ $a ] ?? '', $name_map[ $b ] ?? '' ) );
+
+		global $wpdb;
+		$grp_rows = $wpdb->get_results(
+			"SELECT p.ID as eid, p.post_author as uid, m.meta_value as gid
+			 FROM {$wpdb->posts} p
+			 JOIN {$wpdb->postmeta} m ON m.post_id = p.ID AND m.meta_key = 'bas_event_group_id'
+			 WHERE p.post_type = 'evenimente' AND p.post_status = 'publish' AND m.meta_value > 0",
+			ARRAY_A
+		);
+		$event_to_group  = [];
+		$group_to_events = [];
+		foreach ( $grp_rows as $row ) {
+			$eid = (int) $row['eid'];
+			$gid = (int) $row['gid'];
+			$event_to_group[ $eid ]          = $gid;
+			$group_to_events[ $gid ][ $eid ] = (int) $row['uid'];
+		}
+
+		$blocks = '';
+		foreach ( $by_artist as $uid => $events ) {
+			$artist_name = esc_html( $name_map[ $uid ] ?? "Artist #{$uid}" );
+			$rows = '';
+			foreach ( $events as $ev ) {
+				$rows .= self::schedule_row( $ev, $uid, $event_to_group, $group_to_events, $name_map );
+			}
+			$blocks .= "
+				<tr>
+					<td style='padding:16px 0 4px;'>
+						<div style='font-size:11px;font-weight:bold;text-transform:uppercase;
+						            letter-spacing:1px;color:#FF6A00;border-bottom:2px solid #FF6A00;
+						            padding-bottom:6px;'>{$artist_name}</div>
+					</td>
+				</tr>
+				{$rows}
+			";
+		}
+
+		return "<table width='100%' cellpadding='0' cellspacing='0'>{$blocks}</table>";
+	}
+
 	// ── HTML wrapper email ─────────────────────────────────────────
 
-	private static function html_wrapper( string $content ): string {
+	public static function html_wrapper( string $content ): string {
 		return '<!DOCTYPE html>
 <html lang="ro">
 <head>
@@ -522,7 +787,7 @@ class BAS_Email_Notifier {
 
 	// ── Trimitere email HTML ───────────────────────────────────────
 
-	private static function send( string $to, string $subject, string $html ): bool {
+	public static function send( string $to, string $subject, string $html ): bool {
 		if ( ! $to || ! is_email( $to ) ) {
 			return false;
 		}

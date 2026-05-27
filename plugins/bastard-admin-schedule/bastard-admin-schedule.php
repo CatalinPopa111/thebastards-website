@@ -19,6 +19,7 @@ require_once BAS_PATH . 'includes/class-conflict-detector.php';
 require_once BAS_PATH . 'includes/class-email-notifier.php';
 require_once BAS_PATH . 'includes/class-ajax-handler.php';
 require_once BAS_PATH . 'includes/class-admin-page.php';
+require_once BAS_PATH . 'includes/class-vacation-request.php';
 
 add_action( 'admin_menu', function () {
 	add_menu_page(
@@ -79,6 +80,9 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
 
 // Înregistrare acțiuni AJAX
 BAS_Ajax_Handler::register();
+
+// Înregistrare flux aprobare vacanță
+BAS_Vacation_Request::register();
 
 // ── Shortcode frontend [bas_schedule] ──────────────────────────
 
