@@ -6,6 +6,7 @@ class BAS_Ajax_Handler {
 	public static function register(): void {
 		$actions = [
 			'bas_save_schedule',
+			'bas_send_weekly_schedule',
 			'bas_add_location',
 			'bas_delete_location',
 			'bas_update_event_status',
@@ -157,10 +158,24 @@ class BAS_Ajax_Handler {
 		// Sincronizăm evenimentele CPT rezidentiat
 		self::sync_schedule_events( $year, $week, $clean, $old_schedule );
 
-		// Notificări email program săptămânal (async — nu blochează răspunsul)
+		wp_send_json_success( [ 'message' => 'Program salvat.' ] );
+	}
+
+	// ── Trimite email program săptămânal manual ────────────────────
+
+	public static function send_weekly_schedule(): void {
+		self::verify();
+
+		$week = absint( $_POST['week'] ?? 0 );
+		$year = absint( $_POST['year'] ?? 0 );
+
+		if ( ! $week || ! $year ) {
+			wp_send_json_error( [ 'message' => 'Săptămână invalidă.' ] );
+		}
+
 		BAS_Email_Notifier::send_weekly_schedule( $year, $week );
 
-		wp_send_json_success( [ 'message' => 'Program salvat.' ] );
+		wp_send_json_success( [ 'message' => 'Email-uri trimise cu succes.' ] );
 	}
 
 	// ── Sincronizare evenimente CPT ────────────────────────────────

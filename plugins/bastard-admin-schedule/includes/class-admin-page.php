@@ -152,6 +152,11 @@ class BAS_Admin_Page {
 
 			<div class="bas-save-bar">
 				<button class="bas-btn-secondary" @click="resetCalendar()">Resetează</button>
+				<button class="bas-btn-email" @click="sendWeeklySchedule()" :disabled="sendingEmail"
+					title="Trimite programul săptămânii pe email artiștilor">
+					<span x-show="!sendingEmail">✉</span>
+					<span x-show="sendingEmail" style="display:none">...</span>
+				</button>
 				<button class="bas-btn-save" @click="saveSchedule()" :disabled="saving || !isDirty">
 					<span x-show="!saving">Salvează programul</span>
 					<span x-show="saving" style="display:none">Se salvează...</span>
@@ -161,6 +166,8 @@ class BAS_Admin_Page {
 			<!-- Notificare salvare -->
 			<div class="bas-notice bas-notice-success" x-show="notice === 'success'" x-transition>Program salvat cu succes.</div>
 			<div class="bas-notice bas-notice-error"   x-show="notice === 'error'"   x-transition>Eroare la salvare. Încearcă din nou.</div>
+			<div class="bas-notice bas-notice-success" x-show="notice === 'email-success'" x-transition>Email-uri trimise cu succes.</div>
+			<div class="bas-notice bas-notice-error"   x-show="notice === 'email-error'"   x-transition>Eroare la trimiterea email-urilor. Încearcă din nou.</div>
 
 			<!-- ── Header secțiune evenimente + filtru ───────────────── -->
 			<div class="bas-section-header">

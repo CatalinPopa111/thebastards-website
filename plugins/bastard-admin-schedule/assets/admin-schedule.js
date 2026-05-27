@@ -4,6 +4,7 @@ document.addEventListener('alpine:init', () => {
 		// ── State ──────────────────────────────────────────────────
 		modal:           null,
 		saving:          false,
+		sendingEmail:    false,
 		notice:          null,
 		noticeTimer:     null,
 		modalError:      '',
@@ -142,6 +143,21 @@ document.addEventListener('alpine:init', () => {
 				this.showNotice('error');
 			}).finally(() => {
 				this.saving = false;
+			});
+		},
+
+		// ── Trimite email program săptămânal ──────────────────────
+		sendWeeklySchedule() {
+			this.sendingEmail = true;
+			this.ajax('bas_send_weekly_schedule', {
+				week: basData.week,
+				year: basData.year,
+			}).then(() => {
+				this.showNotice('email-success');
+			}).catch(() => {
+				this.showNotice('email-error');
+			}).finally(() => {
+				this.sendingEmail = false;
 			});
 		},
 
