@@ -508,7 +508,7 @@ class BAS_Email_Notifier {
 		// Evenimente din perioada vacanței ±2 zile, grupate pe zile
 		$context_from = strtotime( 'midnight', $start_ts ) - 2 * DAY_IN_SECONDS;
 		$context_to   = strtotime( 'midnight', $end_ts ?: $start_ts ) + 2 * DAY_IN_SECONDS + DAY_IN_SECONDS - 1;
-		$period_html  = self::build_period_events_html( $context_from, $context_to, $name_map, $artist_uid );
+		$period_html  = self::build_period_events_html( $context_from, $context_to, $name_map, $artist_uid, $start_ts, $end_ts ?: $start_ts );
 
 		$context_label = date( 'j', $context_from ) . ' ' . self::$months_ro[ (int) date( 'n', $context_from ) ]
 		               . ' – ' . date( 'j', $context_to ) . ' ' . self::$months_ro[ (int) date( 'n', $context_to ) ]
@@ -657,7 +657,7 @@ class BAS_Email_Notifier {
 	// ── Helper: HTML-ul cu toate evenimentele dintr-o săptămână ────
 
 	// ── Evenimente pe perioadă, grupate pe zile ───────────────────
-	private static function build_period_events_html( int $from_ts, int $to_ts, array $name_map, int $requesting_uid = 0 ): string {
+	private static function build_period_events_html( int $from_ts, int $to_ts, array $name_map, int $requesting_uid = 0, int $alert_from = 0, int $alert_to = 0 ): string {
 
 		// Evenimentele non-vacanță care încep în interval
 		$regular = get_posts( [
@@ -765,12 +765,16 @@ class BAS_Email_Notifier {
 					$detail = esc_html( implode( ', ', array_filter( [ $tip, $loc, $oras, $ora ] ) ) ?: '—' );
 				}
 
-				// Bulină roșie dacă e chiar artistul care solicită vacanța și are eveniment activ
+				// Bulină roșie doar în zilele din intervalul solicitat (nu în zilele de context ±2 zile)
 				$alert = '';
-				if ( $requesting_uid && $uid === $requesting_uid ) {
-					$ev_status = (string) get_post_meta( $ev->ID, 'status-eveniment', true );
-					if ( in_array( $ev_status, [ 'confirmed', 'pending', 'vacation' ], true ) ) {
-						$alert = $red_dot;
+				if ( $requesting_uid && $uid === $requesting_uid && $alert_from && $alert_to ) {
+					$alert_from_midnight = strtotime( 'midnight', $alert_from );
+					$alert_to_midnight   = strtotime( 'midnight', $alert_to );
+					if ( $day_ts >= $alert_from_midnight && $day_ts <= $alert_to_midnight ) {
+						$ev_status = (string) get_post_meta( $ev->ID, 'status-eveniment', true );
+						if ( in_array( $ev_status, [ 'confirmed', 'pending', 'vacation' ], true ) ) {
+							$alert = $red_dot;
+						}
 					}
 				}
 
