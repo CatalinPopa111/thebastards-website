@@ -14,6 +14,7 @@ class BAS_Ajax_Handler {
 			'bas_delete_event',
 			'bas_create_event',
 			'bas_add_artist_to_event',
+			'bas_get_conflicts',
 		];
 
 		foreach ( $actions as $action ) {
@@ -80,7 +81,7 @@ class BAS_Ajax_Handler {
 	private static function event_to_booking_status( string $status ): string {
 		return match ( $status ) {
 			'confirmed' => 'completed',
-			'canceled'  => 'canceled',
+			'canceled'  => 'cancelled',
 			default     => 'pending',
 		};
 	}
@@ -802,5 +803,15 @@ class BAS_Ajax_Handler {
 		}
 
 		wp_send_json_success( [ 'slot_key' => $slot_key ] );
+	}
+
+	// ── Returnează conflict map actualizat ────────────────────────────
+
+	public static function get_conflicts(): void {
+		check_ajax_referer( 'bas_nonce', 'nonce' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( [], 403 );
+		}
+		wp_send_json_success( BAS_Conflict_Detector::get_conflicts_map() );
 	}
 }

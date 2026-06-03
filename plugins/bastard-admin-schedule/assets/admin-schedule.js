@@ -46,6 +46,11 @@ document.addEventListener('alpine:init', () => {
 				this.refreshAllCells();
 				this.captureInitialSchedule();
 			});
+
+			document.addEventListener('bas:refresh-conflicts', (e) => {
+				this.conflicts = e.detail;
+				this.$nextTick(() => this.refreshAllCells());
+			});
 		},
 
 		// ── Dirty tracking ─────────────────────────────────────────
@@ -516,4 +521,29 @@ document.addEventListener('alpine:init', () => {
 				.replace(/"/g, '&quot;');
 		},
 	}));
+});
+
+// ── Refresh conflict map la focus pe dropdown artist ──────────────────
+
+let _basConflictDebounce = null;
+
+async function basRefreshConflicts() {
+	const body = new FormData();
+	body.append('action', 'bas_get_conflicts');
+	body.append('nonce', basData.nonce);
+	try {
+		const res  = await fetch(ajaxurl, { method: 'POST', body });
+		const json = await res.json();
+		if (json.success) {
+			document.dispatchEvent(
+				new CustomEvent('bas:refresh-conflicts', { detail: json.data })
+			);
+		}
+	} catch (_) {}
+}
+
+document.addEventListener('focusin', (e) => {
+	if (!e.target.matches('.bas-artist-select')) return;
+	clearTimeout(_basConflictDebounce);
+	_basConflictDebounce = setTimeout(basRefreshConflicts, 2000);
 });

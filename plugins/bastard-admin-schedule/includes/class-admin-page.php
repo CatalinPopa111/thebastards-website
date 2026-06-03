@@ -321,8 +321,21 @@ class BAS_Admin_Page {
 					<tbody><tr><td colspan="6" class="bas-empty">Nu există evenimente viitoare.</td></tr></tbody>
 					<?php endif; ?>
 
-					<?php foreach ( $events as $ev ) :
-						$status = $ev['status'];
+					<?php
+					$__current_year = null;
+					foreach ( $events as $ev ) :
+						$status   = $ev['status'];
+						$__ev_year = $ev['fields']['data_start']
+							? substr( $ev['fields']['data_start'], 0, 4 )
+							: null;
+						if ( $__ev_year && $__ev_year !== $__current_year ) :
+							if ( $__current_year !== null ) : ?>
+							<tbody class="bas-year-sep-tbody">
+								<tr><td colspan="6" style="text-align:center;padding:10px 0;color:#555;font-size:11px;letter-spacing:2px;border-top:1px solid #1e1e1e;border-bottom:1px solid #1e1e1e;">── <?php echo esc_html( $__ev_year ); ?> ──</td></tr>
+							</tbody>
+							<?php endif;
+							$__current_year = $__ev_year;
+						endif;
 					?>
 					<tbody
 						class="bas-event-tbody"

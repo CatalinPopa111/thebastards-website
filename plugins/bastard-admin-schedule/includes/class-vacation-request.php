@@ -100,33 +100,10 @@ class BAS_Vacation_Request {
 	private static function accept_vacation( int $event_id ): void {
 		update_post_meta( $event_id, 'status-eveniment', 'vacation' );
 
-		$artist_uid = (int) get_post_field( 'post_author', $event_id );
-		$start_ts   = (int) get_post_meta( $event_id, 'data-evenimentului', true );
-		$end_ts     = (int) get_post_meta( $event_id, 'data-sfarsit', true ) ?: $start_ts;
-
-		$artist_cpt = get_posts( [
-			'post_type'      => 'artist',
-			'author'         => $artist_uid,
-			'posts_per_page' => 1,
-			'post_status'    => 'publish',
-			'fields'         => 'ids',
-		] );
-
-		if ( $artist_cpt ) {
-			global $wpdb;
-			$wpdb->insert(
-				$wpdb->prefix . 'jet_apartment_bookings',
-				[
-					'apartment_id'   => (int) $artist_cpt[0],
-					'check_in_date'  => $start_ts,
-					'check_out_date' => $end_ts,
-					'status'         => 'on-hold',
-					'order_id'       => $event_id,
-					'user_id'        => $artist_uid,
-				],
-				[ '%d', '%d', '%d', '%s', '%d', '%d' ]
-			);
-		}
+		// Declanșăm save_post pentru ca BAS_Booking_Sync să creeze booking-ul.
+		// $processing = true (setat în caller) face ca maybe_intercept_vacation (priority 5)
+		// să returneze imediat, lăsând BAS_Booking_Sync (priority 20) să ruleze.
+		wp_update_post( [ 'ID' => $event_id ] );
 
 		BAS_Email_Notifier::send_vacation_approved_to_artist( $event_id );
 	}

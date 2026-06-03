@@ -20,6 +20,8 @@ require_once BAS_PATH . 'includes/class-email-notifier.php';
 require_once BAS_PATH . 'includes/class-ajax-handler.php';
 require_once BAS_PATH . 'includes/class-admin-page.php';
 require_once BAS_PATH . 'includes/class-vacation-request.php';
+require_once BAS_PATH . 'includes/class-booking-sync.php';
+require_once BAS_PATH . 'includes/class-artist-events.php';
 
 add_action( 'admin_menu', function () {
 	add_menu_page(
@@ -83,6 +85,12 @@ BAS_Ajax_Handler::register();
 
 // Înregistrare flux aprobare vacanță
 BAS_Vacation_Request::register();
+
+// Sincronizare universală booking ↔ status-eveniment
+BAS_Booking_Sync::register();
+
+// Shortcode și AJAX pentru lista de evenimente a artistului
+BAS_Artist_Events::register();
 
 // ── Shortcode frontend [bas_schedule] ──────────────────────────
 
