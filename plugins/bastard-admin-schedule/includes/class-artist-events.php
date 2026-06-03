@@ -21,7 +21,7 @@ class BAS_Artist_Events {
 		global $wpdb;
 
 		$events = $wpdb->get_results( $wpdb->prepare(
-			"SELECT p.ID, p.post_author,
+			"SELECT p.ID, p.post_author, p.post_title,
 			  m_data.meta_value   AS data_start,
 			  m_status.meta_value AS status,
 			  m_tip.meta_value    AS tip,
@@ -90,13 +90,14 @@ class BAS_Artist_Events {
 			$strike      = $status === 'canceled' ? 'text-decoration:line-through;' : '';
 
 			$date_fmt = date_i18n( 'd M Y', $ts );
-			$tip      = $event['tip']     ?: '';
+			// Pentru vacanțe, tipul e gol — folosim titlul postării (ce a scris artistul)
+			$tip      = $event['tip'] ?: ( in_array( $status, [ 'vacation', 'vacation_pending' ], true ) ? $event['post_title'] : '' );
 			$client   = $event['client']  ?: '';
 			$locatie  = $event['locatie'] ?: '';
 			$oras     = $event['oras']    ?: '';
 			$ora      = $event['ora_inceput'] ?: '';
 
-			// Rând 1: dată · tip · client (dacă există)
+			// Rând 1: dată · tip (sau titlu vacanță) · client (dacă există)
 			$l1 = array_filter( [ $date_fmt, $tip, $client ] );
 			// Rând 2: locație · oraș · oră (dacă există)
 			$l2 = array_filter( [ $locatie, $oras, $ora ] );
@@ -164,7 +165,7 @@ class BAS_Artist_Events {
 						.then(function(r) { return r.json(); })
 						.then(function(json) {
 							if (json.success) {
-								var row = document.querySelector('tr[data-event-id="' + eventId + '"]');
+								var row = document.querySelector('[data-event-id="' + eventId + '"]');
 								if (row) row.remove();
 							} else {
 								alert(json.data && json.data.message ? json.data.message : 'Eroare la ștergere.');

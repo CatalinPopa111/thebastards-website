@@ -379,9 +379,11 @@ class BAS_Admin_Page {
 							<?php endif; ?>
 						</td>
 						<td class="bas-status-cell">
+							<div class="bas-sc-inner">
 							<span class="bas-status-badge"
 								x-text="{'confirmed':'Confirmat','pending':'Cerere client','canceled':'Anulat','vacation':'Vacanță'}[status] || status">
 							</span>
+							<div class="bas-sc-buttons">
 							<select class="bas-status-select"
 								x-model="status"
 								@change="$el.closest('tr').dataset.status = status; $el.closest('tr').className = 'bas-row bas-row-' + status;">
@@ -406,6 +408,8 @@ class BAS_Admin_Page {
 									'<?php echo esc_js( $ev['location'] ); ?>',
 									'<?php echo esc_js( $ev['type_label'] ); ?>'
 								)">✕</button>
+							</div><!-- .bas-sc-buttons -->
+							</div><!-- .bas-sc-inner -->
 						</td>
 					</tr>
 
@@ -748,7 +752,8 @@ class BAS_Admin_Page {
 			$loc_parts   = array_filter( [ $location, $city ] );
 			$loc_str     = implode( ', ', $loc_parts ) ?: '—';
 			$artist_name = $name_map[ $artist_id ] ?? get_the_author_meta( 'display_name', $artist_id );
-			$type_label  = $type ?: '—';
+			// Pentru vacanțe, tipul e gol — folosim titlul postării (ce a scris artistul)
+			$type_label  = $type ?: ( in_array( $status, [ 'vacation', 'vacation_pending' ], true ) ? $post->post_title : '—' );
 
 			// ── Date grup ────────────────────────────────────────────────
 			$group_id = $event_to_group[ $post->ID ] ?? 0;
