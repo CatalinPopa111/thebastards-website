@@ -257,6 +257,7 @@ class BAS_Ajax_Handler {
 				$loc_city = $loc['city'] ?? '';
 				$date_str = date_i18n( 'd.m.Y', $day_ts );
 
+				BAS_Booking_Sync::pause();
 				$new_id = wp_insert_post( [
 					'post_type'   => 'evenimente',
 					'post_status' => 'publish',
@@ -272,6 +273,7 @@ class BAS_Ajax_Handler {
 						'bas_slot_key'          => $slot_key,
 					],
 				] );
+				BAS_Booking_Sync::resume();
 
 				if ( $new_id && ! is_wp_error( $new_id ) ) {
 					$artist_cpt = get_posts( [
@@ -576,12 +578,14 @@ class BAS_Ajax_Handler {
 		}
 
 		// Creăm postarea clonă pentru noul artist
+		BAS_Booking_Sync::pause();
 		$clone_id = wp_insert_post( [
 			'post_type'   => 'evenimente',
 			'post_status' => 'publish',
 			'post_author' => $new_artist_id,
 			'meta_input'  => $meta_input,
 		] );
+		BAS_Booking_Sync::resume();
 
 		if ( ! $clone_id || is_wp_error( $clone_id ) ) {
 			wp_send_json_error( [ 'message' => 'Eroare la crearea clonei.' ] );
@@ -709,12 +713,14 @@ class BAS_Ajax_Handler {
 		}
 
 		// Creare post CPT evenimente
+		BAS_Booking_Sync::pause();
 		$event_id = wp_insert_post( [
 			'post_type'   => 'evenimente',
 			'post_status' => 'publish',
 			'post_author' => $artist_id,
 			'meta_input'  => $meta_input,
 		] );
+		BAS_Booking_Sync::resume();
 
 		if ( ! $event_id || is_wp_error( $event_id ) ) {
 			wp_send_json_error( [ 'message' => 'Eroare la crearea evenimentului.' ] );

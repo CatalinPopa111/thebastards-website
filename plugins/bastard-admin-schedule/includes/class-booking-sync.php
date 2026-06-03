@@ -20,6 +20,10 @@ class BAS_Booking_Sync {
 	// Per-request: previne dubla execuție dacă ambele hook-uri se declanșează la același save
 	private static array $synced = [];
 
+	// Permite callerilor care gestionează booking-ul manual să suspende sync-ul temporar
+	public static function pause(): void  { self::$processing = true; }
+	public static function resume(): void { self::$processing = false; }
+
 	public static function register(): void {
 		// Trigger principal: când status-eveniment este adăugat sau modificat
 		add_action( 'added_post_meta',   [ __CLASS__, 'on_meta_change' ], 20, 4 );
