@@ -479,18 +479,13 @@ class BAS_Email_Notifier {
 		$end_ts     = (int) get_post_meta( $event_id, 'data-sfarsit',       true );
 
 		[ $name_map, $email_map ] = self::build_artist_maps();
-		$artist_name = $name_map[ $artist_uid ] ?? "Artist #{$artist_uid}";
+		$artist_name    = $name_map[ $artist_uid ] ?? "Artist #{$artist_uid}";
+		$vacation_title = get_post_field( 'post_title', $event_id );
 
 		$date_start = (int) date( 'j', $start_ts ) . ' ' . self::$months_ro[ (int) date( 'n', $start_ts ) ] . ' ' . date( 'Y', $start_ts );
 		$date_end   = $end_ts && $end_ts > $start_ts
 			? ' → ' . (int) date( 'j', $end_ts ) . ' ' . self::$months_ro[ (int) date( 'n', $end_ts ) ] . ' ' . date( 'Y', $end_ts )
 			: '';
-
-		// Săptămâna vacanței
-		$dt = new DateTime();
-		$dt->setTimestamp( $start_ts );
-		$year = (int) $dt->format( 'o' );
-		$week = (int) $dt->format( 'W' );
 
 		// Link-uri Accept / Respinge
 		$base_url    = home_url( '/' );
@@ -513,7 +508,7 @@ class BAS_Email_Notifier {
 		// Evenimente din perioada vacanței ±2 zile, grupate pe zile
 		$context_from = strtotime( 'midnight', $start_ts ) - 2 * DAY_IN_SECONDS;
 		$context_to   = strtotime( 'midnight', $end_ts ?: $start_ts ) + 2 * DAY_IN_SECONDS + DAY_IN_SECONDS - 1;
-		$period_html  = self::build_period_events_html( $context_from, $context_to, $name_map );
+		$period_html  = self::build_period_events_html( $context_from, $context_to, $name_map, $artist_uid );
 
 		$context_label = date( 'j', $context_from ) . ' ' . self::$months_ro[ (int) date( 'n', $context_from ) ]
 		               . ' – ' . date( 'j', $context_to ) . ' ' . self::$months_ro[ (int) date( 'n', $context_to ) ]
@@ -529,9 +524,11 @@ class BAS_Email_Notifier {
 				<h2 style='margin:0 0 6px;font-size:20px;color:#1a1a1a;font-weight:bold;'>
 					" . esc_html( $artist_name ) . "
 				</h2>
-				<p style='margin:0;color:#555;font-size:14px;'>
+				<p style='margin:0 0 4px;color:#555;font-size:14px;'>
 					" . esc_html( $date_start . $date_end ) . "
 				</p>
+				" . ( $vacation_title ? "<p style='margin:0;color:#1a1a1a;font-size:14px;font-style:italic;'>"
+					. esc_html( $vacation_title ) . "</p>" : "" ) . "
 			</div>
 
 			<div style='margin:28px 0;text-align:center;padding:20px;
@@ -660,81 +657,127 @@ class BAS_Email_Notifier {
 	// ── Helper: HTML-ul cu toate evenimentele dintr-o săptămână ────
 
 	// ── Evenimente pe perioadă, grupate pe zile ───────────────────
-	private static function build_period_events_html( int $from_ts, int $to_ts, array $name_map ): string {
-		$posts = get_posts( [
+	private static function build_period_events_html( int $from_ts, int $to_ts, array $name_map, int $requesting_uid = 0 ): string {
+
+		// Evenimentele non-vacanță care încep în interval
+		$regular = get_posts( [
 			'post_type'      => 'evenimente',
 			'posts_per_page' => -1,
 			'post_status'    => 'publish',
-			'orderby'        => 'meta_value_num',
-			'meta_key'       => 'data-evenimentului',
-			'order'          => 'ASC',
 			'meta_query'     => [
 				'relation' => 'AND',
-				[
-					'key'     => 'data-evenimentului',
-					'value'   => [ $from_ts, $to_ts ],
-					'compare' => 'BETWEEN',
-					'type'    => 'NUMERIC',
-				],
-				[
-					'key'     => 'status-eveniment',
-					'value'   => [ 'canceled', 'vacation_pending' ],
-					'compare' => 'NOT IN',
-				],
+				[ 'key' => 'data-evenimentului', 'value' => [ $from_ts, $to_ts ], 'compare' => 'BETWEEN', 'type' => 'NUMERIC' ],
+				[ 'key' => 'status-eveniment',   'value' => [ 'canceled', 'vacation_pending', 'vacation' ], 'compare' => 'NOT IN' ],
 			],
 		] );
 
-		if ( empty( $posts ) ) {
+		// Vacanțe confirmate care se suprapun cu intervalul
+		// (pot începe înainte de from_ts și se termină în interval)
+		$vacations = get_posts( [
+			'post_type'      => 'evenimente',
+			'posts_per_page' => -1,
+			'post_status'    => 'publish',
+			'meta_query'     => [
+				'relation' => 'AND',
+				[ 'key' => 'status-eveniment',   'value' => 'vacation', 'compare' => '=' ],
+				[ 'key' => 'data-evenimentului', 'value' => $to_ts,     'compare' => '<=', 'type' => 'NUMERIC' ],
+			],
+		] );
+		// Filtrăm în PHP: păstrăm doar cele care nu s-au terminat înainte de from_ts
+		$vacations = array_filter( $vacations, function( $p ) use ( $from_ts ) {
+			$v_end = (int) get_post_meta( $p->ID, 'data-sfarsit', true );
+			$v_start = (int) get_post_meta( $p->ID, 'data-evenimentului', true );
+			return ( $v_end ?: $v_start ) >= $from_ts;
+		} );
+
+		if ( empty( $regular ) && empty( $vacations ) ) {
 			return '<p style="color:#888;font-size:13px;">Niciun eveniment în această perioadă.</p>';
 		}
 
-		// Grupăm pe zile (YYYY-MM-DD)
+		// Construim structura pe zile: [ 'YYYY-MM-DD' => [ ['post'=>..,'ts'=>..,'is_vac'=>bool] ] ]
 		$by_day = [];
-		foreach ( $posts as $p ) {
+		$midnight_from = strtotime( 'midnight', $from_ts );
+		$midnight_to   = strtotime( 'midnight', $to_ts );
+
+		// Evenimentele obișnuite — o singură zi
+		foreach ( $regular as $p ) {
 			$ts  = (int) get_post_meta( $p->ID, 'data-evenimentului', true );
 			$day = date( 'Y-m-d', $ts );
-			$by_day[ $day ][] = $p;
+			$by_day[ $day ][] = [ 'post' => $p, 'ts' => $ts, 'is_vac' => false ];
 		}
+
+		// Vacanțe — extindem pe fiecare zi din durată, limitat la interval
+		foreach ( $vacations as $p ) {
+			$v_start = (int) get_post_meta( $p->ID, 'data-evenimentului', true );
+			$v_end   = (int) get_post_meta( $p->ID, 'data-sfarsit', true ) ?: $v_start;
+
+			$day_ts = max( strtotime( 'midnight', $v_start ), $midnight_from );
+			$end_mn = min( strtotime( 'midnight', $v_end ),   $midnight_to  );
+
+			while ( $day_ts <= $end_mn ) {
+				$day = date( 'Y-m-d', $day_ts );
+				$by_day[ $day ][] = [ 'post' => $p, 'ts' => $day_ts, 'is_vac' => true ];
+				$day_ts = strtotime( '+1 day', $day_ts );
+			}
+		}
+
 		ksort( $by_day );
+
+		$red_dot = '<span style="display:inline-block;width:8px;height:8px;background:#eb5757;'
+		         . 'border-radius:50%;margin-right:5px;vertical-align:middle;flex-shrink:0;"></span>';
 
 		$html = "<table width='100%' cellpadding='0' cellspacing='0'>";
 
-		foreach ( $by_day as $day_str => $events ) {
+		foreach ( $by_day as $day_str => $items ) {
+			// Sortăm evenimentele din zi după oră (timestamp)
+			usort( $items, fn( $a, $b ) => $a['ts'] <=> $b['ts'] );
+
 			$day_ts   = strtotime( $day_str );
-			$dow      = (int) date( 'N', $day_ts ); // 1=Luni … 7=Duminică
+			$dow      = (int) date( 'N', $day_ts );
 			$day_name = self::$days_ro[ $dow ] ?? '';
 			$day_num  = (int) date( 'j', $day_ts );
 			$month    = self::$months_ro[ (int) date( 'n', $day_ts ) ] ?? '';
 
 			$html .= "
-				<tr>
-					<td style='padding:14px 0 4px;'>
-						<div style='font-size:12px;font-weight:bold;text-transform:uppercase;
-						            letter-spacing:0.5px;color:#FF6A00;border-bottom:1px solid #FF6A00;
-						            padding-bottom:5px;'>
-							{$day_name}, {$day_num} " . strtolower( $month ) . "
-						</div>
-					</td>
-				</tr>
+				<tr><td style='padding:14px 0 4px;'>
+					<div style='font-size:12px;font-weight:bold;text-transform:uppercase;
+					            letter-spacing:0.5px;color:#FF6A00;border-bottom:1px solid #FF6A00;
+					            padding-bottom:5px;'>
+						{$day_name}, {$day_num} " . strtolower( $month ) . "
+					</div>
+				</td></tr>
 			";
 
-			foreach ( $events as $ev ) {
+			foreach ( $items as $item ) {
+				$ev     = $item['post'];
 				$uid    = (int) $ev->post_author;
 				$artist = esc_html( $name_map[ $uid ] ?? "Artist #{$uid}" );
-				$tip    = (string) get_post_meta( $ev->ID, 'tipul-evenimentului', true );
-				$loc    = (string) get_post_meta( $ev->ID, 'locatia-evenimentului', true );
-				$oras   = (string) get_post_meta( $ev->ID, 'oras-eveniment', true );
-				$ora    = (string) get_post_meta( $ev->ID, 'ora-de-inceput', true );
 
-				$parts = array_filter( [ $tip, $loc, $oras, $ora ] );
-				$detail = $parts ? implode( ', ', $parts ) : '—';
+				if ( $item['is_vac'] ) {
+					// Vacanță — afișăm titlul dat de artist
+					$detail = get_post_field( 'post_title', $ev->ID ) ?: 'Vacanță';
+					$detail = esc_html( $detail );
+				} else {
+					$tip  = (string) get_post_meta( $ev->ID, 'tipul-evenimentului', true );
+					$loc  = (string) get_post_meta( $ev->ID, 'locatia-evenimentului', true );
+					$oras = (string) get_post_meta( $ev->ID, 'oras-eveniment', true );
+					$ora  = (string) get_post_meta( $ev->ID, 'ora-de-inceput', true );
+					$detail = esc_html( implode( ', ', array_filter( [ $tip, $loc, $oras, $ora ] ) ) ?: '—' );
+				}
+
+				// Bulină roșie dacă e chiar artistul care solicită vacanța și are eveniment activ
+				$alert = '';
+				if ( $requesting_uid && $uid === $requesting_uid ) {
+					$ev_status = (string) get_post_meta( $ev->ID, 'status-eveniment', true );
+					if ( in_array( $ev_status, [ 'confirmed', 'pending', 'vacation' ], true ) ) {
+						$alert = $red_dot;
+					}
+				}
 
 				$html .= "
-					<tr>
-						<td style='padding:5px 0 5px 12px;font-size:13px;color:#333;border-bottom:1px solid #f0f0f0;'>
-							<strong>{$artist}</strong> — " . esc_html( $detail ) . "
-						</td>
-					</tr>
+					<tr><td style='padding:5px 0 5px 12px;font-size:13px;color:#333;border-bottom:1px solid #f0f0f0;'>
+						{$alert}<strong>{$artist}</strong> — {$detail}
+					</td></tr>
 				";
 			}
 		}
