@@ -308,17 +308,13 @@ class BAS_Admin_Page {
 			<table class="bas-events-table">
 				<thead>
 					<tr>
-						<th>Data</th>
-						<th>Artist</th>
-						<th>Locație / Oraș</th>
-						<th>Client</th>
-						<th>Tip</th>
+						<th>Eveniment</th>
 						<th>Status</th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php if ( empty( $events ) ) : ?>
-					<tbody><tr><td colspan="6" class="bas-empty">Nu există evenimente viitoare.</td></tr></tbody>
+					<tbody><tr><td colspan="2" class="bas-empty">Nu există evenimente viitoare.</td></tr></tbody>
 					<?php endif; ?>
 
 					<?php
@@ -331,7 +327,7 @@ class BAS_Admin_Page {
 						if ( $__ev_year && $__ev_year !== $__current_year ) :
 							if ( $__current_year !== null ) : ?>
 							<tbody class="bas-year-sep-tbody">
-								<tr><td colspan="6" style="text-align:center;padding:10px 0;color:#555;font-size:11px;letter-spacing:2px;border-top:1px solid #1e1e1e;border-bottom:1px solid #1e1e1e;">── <?php echo esc_html( $__ev_year ); ?> ──</td></tr>
+								<tr><td colspan="2" style="text-align:center;padding:10px 0;color:#555;font-size:11px;letter-spacing:2px;border-top:1px solid #1e1e1e;border-bottom:1px solid #1e1e1e;">── <?php echo esc_html( $__ev_year ); ?> ──</td></tr>
 							</tbody>
 							<?php endif;
 							$__current_year = $__ev_year;
@@ -349,17 +345,43 @@ class BAS_Admin_Page {
 						data-type="<?php echo esc_attr( $ev['type'] ); ?>"
 						data-status="<?php echo esc_attr( $status ); ?>"
 					>
-						<td class="bas-data-cell"><?php echo esc_html( $ev['date_label'] ); ?></td>
-						<td class="bas-data-cell bas-artist-cell">
-							<?php echo esc_html( $ev['artist_name'] ); ?>
-							<?php if ( $ev['group_count'] > 1 ) : ?>
-								<span class="bas-group-badge">+<?php echo $ev['group_count'] - 1; ?></span>
+						<td class="bas-data-cell bas-main-cell">
+							<div class="bas-row-l1">
+								<span class="bas-ev-date"><?php echo esc_html( $ev['date_label'] ); ?></span>
+								<span class="bas-ev-dot">·</span>
+								<span class="bas-ev-artist">
+									<?php echo esc_html( $ev['artist_name'] ); ?>
+									<?php if ( $ev['group_count'] > 1 ) : ?>
+										<span class="bas-group-badge">+<?php echo $ev['group_count'] - 1; ?></span>
+									<?php endif; ?>
+								</span>
+								<?php if ( $ev['type_label'] !== '—' ) : ?>
+									<span class="bas-ev-dot">·</span>
+									<span><?php echo esc_html( $ev['type_label'] ); ?></span>
+								<?php endif; ?>
+							</div>
+							<?php
+							$l2_parts = array_filter( [
+								$ev['location'] !== '—' ? $ev['location'] : '',
+								$ev['client']   !== '—' ? $ev['client']   : '',
+							] );
+							if ( $l2_parts ) : ?>
+							<div class="bas-row-l2">
+								<?php
+								$first = true;
+								foreach ( $l2_parts as $part ) {
+									if ( ! $first ) echo '<span class="bas-ev-dot">·</span>';
+									echo '<span>' . esc_html( $part ) . '</span>';
+									$first = false;
+								}
+								?>
+							</div>
 							<?php endif; ?>
 						</td>
-						<td class="bas-data-cell"><?php echo esc_html( $ev['location'] ); ?></td>
-						<td class="bas-data-cell"><?php echo esc_html( $ev['client'] ); ?></td>
-						<td class="bas-data-cell"><?php echo esc_html( $ev['type_label'] ); ?></td>
 						<td class="bas-status-cell">
+							<span class="bas-status-badge"
+								x-text="{'confirmed':'Confirmat','pending':'Cerere client','canceled':'Anulat','vacation':'Vacanță'}[status] || status">
+							</span>
 							<select class="bas-status-select"
 								x-model="status"
 								@change="$el.closest('tr').dataset.status = status; $el.closest('tr').className = 'bas-row bas-row-' + status;">
@@ -389,7 +411,7 @@ class BAS_Admin_Page {
 
 					<!-- Rând detalii (expand) -->
 					<tr class="bas-detail-row" x-show="open">
-						<td colspan="6" class="bas-detail-cell">
+						<td colspan="2" class="bas-detail-cell">
 							<div class="bas-detail-grid">
 
 								<!-- Artist (schimbare) -->

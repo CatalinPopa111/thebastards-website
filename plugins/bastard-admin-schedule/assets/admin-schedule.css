@@ -499,8 +499,30 @@
 .bas-row-canceled  .bas-data-cell { color: #525252; text-decoration: line-through; }
 .bas-row-vacation  .bas-data-cell { color: #5b9bd5; }
 
+/* ── Layout 2 rânduri per eveniment ──────────────────────────── */
+.bas-main-cell { vertical-align: middle; }
+.bas-row-l1 { display: flex; flex-wrap: wrap; gap: 3px 8px; align-items: baseline; font-size: 13px; }
+.bas-row-l2 { display: flex; flex-wrap: wrap; gap: 3px 8px; align-items: baseline; font-size: 12px; margin-top: 4px; opacity: .8; }
+.bas-ev-date { font-weight: 600; white-space: nowrap; }
+.bas-ev-dot  { color: #3a3a3a; }
+
+/* ── Status badge admin ───────────────────────────────────────── */
+.bas-status-badge {
+	display: block;
+	padding: 2px 8px;
+	border-radius: 4px;
+	font-size: 11px;
+	text-align: center;
+	margin-bottom: 6px;
+	white-space: nowrap;
+}
+.bas-row-confirmed .bas-status-badge { background: #0f2d0f; color: #6fcf6f; }
+.bas-row-pending   .bas-status-badge { background: #2d2200; color: #e6c000; }
+.bas-row-canceled  .bas-status-badge { background: #2a0a0a; color: #eb5757; }
+.bas-row-vacation  .bas-status-badge { background: #0a1a2d; color: #5b9bd5; }
+
 /* ── Status cell ──────────────────────────────────────────────── */
-.bas-status-cell { white-space: nowrap; }
+.bas-status-cell { white-space: nowrap; vertical-align: middle; }
 .bas-status-select {
 	background: #1a1a1a;
 	border: 1px solid #333;

@@ -27,14 +27,16 @@ class BAS_Artist_Events {
 			  m_tip.meta_value    AS tip,
 			  m_loc.meta_value    AS locatie,
 			  m_oras.meta_value   AS oras,
-			  m_ora.meta_value    AS ora_inceput
+			  m_ora.meta_value    AS ora_inceput,
+			  m_client.meta_value AS client
 			FROM {$wpdb->posts} p
 			JOIN  {$wpdb->postmeta} m_data   ON m_data.post_id   = p.ID AND m_data.meta_key   = 'data-evenimentului'
 			JOIN  {$wpdb->postmeta} m_status ON m_status.post_id = p.ID AND m_status.meta_key = 'status-eveniment'
-			LEFT JOIN {$wpdb->postmeta} m_tip  ON m_tip.post_id  = p.ID AND m_tip.meta_key    = 'tipul-evenimentului'
-			LEFT JOIN {$wpdb->postmeta} m_loc  ON m_loc.post_id  = p.ID AND m_loc.meta_key    = 'locatia-evenimentului'
-			LEFT JOIN {$wpdb->postmeta} m_oras ON m_oras.post_id = p.ID AND m_oras.meta_key   = 'oras-eveniment'
-			LEFT JOIN {$wpdb->postmeta} m_ora  ON m_ora.post_id  = p.ID AND m_ora.meta_key    = 'ora-de-inceput'
+			LEFT JOIN {$wpdb->postmeta} m_tip    ON m_tip.post_id    = p.ID AND m_tip.meta_key    = 'tipul-evenimentului'
+			LEFT JOIN {$wpdb->postmeta} m_loc    ON m_loc.post_id    = p.ID AND m_loc.meta_key    = 'locatia-evenimentului'
+			LEFT JOIN {$wpdb->postmeta} m_oras   ON m_oras.post_id   = p.ID AND m_oras.meta_key   = 'oras-eveniment'
+			LEFT JOIN {$wpdb->postmeta} m_ora    ON m_ora.post_id    = p.ID AND m_ora.meta_key    = 'ora-de-inceput'
+			LEFT JOIN {$wpdb->postmeta} m_client ON m_client.post_id = p.ID AND m_client.meta_key = 'nume-client'
 			WHERE p.post_type   = 'evenimente'
 			  AND p.post_status = 'publish'
 			  AND p.post_author = %d
@@ -51,66 +53,93 @@ class BAS_Artist_Events {
 
 		ob_start();
 		?>
-		<div class="bas-events-wrap" style="font-family:Inter,sans-serif;">
-		<table class="bas-events-table" style="width:100%;border-collapse:collapse;font-size:14px;">
-			<thead>
-				<tr style="border-bottom:2px solid #2a2a2a;color:#aaa;text-align:left;">
-					<th style="padding:8px 10px;">Dată</th>
-					<th style="padding:8px 10px;">Tip</th>
-					<th style="padding:8px 10px;">Locație</th>
-					<th style="padding:8px 10px;">Oraș</th>
-					<th style="padding:8px 10px;">Ora</th>
-					<th style="padding:8px 10px;">Status</th>
-					<th style="padding:8px 10px;"></th>
-				</tr>
-			</thead>
-			<tbody>
-			<?php
-			$current_year = null;
+		<style>
+		.bas-el-list{font-family:Inter,sans-serif;font-size:14px;}
+		.bas-el-item{display:flex;align-items:center;padding:10px 2px;border-bottom:1px solid #1e1e1e;gap:10px;}
+		.bas-el-body{flex:1;min-width:0;}
+		.bas-el-l1{display:flex;flex-wrap:wrap;gap:3px 7px;align-items:baseline;font-size:14px;}
+		.bas-el-l2{display:flex;flex-wrap:wrap;gap:3px 7px;align-items:baseline;font-size:12px;margin-top:4px;opacity:.8;}
+		.bas-el-date{font-weight:600;white-space:nowrap;}
+		.bas-el-dot{color:#3a3a3a;}
+		.bas-el-right{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:5px;flex-shrink:0;min-width:0;}
+		.bas-el-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;white-space:nowrap;text-align:center;}
+		.bas-el-year{text-align:center;padding:8px 0;color:#555;font-size:11px;letter-spacing:2px;border-top:1px solid #1e1e1e;border-bottom:1px solid #1e1e1e;margin:2px 0;}
+		.bas-btn-del-ev{background:#2a0a0a;color:#eb5757;border:1px solid #5a2020;padding:3px 10px;border-radius:4px;cursor:pointer;font-size:11px;white-space:nowrap;}
+		</style>
+		<div class="bas-el-list">
+		<?php
+		$current_year = null;
 
-			foreach ( $events as $event ) {
-				$ts   = (int) $event['data_start'];
-				$year = date( 'Y', $ts );
+		foreach ( $events as $event ) {
+			$ts   = (int) $event['data_start'];
+			$year = date( 'Y', $ts );
 
-				if ( $year !== $current_year ) {
-					if ( $current_year !== null ) {
-						echo '<tr class="bas-year-sep"><td colspan="7" style="text-align:center;padding:12px 0;color:#555;font-size:12px;letter-spacing:2px;border-top:1px solid #2a2a2a;border-bottom:1px solid #2a2a2a;">── ' . esc_html( $year ) . ' ──</td></tr>';
-					}
-					$current_year = $year;
+			if ( $year !== $current_year ) {
+				if ( $current_year !== null ) {
+					echo '<div class="bas-el-year">── ' . esc_html( $year ) . ' ──</div>';
 				}
-
-				$status   = $event['status'];
-				$can_delete = in_array( $status, [ 'vacation', 'vacation_pending' ], true )
-				              && (int) $event['post_author'] === $user_id;
-
-				[ $badge_label, $badge_color ] = self::status_badge( $status );
-
-				$date_fmt = date_i18n( 'd M Y', $ts );
-				$ora      = $event['ora_inceput'] ? esc_html( $event['ora_inceput'] ) : '—';
-				$tip      = $event['tip']     ? esc_html( $event['tip'] )     : '—';
-				$locatie  = $event['locatie'] ? esc_html( $event['locatie'] ) : '—';
-				$oras     = $event['oras']    ? esc_html( $event['oras'] )    : '—';
-
-				$row_style = self::row_style( $status );
-				$cell_extra = $status === 'canceled' ? 'text-decoration:line-through;' : '';
-
-				echo '<tr data-event-id="' . esc_attr( $event['ID'] ) . '" style="border-bottom:1px solid #1e1e1e;' . $row_style . '">';
-				echo '<td style="padding:8px 10px;white-space:nowrap;' . $cell_extra . '">' . esc_html( $date_fmt ) . '</td>';
-				echo '<td style="padding:8px 10px;' . $cell_extra . '">' . $tip . '</td>';
-				echo '<td style="padding:8px 10px;' . $cell_extra . '">' . $locatie . '</td>';
-				echo '<td style="padding:8px 10px;' . $cell_extra . '">' . $oras . '</td>';
-				echo '<td style="padding:8px 10px;white-space:nowrap;' . $cell_extra . '">' . $ora . '</td>';
-				echo '<td style="padding:8px 10px;"><span style="' . esc_attr( $badge_color ) . 'display:inline-block;padding:2px 8px;border-radius:4px;font-size:12px;">' . esc_html( $badge_label ) . '</span></td>';
-				echo '<td style="padding:8px 10px;">';
-				if ( $can_delete ) {
-					echo '<button class="bas-delete-vacation" data-id="' . esc_attr( $event['ID'] ) . '" style="background:#2a0a0a;color:#eb5757;border:1px solid #5a2020;padding:3px 10px;border-radius:4px;cursor:pointer;font-size:12px;">Șterge</button>';
-				}
-				echo '</td>';
-				echo '</tr>';
+				$current_year = $year;
 			}
-			?>
-			</tbody>
-		</table>
+
+			$status     = $event['status'];
+			$can_delete = in_array( $status, [ 'vacation', 'vacation_pending' ], true )
+			              && (int) $event['post_author'] === $user_id;
+
+			[ $badge_label, $badge_color ] = self::status_badge( $status );
+			$row_color   = self::row_style( $status );
+			$strike      = $status === 'canceled' ? 'text-decoration:line-through;' : '';
+
+			$date_fmt = date_i18n( 'd M Y', $ts );
+			$tip      = $event['tip']     ?: '';
+			$client   = $event['client']  ?: '';
+			$locatie  = $event['locatie'] ?: '';
+			$oras     = $event['oras']    ?: '';
+			$ora      = $event['ora_inceput'] ?: '';
+
+			// Rând 1: dată · tip · client (dacă există)
+			$l1 = array_filter( [ $date_fmt, $tip, $client ] );
+			// Rând 2: locație · oraș · oră (dacă există)
+			$l2 = array_filter( [ $locatie, $oras, $ora ] );
+
+			echo '<div class="bas-el-item" data-event-id="' . esc_attr( $event['ID'] ) . '">';
+
+			// Corp stânga
+			echo '<div class="bas-el-body" style="' . $row_color . $strike . '">';
+
+			echo '<div class="bas-el-l1">';
+			$first = true;
+			foreach ( $l1 as $part ) {
+				if ( ! $first ) echo '<span class="bas-el-dot">·</span>';
+				$cls = $first ? ' class="bas-el-date"' : '';
+				echo '<span' . $cls . '>' . esc_html( $part ) . '</span>';
+				$first = false;
+			}
+			echo '</div>';
+
+			if ( $l2 ) {
+				echo '<div class="bas-el-l2">';
+				$first = true;
+				foreach ( $l2 as $part ) {
+					if ( ! $first ) echo '<span class="bas-el-dot">·</span>';
+					echo '<span>' . esc_html( $part ) . '</span>';
+					$first = false;
+				}
+				echo '</div>';
+			}
+
+			echo '</div>'; // .bas-el-body
+
+			// Dreapta: badge + buton ștergere
+			echo '<div class="bas-el-right">';
+			echo '<span class="bas-el-badge" style="' . esc_attr( $badge_color ) . '">' . esc_html( $badge_label ) . '</span>';
+			if ( $can_delete ) {
+				echo '<button class="bas-btn-del-ev bas-delete-vacation" data-id="' . esc_attr( $event['ID'] ) . '">Șterge</button>';
+			}
+			echo '</div>'; // .bas-el-right
+
+			echo '</div>'; // .bas-el-item
+		}
+		?>
 		</div>
 
 		<script>

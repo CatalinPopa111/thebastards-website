@@ -51,7 +51,7 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
 		'bas-admin',
 		BAS_URL . 'assets/admin-schedule.css',
 		[ 'bas-google-fonts' ],
-		'1.2.0'
+		'1.3.0'
 	);
 
 	// bas-admin se încarcă primul (înregistrează ascultătorul alpine:init)
@@ -60,7 +60,7 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
 		'bas-admin',
 		BAS_URL . 'assets/admin-schedule.js',
 		[],
-		'1.2.0',
+		'1.3.0',
 		true // footer
 	);
 
@@ -105,9 +105,9 @@ add_action( 'wp_enqueue_scripts', function () {
 		[],
 		null
 	);
-	wp_register_style( 'bas-admin', BAS_URL . 'assets/admin-schedule.css', [ 'bas-google-fonts' ], '1.1.0' );
+	wp_register_style( 'bas-admin', BAS_URL . 'assets/admin-schedule.css', [ 'bas-google-fonts' ], '1.3.0' );
 	// bas-admin se înregistrează fără dependință de Alpine (trebuie să se încarce primul)
-	wp_register_script( 'bas-admin', BAS_URL . 'assets/admin-schedule.js', [], '1.1.0', true );
+	wp_register_script( 'bas-admin', BAS_URL . 'assets/admin-schedule.js', [], '1.3.0', true );
 	// bas-alpine depinde de bas-admin → se încarcă după
 	wp_register_script( 'bas-alpine', BAS_URL . 'assets/alpine.min.js', [ 'bas-admin' ], '3.14.1', true );
 } );
