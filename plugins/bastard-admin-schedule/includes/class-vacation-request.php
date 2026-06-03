@@ -98,12 +98,9 @@ class BAS_Vacation_Request {
 	// ── Acceptă vacanța ─────────────────────────────────────────────
 
 	private static function accept_vacation( int $event_id ): void {
+		// update_post_meta declanșează updated_post_meta → BAS_Booking_Sync::on_meta_change
+		// care creează booking-ul cu status 'on-hold'.
 		update_post_meta( $event_id, 'status-eveniment', 'vacation' );
-
-		// Declanșăm save_post pentru ca BAS_Booking_Sync să creeze booking-ul.
-		// $processing = true (setat în caller) face ca maybe_intercept_vacation (priority 5)
-		// să returneze imediat, lăsând BAS_Booking_Sync (priority 20) să ruleze.
-		wp_update_post( [ 'ID' => $event_id ] );
 
 		BAS_Email_Notifier::send_vacation_approved_to_artist( $event_id );
 	}

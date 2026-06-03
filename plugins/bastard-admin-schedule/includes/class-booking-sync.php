@@ -25,34 +25,23 @@ class BAS_Booking_Sync {
 	public static function resume(): void { self::$processing = false; }
 
 	public static function register(): void {
-		// Trigger principal: când status-eveniment este adăugat sau modificat
+		// Singurul trigger: când status-eveniment este adăugat sau modificat.
+		// Aceste hook-uri se declanșează DUPĂ ce meta este efectiv salvat,
+		// indiferent de calea de creare (WP Admin, JetEngine form, wp_update_post cu meta_input).
 		add_action( 'added_post_meta',   [ __CLASS__, 'on_meta_change' ], 20, 4 );
 		add_action( 'updated_post_meta', [ __CLASS__, 'on_meta_change' ], 20, 4 );
-
-		// Trigger secundar: pentru wp_update_post() fără schimbare de meta (ex: accept_vacation)
-		add_action( 'save_post_evenimente', [ __CLASS__, 'on_save_post' ], 99, 1 );
 	}
 
 	// Declanșat când status-eveniment este salvat/modificat
-	public static function on_meta_change( int $meta_id, int $post_id, string $meta_key, string $meta_value ): void {
+	public static function on_meta_change( int $meta_id, int $post_id, string $meta_key, mixed $meta_value ): void {
 		if ( $meta_key !== 'status-eveniment' ) return;
+		if ( ! is_string( $meta_value ) ) return;
 		if ( get_post_type( $post_id ) !== 'evenimente' ) return;
 
 		self::sync( $post_id, $meta_value );
 	}
 
-	// Declanșat de save_post — citește statusul curent din DB (meta deja salvat la priority 99)
-	public static function on_save_post( int $post_id ): void {
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
-		if ( wp_is_post_revision( $post_id ) ) return;
-
-		$status = (string) get_post_meta( $post_id, 'status-eveniment', true );
-		if ( ! $status ) return;
-
-		self::sync( $post_id, $status );
-	}
-
-	// Logica principală de upsert — apelată din ambele hook-uri
+	// Logica principală de upsert — apelată din hook-urile de meta
 	public static function sync( int $post_id, string $status ): void {
 		if ( self::$processing ) return;
 
