@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - /bin/mkdir -p /home/bastard/public_html/wp-content/plugins/bastard-admin-schedule
+    - /bin/cp -Rf plugins/bastard-admin-schedule/. /home/bastard/public_html/wp-content/plugins/bastard-admin-schedule/
