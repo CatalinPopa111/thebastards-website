@@ -2,27 +2,59 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Sincronizează wp4u_jet_apartment_bookings cu status-eveniment la fiecare save.
+ * Sincronizează wp4u_jet_apartment_bookings cu status-eveniment.
+ *
+ * Folosim added_post_meta + updated_post_meta pentru `status-eveniment` ca trigger
+ * principal — acestea se declanșează DUPĂ ce meta este salvat, indiferent de calea
+ * de creare (WP Admin, JetEngine form, bastard-admin-schedule).
+ *
+ * save_post_evenimente (priority 99) acoperă cazul accept_vacation() care apelează
+ * wp_update_post() fără să schimbe statusul (meta deja salvat la acel moment).
  *
  * Înlocuiește Snippet 9 (updated_post_meta sync) și Snippet 17 (vacation booking).
- * Rulează la priority 20, după Snippet 7 (conversie dată→timestamp, priority 10 default).
  */
 class BAS_Booking_Sync {
 
 	private static bool $processing = false;
 
+	// Per-request: previne dubla execuție dacă ambele hook-uri se declanșează la același save
+	private static array $synced = [];
+
 	public static function register(): void {
-		add_action( 'save_post_evenimente', [ __CLASS__, 'sync' ], 20, 1 );
+		// Trigger principal: când status-eveniment este adăugat sau modificat
+		add_action( 'added_post_meta',   [ __CLASS__, 'on_meta_change' ], 20, 4 );
+		add_action( 'updated_post_meta', [ __CLASS__, 'on_meta_change' ], 20, 4 );
+
+		// Trigger secundar: pentru wp_update_post() fără schimbare de meta (ex: accept_vacation)
+		add_action( 'save_post_evenimente', [ __CLASS__, 'on_save_post' ], 99, 1 );
 	}
 
-	public static function sync( int $post_id ): void {
-		if ( self::$processing ) return;
+	// Declanșat când status-eveniment este salvat/modificat
+	public static function on_meta_change( int $meta_id, int $post_id, string $meta_key, string $meta_value ): void {
+		if ( $meta_key !== 'status-eveniment' ) return;
+		if ( get_post_type( $post_id ) !== 'evenimente' ) return;
+
+		self::sync( $post_id, $meta_value );
+	}
+
+	// Declanșat de save_post — citește statusul curent din DB (meta deja salvat la priority 99)
+	public static function on_save_post( int $post_id ): void {
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
 		if ( wp_is_post_revision( $post_id ) ) return;
-		if ( wp_is_post_autosave( $post_id ) ) return;
 
 		$status = (string) get_post_meta( $post_id, 'status-eveniment', true );
 		if ( ! $status ) return;
+
+		self::sync( $post_id, $status );
+	}
+
+	// Logica principală de upsert — apelată din ambele hook-uri
+	public static function sync( int $post_id, string $status ): void {
+		if ( self::$processing ) return;
+
+		// Previne dubla execuție în același request pentru același post
+		if ( isset( self::$synced[ $post_id ] ) ) return;
+		self::$synced[ $post_id ] = true;
 
 		self::$processing = true;
 
@@ -30,7 +62,6 @@ class BAS_Booking_Sync {
 		$table = $wpdb->prefix . 'jet_apartment_bookings';
 
 		if ( $status === 'vacation_pending' ) {
-			// Data rămâne liberă până la aprobarea adminului
 			$wpdb->delete( $table, [ 'order_id' => $post_id ], [ '%d' ] );
 			self::$processing = false;
 			return;
