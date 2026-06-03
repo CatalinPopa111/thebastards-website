@@ -510,8 +510,14 @@ class BAS_Email_Notifier {
 			🚫 Respinge cererea
 		</a>";
 
-		// Evenimente din săptămâna vacanței
-		$week_events_html = self::build_week_events_html( $year, $week, $name_map );
+		// Evenimente din perioada vacanței ±2 zile, grupate pe zile
+		$context_from = strtotime( 'midnight', $start_ts ) - 2 * DAY_IN_SECONDS;
+		$context_to   = strtotime( 'midnight', $end_ts ?: $start_ts ) + 2 * DAY_IN_SECONDS + DAY_IN_SECONDS - 1;
+		$period_html  = self::build_period_events_html( $context_from, $context_to, $name_map );
+
+		$context_label = date( 'j', $context_from ) . ' ' . self::$months_ro[ (int) date( 'n', $context_from ) ]
+		               . ' – ' . date( 'j', $context_to ) . ' ' . self::$months_ro[ (int) date( 'n', $context_to ) ]
+		               . ' ' . date( 'Y', $context_to );
 
 		$content = "
 			<div style='margin-bottom:28px;'>
@@ -538,9 +544,9 @@ class BAS_Email_Notifier {
 				<div style='font-size:11px;font-weight:bold;text-transform:uppercase;
 				            letter-spacing:1px;color:#aaa;border-top:1px solid #f0f0f0;
 				            padding-top:16px;margin-bottom:12px;'>
-					Toate evenimentele din săptămâna " . date( 'j', $start_ts ) . " – " . (int)date( 'j', (new DateTime())->setISODate($year,$week,7)->getTimestamp() ) . " " . self::$months_ro[ (int) date( 'n', $start_ts ) ] . "
+					Evenimente în perioada {$context_label}
 				</div>
-				{$week_events_html}
+				{$period_html}
 			</div>
 		";
 
@@ -652,6 +658,90 @@ class BAS_Email_Notifier {
 	}
 
 	// ── Helper: HTML-ul cu toate evenimentele dintr-o săptămână ────
+
+	// ── Evenimente pe perioadă, grupate pe zile ───────────────────
+	private static function build_period_events_html( int $from_ts, int $to_ts, array $name_map ): string {
+		$posts = get_posts( [
+			'post_type'      => 'evenimente',
+			'posts_per_page' => -1,
+			'post_status'    => 'publish',
+			'orderby'        => 'meta_value_num',
+			'meta_key'       => 'data-evenimentului',
+			'order'          => 'ASC',
+			'meta_query'     => [
+				'relation' => 'AND',
+				[
+					'key'     => 'data-evenimentului',
+					'value'   => [ $from_ts, $to_ts ],
+					'compare' => 'BETWEEN',
+					'type'    => 'NUMERIC',
+				],
+				[
+					'key'     => 'status-eveniment',
+					'value'   => [ 'canceled', 'vacation_pending' ],
+					'compare' => 'NOT IN',
+				],
+			],
+		] );
+
+		if ( empty( $posts ) ) {
+			return '<p style="color:#888;font-size:13px;">Niciun eveniment în această perioadă.</p>';
+		}
+
+		// Grupăm pe zile (YYYY-MM-DD)
+		$by_day = [];
+		foreach ( $posts as $p ) {
+			$ts  = (int) get_post_meta( $p->ID, 'data-evenimentului', true );
+			$day = date( 'Y-m-d', $ts );
+			$by_day[ $day ][] = $p;
+		}
+		ksort( $by_day );
+
+		$html = "<table width='100%' cellpadding='0' cellspacing='0'>";
+
+		foreach ( $by_day as $day_str => $events ) {
+			$day_ts   = strtotime( $day_str );
+			$dow      = (int) date( 'N', $day_ts ); // 1=Luni … 7=Duminică
+			$day_name = self::$days_ro[ $dow ] ?? '';
+			$day_num  = (int) date( 'j', $day_ts );
+			$month    = self::$months_ro[ (int) date( 'n', $day_ts ) ] ?? '';
+
+			$html .= "
+				<tr>
+					<td style='padding:14px 0 4px;'>
+						<div style='font-size:12px;font-weight:bold;text-transform:uppercase;
+						            letter-spacing:0.5px;color:#FF6A00;border-bottom:1px solid #FF6A00;
+						            padding-bottom:5px;'>
+							{$day_name}, {$day_num} " . strtolower( $month ) . "
+						</div>
+					</td>
+				</tr>
+			";
+
+			foreach ( $events as $ev ) {
+				$uid    = (int) $ev->post_author;
+				$artist = esc_html( $name_map[ $uid ] ?? "Artist #{$uid}" );
+				$tip    = (string) get_post_meta( $ev->ID, 'tipul-evenimentului', true );
+				$loc    = (string) get_post_meta( $ev->ID, 'locatia-evenimentului', true );
+				$oras   = (string) get_post_meta( $ev->ID, 'oras-eveniment', true );
+				$ora    = (string) get_post_meta( $ev->ID, 'ora-de-inceput', true );
+
+				$parts = array_filter( [ $tip, $loc, $oras, $ora ] );
+				$detail = $parts ? implode( ', ', $parts ) : '—';
+
+				$html .= "
+					<tr>
+						<td style='padding:5px 0 5px 12px;font-size:13px;color:#333;border-bottom:1px solid #f0f0f0;'>
+							<strong>{$artist}</strong> — " . esc_html( $detail ) . "
+						</td>
+					</tr>
+				";
+			}
+		}
+
+		$html .= "</table>";
+		return $html;
+	}
 
 	private static function build_week_events_html( int $year, int $week, array $name_map ): string {
 		$dt_mon = new DateTime();

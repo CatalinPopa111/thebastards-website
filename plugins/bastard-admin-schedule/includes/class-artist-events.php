@@ -28,15 +28,17 @@ class BAS_Artist_Events {
 			  m_loc.meta_value    AS locatie,
 			  m_oras.meta_value   AS oras,
 			  m_ora.meta_value    AS ora_inceput,
-			  m_client.meta_value AS client
+			  m_client.meta_value  AS client,
+			  m_sfarsit.meta_value AS data_sfarsit
 			FROM {$wpdb->posts} p
-			JOIN  {$wpdb->postmeta} m_data   ON m_data.post_id   = p.ID AND m_data.meta_key   = 'data-evenimentului'
-			JOIN  {$wpdb->postmeta} m_status ON m_status.post_id = p.ID AND m_status.meta_key = 'status-eveniment'
-			LEFT JOIN {$wpdb->postmeta} m_tip    ON m_tip.post_id    = p.ID AND m_tip.meta_key    = 'tipul-evenimentului'
-			LEFT JOIN {$wpdb->postmeta} m_loc    ON m_loc.post_id    = p.ID AND m_loc.meta_key    = 'locatia-evenimentului'
-			LEFT JOIN {$wpdb->postmeta} m_oras   ON m_oras.post_id   = p.ID AND m_oras.meta_key   = 'oras-eveniment'
-			LEFT JOIN {$wpdb->postmeta} m_ora    ON m_ora.post_id    = p.ID AND m_ora.meta_key    = 'ora-de-inceput'
-			LEFT JOIN {$wpdb->postmeta} m_client ON m_client.post_id = p.ID AND m_client.meta_key = 'nume-client'
+			JOIN  {$wpdb->postmeta} m_data    ON m_data.post_id    = p.ID AND m_data.meta_key    = 'data-evenimentului'
+			JOIN  {$wpdb->postmeta} m_status  ON m_status.post_id  = p.ID AND m_status.meta_key  = 'status-eveniment'
+			LEFT JOIN {$wpdb->postmeta} m_tip     ON m_tip.post_id     = p.ID AND m_tip.meta_key     = 'tipul-evenimentului'
+			LEFT JOIN {$wpdb->postmeta} m_loc     ON m_loc.post_id     = p.ID AND m_loc.meta_key     = 'locatia-evenimentului'
+			LEFT JOIN {$wpdb->postmeta} m_oras    ON m_oras.post_id    = p.ID AND m_oras.meta_key    = 'oras-eveniment'
+			LEFT JOIN {$wpdb->postmeta} m_ora     ON m_ora.post_id     = p.ID AND m_ora.meta_key     = 'ora-de-inceput'
+			LEFT JOIN {$wpdb->postmeta} m_client  ON m_client.post_id  = p.ID AND m_client.meta_key  = 'nume-client'
+			LEFT JOIN {$wpdb->postmeta} m_sfarsit ON m_sfarsit.post_id = p.ID AND m_sfarsit.meta_key = 'data-sfarsit'
 			WHERE p.post_type   = 'evenimente'
 			  AND p.post_status = 'publish'
 			  AND p.post_author = %d
@@ -89,9 +91,16 @@ class BAS_Artist_Events {
 			$row_color   = self::row_style( $status );
 			$strike      = $status === 'canceled' ? 'text-decoration:line-through;' : '';
 
-			$date_fmt = date_i18n( 'd M Y', $ts );
+			// Dată afișată — pentru vacanțe cu perioadă, afișăm intervalul
+			$end_ts   = (int) ( $event['data_sfarsit'] ?? 0 );
+			$is_vac   = in_array( $status, [ 'vacation', 'vacation_pending' ], true );
+			if ( $is_vac && $end_ts && $end_ts > $ts ) {
+				$date_fmt = date_i18n( 'd M', $ts ) . ' → ' . date_i18n( 'd M Y', $end_ts );
+			} else {
+				$date_fmt = date_i18n( 'd M Y', $ts );
+			}
 			// Pentru vacanțe, tipul e gol — folosim titlul postării (ce a scris artistul)
-			$tip      = $event['tip'] ?: ( in_array( $status, [ 'vacation', 'vacation_pending' ], true ) ? $event['post_title'] : '' );
+			$tip      = $event['tip'] ?: ( $is_vac ? $event['post_title'] : '' );
 			$client   = $event['client']  ?: '';
 			$locatie  = $event['locatie'] ?: '';
 			$oras     = $event['oras']    ?: '';
@@ -227,7 +236,7 @@ class BAS_Artist_Events {
 			'confirmed'        => 'color:#ffffff;',
 			'pending'          => 'color:#777777;',
 			'vacation'         => 'color:#5b9bd5;',
-			'vacation_pending' => 'color:#FF6A00;',
+			'vacation_pending' => 'color:#5b9bd5;',
 			'canceled'         => 'color:#525252;',
 			default            => '',
 		};
@@ -238,7 +247,7 @@ class BAS_Artist_Events {
 			'confirmed'        => [ 'Confirmat',              'background:#0f2d0f;color:#6fcf6f;' ],
 			'pending'          => [ 'Cerere client',          'background:#2d2200;color:#e6c000;' ],
 			'vacation'         => [ 'Vacanță',                'background:#0a1a2d;color:#5b9bd5;' ],
-			'vacation_pending' => [ 'Vacanță în așteptare',   'background:#2d1500;color:#FF6A00;' ],
+			'vacation_pending' => [ 'Vacanță în așteptare',   'background:#0a1a2d;color:#5b9bd5;' ],
 			'canceled'         => [ 'Anulat',                 'background:#2a0a0a;color:#eb5757;' ],
 			default            => [ ucfirst( $status ),       'background:#1e1e1e;color:#888;' ],
 		};
