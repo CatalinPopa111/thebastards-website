@@ -18,6 +18,8 @@ class BAS_Artist_Events {
 		$nonce     = wp_create_nonce( 'bas_artist_events_nonce' );
 		$ajax_url  = admin_url( 'admin-ajax.php' );
 
+		$out = self::render_weekly_view( $user_id );
+
 		global $wpdb;
 
 		$events = $wpdb->get_results( $wpdb->prepare(
@@ -50,7 +52,7 @@ class BAS_Artist_Events {
 		), ARRAY_A );
 
 		if ( empty( $events ) ) {
-			return '<p style="color:#888;font-style:italic;">Nu există evenimente viitoare.</p>';
+			return $out . '<p style="color:#888;font-style:italic;">Nu există evenimente viitoare.</p>';
 		}
 
 		ob_start();
@@ -191,6 +193,188 @@ class BAS_Artist_Events {
 			});
 		})();
 		</script>
+		<?php
+		return $out . '<div style="height:50px;"></div>' . ob_get_clean();
+	}
+
+	// ── Program săptămânal artist ─────────────────────────────────────
+
+	private static function current_week_monday(): int {
+		$n = (int) date( 'N' ); // 1 = Lun, 7 = Dum
+		return strtotime( '-' . ( $n - 1 ) . ' days', strtotime( 'today midnight' ) );
+	}
+
+	private static function get_week_days( int $offset ): array {
+		$monday    = strtotime( "+{$offset} weeks", self::current_week_monday() );
+		$today     = strtotime( 'today midnight' );
+		$day_names = [ 'Lun', 'Mar', 'Mie', 'Joi', 'Vin', 'Sâm', 'Dum' ];
+		$months    = [ 1 => 'Ian', 'Feb', 'Mar', 'Apr', 'Mai', 'Iun', 'Iul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ];
+		$days      = [];
+
+		for ( $i = 0; $i < 7; $i++ ) {
+			$ts     = strtotime( "+{$i} days", $monday );
+			$day_n  = (int) date( 'j', $ts );
+			$mon_n  = (int) date( 'n', $ts );
+			$year_n = (int) date( 'Y', $ts );
+
+			$days[] = [
+				'date'        => date( 'Y-m-d', $ts ),
+				'ts'          => $ts,
+				'col_label'   => $day_names[ $i ] . ' ' . $day_n,
+				'label_short' => $day_n . ' ' . $months[ $mon_n ],
+				'label_full'  => $day_n . ' ' . $months[ $mon_n ] . ' ' . $year_n,
+				'is_today'    => $ts === $today,
+			];
+		}
+
+		return $days;
+	}
+
+	private static function render_weekly_view( int $user_id ): string {
+		$week_offset = (int) ( $_GET['week_offset'] ?? 0 );
+		$week_days   = self::get_week_days( $week_offset );
+		$week_label  = $week_days[0]['label_short'] . ' – ' . $week_days[6]['label_full'];
+
+		$week_start_ts = $week_days[0]['ts'];
+		$week_end_ts   = $week_days[6]['ts'] + 86399;
+
+		$prev_url = add_query_arg( 'week_offset', $week_offset - 1 );
+		$next_url = add_query_arg( 'week_offset', $week_offset + 1 );
+
+		global $wpdb;
+
+		$events = $wpdb->get_results( $wpdb->prepare(
+			"SELECT p.ID, p.post_title,
+			  m_start.meta_value  AS data_start,
+			  m_end.meta_value    AS data_sfarsit,
+			  m_status.meta_value AS status,
+			  m_tip.meta_value    AS tip,
+			  m_loc.meta_value    AS locatie,
+			  m_oras.meta_value   AS oras,
+			  m_ora.meta_value    AS ora_inceput
+			FROM {$wpdb->posts} p
+			JOIN  {$wpdb->postmeta} m_start  ON m_start.post_id  = p.ID AND m_start.meta_key  = 'data-evenimentului'
+			JOIN  {$wpdb->postmeta} m_status ON m_status.post_id = p.ID AND m_status.meta_key = 'status-eveniment'
+			LEFT JOIN {$wpdb->postmeta} m_end  ON m_end.post_id  = p.ID AND m_end.meta_key    = 'data-sfarsit'
+			LEFT JOIN {$wpdb->postmeta} m_tip  ON m_tip.post_id  = p.ID AND m_tip.meta_key    = 'tipul-evenimentului'
+			LEFT JOIN {$wpdb->postmeta} m_loc  ON m_loc.post_id  = p.ID AND m_loc.meta_key    = 'locatia-evenimentului'
+			LEFT JOIN {$wpdb->postmeta} m_oras ON m_oras.post_id = p.ID AND m_oras.meta_key   = 'oras-eveniment'
+			LEFT JOIN {$wpdb->postmeta} m_ora  ON m_ora.post_id  = p.ID AND m_ora.meta_key    = 'ora-de-inceput'
+			WHERE p.post_type   = 'evenimente'
+			  AND p.post_status = 'publish'
+			  AND p.post_author = %d
+			  AND m_status.meta_value IN ('confirmed','vacation')
+			  AND (
+			    CAST(m_start.meta_value AS UNSIGNED) BETWEEN %d AND %d
+			    OR (
+			      m_status.meta_value IN ('vacation','vacation_pending')
+			      AND CAST(m_start.meta_value AS UNSIGNED) < %d
+			      AND m_end.meta_value IS NOT NULL
+			      AND CAST(m_end.meta_value AS UNSIGNED) >= %d
+			    )
+			  )
+			ORDER BY CAST(m_start.meta_value AS UNSIGNED) ASC",
+			$user_id,
+			$week_start_ts,
+			$week_end_ts,
+			$week_start_ts,
+			$week_start_ts
+		), ARRAY_A );
+
+		// Grupăm evenimentele pe zile
+		$day_map = [];
+		foreach ( $week_days as $day ) {
+			$day_map[ $day['date'] ] = [];
+		}
+
+		foreach ( $events as $ev ) {
+			$start_ts = (int) $ev['data_start'];
+			$end_ts   = (int) ( $ev['data_sfarsit'] ?? 0 );
+			$is_vac   = in_array( $ev['status'], [ 'vacation', 'vacation_pending' ], true );
+
+			if ( $is_vac && $end_ts > $start_ts ) {
+				foreach ( $week_days as $day ) {
+					if ( $start_ts <= ( $day['ts'] + 86399 ) && $end_ts >= $day['ts'] ) {
+						$day_map[ $day['date'] ][] = $ev;
+					}
+				}
+			} else {
+				$start_date = date( 'Y-m-d', $start_ts );
+				if ( isset( $day_map[ $start_date ] ) ) {
+					$day_map[ $start_date ][] = $ev;
+				}
+			}
+		}
+
+		ob_start();
+		?>
+		<style>
+		.bas-aw-wrap *{box-sizing:border-box;}
+		.bas-aw-wrap{font-family:Inter,sans-serif;font-size:14px;margin-bottom:4px;}
+		.bas-aw-nav{display:flex;align-items:center;gap:16px;margin-bottom:20px;}
+		.bas-aw-btn-nav{background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#fff;padding:8px 14px;font-size:13px;text-decoration:none;display:inline-block;transition:border-color .15s,color .15s;}
+		.bas-aw-btn-nav:hover{border-color:#FF6A00;color:#FF6A00;}
+		.bas-aw-week-label{font-weight:600;font-size:16px;color:#FF6A00;flex:1;text-align:center;}
+		.bas-aw-table-wrap{overflow-x:auto;}
+		.bas-aw-cal{width:100%;border-collapse:collapse;border-radius:10px;overflow:hidden;border:1px solid #2a2a2a;}
+		.bas-aw-cal th{background:#1a1a1a;padding:10px 8px;font-weight:600;font-size:12px;text-align:center;border:1px solid #2a2a2a;color:#777;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;}
+		.bas-aw-cal th.bas-aw-today{color:#FF6A00;}
+		.bas-aw-cal td{background:#111;padding:10px 8px;border:1px solid #2a2a2a;vertical-align:top;min-width:100px;}
+		.bas-aw-event{font-size:12px;line-height:1.4;margin-bottom:5px;}
+		.bas-aw-event:last-child{margin-bottom:0;}
+		.bas-aw-empty{color:#333;font-size:12px;font-style:italic;}
+		.bas-aw-divider{border:none;border-top:1px solid #1e1e1e;margin:50px 0 20px;}
+		</style>
+		<div class="bas-aw-wrap">
+			<div class="bas-aw-nav">
+				<a href="<?php echo esc_url( $prev_url ); ?>" class="bas-aw-btn-nav">← Precedenta</a>
+				<span class="bas-aw-week-label"><?php echo esc_html( $week_label ); ?></span>
+				<a href="<?php echo esc_url( $next_url ); ?>" class="bas-aw-btn-nav">Urmatoarea →</a>
+			</div>
+			<div class="bas-aw-table-wrap">
+				<table class="bas-aw-cal">
+					<thead>
+						<tr>
+						<?php foreach ( $week_days as $day ) :
+							$cls = $day['is_today'] ? ' class="bas-aw-today"' : '';
+						?>
+							<th<?php echo $cls; ?>><?php echo esc_html( $day['col_label'] ); ?></th>
+						<?php endforeach; ?>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+						<?php foreach ( $week_days as $day ) :
+							$day_evs = $day_map[ $day['date'] ] ?? [];
+						?>
+							<td>
+							<?php if ( empty( $day_evs ) ) : ?>
+								<span class="bas-aw-empty">—</span>
+							<?php else :
+								foreach ( $day_evs as $ev ) :
+									$status = $ev['status'];
+									$is_vac = in_array( $status, [ 'vacation', 'vacation_pending' ], true );
+									$tip    = $ev['tip'] ?: ( $is_vac ? ( $ev['post_title'] ?: 'Vacanță' ) : '' );
+									$parts  = array_filter( [ $tip, $ev['locatie'], $ev['oras'], $ev['ora_inceput'] ] );
+									$color  = match( $status ) {
+										'confirmed'        => '#ffffff',
+										'pending'          => '#777777',
+										'vacation',
+										'vacation_pending'  => '#5b9bd5',
+										default            => '#888888',
+									};
+							?>
+								<div class="bas-aw-event" style="color:<?php echo esc_attr( $color ); ?>">
+									<?php echo esc_html( implode( ' · ', $parts ) ?: ( $is_vac ? 'Vacanță' : '—' ) ); ?>
+								</div>
+							<?php endforeach; endif; ?>
+							</td>
+						<?php endforeach; ?>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
 		<?php
 		return ob_get_clean();
 	}

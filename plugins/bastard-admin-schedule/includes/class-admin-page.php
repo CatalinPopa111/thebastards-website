@@ -593,15 +593,20 @@ class BAS_Admin_Page {
 
 	// ── Helpers PHP ────────────────────────────────────────────────
 
+	private static function current_week_monday(): int {
+		$n = (int) date( 'N' ); // 1 = Lun, 7 = Dum
+		return strtotime( '-' . ( $n - 1 ) . ' days', strtotime( 'today midnight' ) );
+	}
+
 	private static function get_year_week( int $offset ): array {
-		$ts   = strtotime( "+{$offset} weeks", strtotime( 'this monday midnight' ) );
+		$ts   = strtotime( "+{$offset} weeks", self::current_week_monday() );
 		$year = (int) date( 'Y', $ts );
 		$week = (int) date( 'W', $ts );
 		return [ $year, $week ];
 	}
 
 	private static function get_week_days( int $offset ): array {
-		$monday = strtotime( "+{$offset} weeks", strtotime( 'this monday midnight' ) );
+		$monday = strtotime( "+{$offset} weeks", self::current_week_monday() );
 		$today  = strtotime( 'today midnight' );
 		$days   = [];
 
