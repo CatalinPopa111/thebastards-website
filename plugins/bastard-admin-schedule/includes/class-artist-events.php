@@ -58,7 +58,7 @@ class BAS_Artist_Events {
 		ob_start();
 		?>
 		<style>
-		.bas-el-list{font-family:Inter,sans-serif;font-size:14px;}
+		.bas-el-list{font-family:Inter,sans-serif;font-size:14px;border-top:1px solid #1e1e1e;}
 		.bas-el-item{display:flex;align-items:center;padding:10px 2px;border-bottom:1px solid #1e1e1e;gap:10px;}
 		.bas-el-body{flex:1;min-width:0;}
 		.bas-el-l1{display:flex;flex-wrap:wrap;gap:3px 7px;align-items:baseline;font-size:14px;}
@@ -194,7 +194,14 @@ class BAS_Artist_Events {
 		})();
 		</script>
 		<?php
-		return $out . '<div style="height:50px;"></div>' . ob_get_clean();
+		$popup_url = '#elementor-action%3Aaction%3Dpopup%3Aopen%26settings%3DeyJpZCI6IjE5NTYiLCJ0b2dnbGUiOmZhbHNlfQ%3D%3D';
+		$btn = '<div style="height:25px;"></div>'
+		     . '<div style="text-align:center;">'
+		     .   '<a href="' . esc_attr( $popup_url ) . '" style="display:inline-block;background:#FF6A00;color:#fff;font-family:Inter,sans-serif;font-weight:600;font-size:14px;padding:11px 28px;border-radius:10px;text-decoration:none;letter-spacing:.3px;">Blochează Date</a>'
+		     . '</div>'
+		     . '<div style="height:25px;"></div>';
+
+		return $out . $btn . ob_get_clean();
 	}
 
 	// ── Program săptămânal artist ─────────────────────────────────────
