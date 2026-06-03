@@ -91,12 +91,15 @@ class BAS_Artist_Events {
 				$locatie  = $event['locatie'] ? esc_html( $event['locatie'] ) : '—';
 				$oras     = $event['oras']    ? esc_html( $event['oras'] )    : '—';
 
-				echo '<tr data-event-id="' . esc_attr( $event['ID'] ) . '" style="border-bottom:1px solid #1e1e1e;">';
-				echo '<td style="padding:8px 10px;white-space:nowrap;">' . esc_html( $date_fmt ) . '</td>';
-				echo '<td style="padding:8px 10px;">' . $tip . '</td>';
-				echo '<td style="padding:8px 10px;">' . $locatie . '</td>';
-				echo '<td style="padding:8px 10px;">' . $oras . '</td>';
-				echo '<td style="padding:8px 10px;white-space:nowrap;">' . $ora . '</td>';
+				$row_style = self::row_style( $status );
+				$cell_extra = $status === 'canceled' ? 'text-decoration:line-through;' : '';
+
+				echo '<tr data-event-id="' . esc_attr( $event['ID'] ) . '" style="border-bottom:1px solid #1e1e1e;' . $row_style . '">';
+				echo '<td style="padding:8px 10px;white-space:nowrap;' . $cell_extra . '">' . esc_html( $date_fmt ) . '</td>';
+				echo '<td style="padding:8px 10px;' . $cell_extra . '">' . $tip . '</td>';
+				echo '<td style="padding:8px 10px;' . $cell_extra . '">' . $locatie . '</td>';
+				echo '<td style="padding:8px 10px;' . $cell_extra . '">' . $oras . '</td>';
+				echo '<td style="padding:8px 10px;white-space:nowrap;' . $cell_extra . '">' . $ora . '</td>';
 				echo '<td style="padding:8px 10px;"><span style="' . esc_attr( $badge_color ) . 'display:inline-block;padding:2px 8px;border-radius:4px;font-size:12px;">' . esc_html( $badge_label ) . '</span></td>';
 				echo '<td style="padding:8px 10px;">';
 				if ( $can_delete ) {
@@ -189,13 +192,24 @@ class BAS_Artist_Events {
 
 	// ── Helper badge ──────────────────────────────────────────────────
 
+	private static function row_style( string $status ): string {
+		return match ( $status ) {
+			'confirmed'        => 'color:#ffffff;',
+			'pending'          => 'color:#777777;',
+			'vacation'         => 'color:#5b9bd5;',
+			'vacation_pending' => 'color:#FF6A00;',
+			'canceled'         => 'color:#525252;',
+			default            => '',
+		};
+	}
+
 	private static function status_badge( string $status ): array {
 		return match ( $status ) {
 			'confirmed'        => [ 'Confirmat',              'background:#0f2d0f;color:#6fcf6f;' ],
 			'pending'          => [ 'Cerere client',          'background:#2d2200;color:#e6c000;' ],
 			'vacation'         => [ 'Vacanță',                'background:#0a1a2d;color:#5b9bd5;' ],
 			'vacation_pending' => [ 'Vacanță în așteptare',   'background:#2d1500;color:#FF6A00;' ],
-			'canceled'         => [ 'Anulat',                 'background:#1e1e1e;color:#555;' ],
+			'canceled'         => [ 'Anulat',                 'background:#2a0a0a;color:#eb5757;' ],
 			default            => [ ucfirst( $status ),       'background:#1e1e1e;color:#888;' ],
 		};
 	}

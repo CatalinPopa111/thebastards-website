@@ -496,8 +496,8 @@
 /* Culori text per status */
 .bas-row-confirmed .bas-data-cell { color: #ffffff; }
 .bas-row-pending   .bas-data-cell { color: #777777; }
-.bas-row-canceled  .bas-data-cell { color: #525252; }
-.bas-row-vacation  .bas-data-cell { color: #FF6A00; }
+.bas-row-canceled  .bas-data-cell { color: #525252; text-decoration: line-through; }
+.bas-row-vacation  .bas-data-cell { color: #5b9bd5; }
 
 /* ── Status cell ──────────────────────────────────────────────── */
 .bas-status-cell { white-space: nowrap; }
