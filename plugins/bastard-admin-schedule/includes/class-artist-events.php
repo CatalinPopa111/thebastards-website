@@ -194,10 +194,27 @@ class BAS_Artist_Events {
 		})();
 		</script>
 		<?php
-		$popup_url = '#elementor-action%3Aaction%3Dpopup%3Aopen%26settings%3DeyJpZCI6IjE5NTYiLCJ0b2dnbGUiOmZhbHNlfQ%3D%3D';
+		// Înregistrăm popup-ul 1956 în locația „popup" a Elementor Pro.
+		// Astfel print_popups() (wp_footer) îl printează nativ în DOM — cu toată
+		// structura, CSS-ul, JS-ul și formularul JetEngine — exact ca un widget
+		// Elementor cu acțiune popup. Fără asta, popup-ul nu există în pagină și
+		// link-ul #elementor-action nu are ce deschide.
+		if ( class_exists( '\ElementorPro\Modules\Popup\Module' ) ) {
+			\ElementorPro\Modules\Popup\Module::add_popup_to_location( 1956 );
+		}
+
+		// Link nativ Elementor: handler-ul delegat de pe document (selector
+		// a[href^="#elementor-action"]) declanșează acțiunea popup:open pentru ID 1956.
+		$popup_link = '#elementor-action:action=popup:open&settings=eyJpZCI6IjE5NTYiLCJ0b2dnbGUiOmZhbHNlfQ==';
+
 		$btn = '<div style="height:25px;"></div>'
 		     . '<div style="text-align:center;">'
-		     .   '<a href="' . esc_attr( $popup_url ) . '" style="display:inline-block;background:#FF6A00;color:#fff;font-family:Inter,sans-serif;font-weight:600;font-size:14px;padding:11px 28px;border-radius:10px;text-decoration:none;letter-spacing:.3px;">Blochează Date</a>'
+		     .   '<a id="bas-btn-blocheaza-date" href="' . esc_attr( $popup_link ) . '"'
+		     .     ' style="display:inline-block;background:#FF6A00;color:#fff;font-family:Inter,sans-serif;'
+		     .            'font-weight:600;font-size:14px;padding:11px 28px;border-radius:10px;'
+		     .            'text-decoration:none;letter-spacing:.3px;">'
+		     .     'Blochează Date'
+		     .   '</a>'
 		     . '</div>'
 		     . '<div style="height:25px;"></div>';
 

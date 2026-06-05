@@ -114,7 +114,7 @@ class BAS_Email_Notifier {
 		// Email admin — rezumat complet
 		$admin_body = self::build_admin_schedule_html(
 			$week_full, $week_short, $by_artist, $name_map,
-			$event_to_group, $group_to_events
+			$event_to_group, $group_to_events, $year, $week
 		);
 		self::send( get_option( 'admin_email' ), $subject, $admin_body );
 	}
@@ -146,16 +146,32 @@ class BAS_Email_Notifier {
 	private static function build_admin_schedule_html(
 		string $week_full, string $week_short,
 		array $by_artist, array $name_map,
-		array $event_to_group, array $group_to_events
+		array $event_to_group, array $group_to_events,
+		int $year = 0, int $week = 0
 	): string {
-		$blocks = '';
+
+		// ── Secțiunea „Program după locație" ──────────────────────
+		$loc_section = ( $year && $week )
+			? self::build_location_schedule_section( $year, $week, $name_map )
+			: '';
+
+		$section_separator = "
+			<tr>
+				<td style='padding:32px 0 0;'>
+					<div style='border-top:2px solid #eeeeee;'></div>
+				</td>
+			</tr>
+		";
+
+		// ── Secțiunea „Program după artist" ───────────────────────
+		$artist_blocks = '';
 		foreach ( $by_artist as $uid => $events ) {
 			$artist_name = esc_html( $name_map[ $uid ] ?? "Artist #{$uid}" );
 			$rows = '';
 			foreach ( $events as $ev ) {
 				$rows .= self::schedule_row( $ev, $uid, $event_to_group, $group_to_events, $name_map );
 			}
-			$blocks .= "
+			$artist_blocks .= "
 				<tr>
 					<td style='padding:24px 0 6px;'>
 						<div style='font-size:11px; font-weight:bold; text-transform:uppercase;
@@ -168,17 +184,116 @@ class BAS_Email_Notifier {
 		}
 
 		$count = array_sum( array_map( 'count', $by_artist ) );
+
+		$loc_block_html = $loc_section ? "
+			<table width='100%' cellpadding='0' cellspacing='0'>
+				<tr>
+					<td style='padding:0 0 6px;'>
+						<div style='font-size:13px; font-weight:bold; text-transform:uppercase;
+						            letter-spacing:1.5px; color:#1a1a1a;'>Program după locație</div>
+						<div style='font-size:11px; color:#aaa; margin-top:3px;'>Rezidențiat — artiști per locație</div>
+					</td>
+				</tr>
+			</table>
+			{$loc_section}
+		" : '';
+
 		$content = "
 			<h2 style='margin:0 0 4px; font-size:20px; color:#1a1a1a; font-weight:bold;'>
 				Program Complet — {$week_full}
 			</h2>
-			<p style='margin:0 0 24px; color:#888; font-size:13px;'>
+			<p style='margin:0 0 28px; color:#888; font-size:13px;'>
 				{$count} eveniment(e) &bull; Rezumat administrativ
 			</p>
-			<table width='100%' cellpadding='0' cellspacing='0'>{$blocks}</table>
+
+			{$loc_block_html}
+
+			" . ( $loc_section ? "
+			<table width='100%' cellpadding='0' cellspacing='0'>
+				<tr><td style='padding:32px 0 24px;'>
+					<div style='border-top:2px solid #eeeeee;'></div>
+				</td></tr>
+			</table>
+			" : '' ) . "
+
+			<table width='100%' cellpadding='0' cellspacing='0'>
+				<tr>
+					<td style='padding:0 0 6px;'>
+						<div style='font-size:13px; font-weight:bold; text-transform:uppercase;
+						            letter-spacing:1.5px; color:#1a1a1a;'>Program după artist</div>
+					</td>
+				</tr>
+				{$artist_blocks}
+			</table>
 		";
 
 		return self::html_wrapper( $content );
+	}
+
+	// ── Program rezidențiat per locație ────────────────────────────
+
+	private static function build_location_schedule_section( int $year, int $week, array $name_map ): string {
+		$locations = get_option( 'bas_locations', [] );
+		$saved     = get_option( "bas_schedule_{$year}_W{$week}", [] );
+
+		if ( empty( $locations ) || empty( $saved ) ) {
+			return '';
+		}
+
+		$dt_mon     = new DateTime();
+		$dt_mon->setISODate( $year, $week, 1 );
+		$days_short = [ 'Lun', 'Mar', 'Mie', 'Joi', 'Vin', 'Sâm', 'Dum' ];
+
+		$html = '';
+
+		foreach ( $locations as $loc ) {
+			$slug = $loc['slug'] ?? '';
+			if ( ! $slug ) continue;
+
+			$rows = '';
+			for ( $i = 0; $i < 7; $i++ ) {
+				$uid = (int) ( $saved[ $slug . '_' . $i ] ?? 0 );
+				if ( ! $uid ) continue;
+
+				$artist_name = esc_html( $name_map[ $uid ] ?? "Artist #{$uid}" );
+				$day_dt  = ( clone $dt_mon )->modify( "+{$i} days" );
+				$day_n   = (int) $day_dt->format( 'j' );
+				$month_n = (int) $day_dt->format( 'n' );
+				$date_str = $days_short[ $i ] . ', ' . $day_n . ' ' . strtolower( self::$months_ro[ $month_n ] );
+
+				$rows .= "
+					<tr>
+						<td style='padding:8px 0; border-bottom:1px solid #f2f2f2; font-size:13px;
+						           color:#1a1a1a; line-height:1.5;'>
+							<span style='color:#888; display:inline-block; min-width:110px;'>{$date_str}</span>
+							&mdash;&nbsp;{$artist_name}
+						</td>
+					</tr>
+				";
+			}
+
+			if ( ! $rows ) continue;
+
+			$loc_name = esc_html( $loc['name'] );
+			$city_str = ! empty( $loc['city'] )
+				? ' <span style="color:#aaa; font-size:10px; font-weight:normal; text-transform:none; letter-spacing:0;">/ ' . esc_html( $loc['city'] ) . '</span>'
+				: '';
+
+			$html .= "
+				<table width='100%' cellpadding='0' cellspacing='0' style='margin-bottom:4px;'>
+					<tr>
+						<td style='padding:20px 0 4px;'>
+							<div style='font-size:11px; font-weight:bold; text-transform:uppercase;
+							            letter-spacing:1px; color:#FF6A00; padding-bottom:8px;
+							            border-bottom:2px solid #FF6A00;'>{$loc_name}{$city_str}</div>
+						</td>
+					</tr>
+					{$rows}
+				</table>
+			";
+		}
+
+		return $html;
 	}
 
 	// ── Rând eveniment în tabelul din program ──────────────────────
