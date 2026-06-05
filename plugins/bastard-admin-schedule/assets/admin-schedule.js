@@ -13,7 +13,19 @@ document.addEventListener('alpine:init', () => {
 		conflicts:       {}, // { artist_id: ['YYYY-MM-DD', ...] }
 		initialSchedule: {}, // stare inițială pentru dirty tracking
 		isDirty:         false,
-		artistFilter:    0,
+
+		// ── Filtre evenimente ──────────────────────────────────────
+		filtersOpen:  false,
+		visibleCount: 0,
+		filters: {
+			artist:   0,
+			status:   '',
+			client:   '',
+			dateFrom: '',
+			dateTo:   '',
+			useWeek:  false,
+			types:    [],
+		},
 
 		// Formular eveniment nou
 		newEvent: {
@@ -174,14 +186,75 @@ document.addEventListener('alpine:init', () => {
 			this.checkDirty();
 		},
 
-		// ── Filtru artist ──────────────────────────────────────────
-		filterEvents(artistId) {
-			this.artistFilter = artistId;
+		// ── Filtre evenimente ──────────────────────────────────────
+		get activeFilterCount() {
+			const f = this.filters;
+			let n = 0;
+			if (f.artist)             n++;
+			if (f.status)             n++;
+			if (f.client.trim())      n++;
+			if (f.dateFrom || f.dateTo) n++;
+			if (f.types.length)       n++;
+			return n;
+		},
+
+		weekStart() { return (basData.weekDays?.[0]?.date) || ''; },
+		weekEnd()   { return (basData.weekDays?.[6]?.date) || ''; },
+
+		toggleWeek() {
+			if (this.filters.useWeek) {
+				this.filters.dateFrom = this.weekStart();
+				this.filters.dateTo   = this.weekEnd();
+			} else {
+				this.filters.dateFrom = '';
+				this.filters.dateTo   = '';
+			}
+			this.applyFilters();
+		},
+
+		applyFilters() {
+			const f      = this.filters;
+			const client = f.client.trim().toLowerCase();
+			const from   = f.dateFrom || '';
+			const to     = f.dateTo   || '';
+			let visible  = 0;
+
 			document.querySelectorAll('.bas-event-tbody').forEach(tbody => {
-				const rowArtistId = parseInt(tbody.dataset.artistId) || 0;
-				const visible = !artistId || rowArtistId === artistId;
-				tbody.style.display = visible ? '' : 'none';
+				const d = tbody.dataset;
+				let ok = true;
+
+				if (f.artist && (parseInt(d.artistId) || 0) !== f.artist) ok = false;
+				if (ok && f.status && d.status !== f.status) ok = false;
+				if (ok && client && !(d.client || '').includes(client)) ok = false;
+				if (ok && f.types.length && !f.types.includes(d.type)) ok = false;
+
+				// Suprapunere interval: end >= from && start <= to (comparație ISO)
+				if (ok && (from || to)) {
+					const s = d.start || '';
+					const e = d.end || s;
+					if (from && e && e < from) ok = false;
+					if (to   && s && s > to)   ok = false;
+				}
+
+				tbody.style.display = ok ? '' : 'none';
+				if (ok) visible++;
 			});
+
+			this.visibleCount = visible;
+
+			// Separatoarele de an se ascund cât timp există filtre active
+			const hideSeps = this.activeFilterCount > 0;
+			document.querySelectorAll('.bas-year-sep-tbody').forEach(sep => {
+				sep.style.display = hideSeps ? 'none' : '';
+			});
+		},
+
+		resetFilters() {
+			this.filters = {
+				artist: 0, status: '', client: '',
+				dateFrom: '', dateTo: '', useWeek: false, types: [],
+			};
+			this.applyFilters();
 		},
 
 		// ── Formular eveniment nou ─────────────────────────────────
@@ -372,9 +445,20 @@ document.addEventListener('alpine:init', () => {
 
 			this.ajax('bas_save_event', { event_id: eventId, status, fields })
 				.then(data => {
+					const tbody = row ? row.closest('.bas-event-tbody') : null;
 					if (row) {
 						row.dataset.status = status;
 						row.className = `bas-row bas-row-${status}`;
+					}
+					// Sincronizăm câmpurile pe tbody pentru filtrare
+					if (tbody) {
+						tbody.dataset.status = status;
+						if (fields) {
+							tbody.dataset.start  = fields.data_start || '';
+							tbody.dataset.end    = fields.data_end || fields.data_start || '';
+							tbody.dataset.type   = (fields.tip || '').toLowerCase();
+							tbody.dataset.client = (fields.client || '').toLowerCase();
+						}
 					}
 
 					// ── Actualizăm artistul dacă s-a schimbat ──────
@@ -387,14 +471,11 @@ document.addEventListener('alpine:init', () => {
 						row.dataset.artist = data.new_artist_id;
 
 						// Actualizăm data-artist-id pe tbody (pentru filtru)
-						const tbody = row.closest('.bas-event-tbody');
 						if (tbody) tbody.dataset.artistId = data.new_artist_id;
-
-						// Re-aplicăm filtrul dacă e activ
-						if (this.artistFilter) {
-							this.filterEvents(this.artistFilter);
-						}
 					}
+
+					// Re-aplicăm filtrele dacă sunt active
+					if (this.activeFilterCount > 0) this.applyFilters();
 
 					this.updateConflictsFromRow(row, status);
 					this.refreshAllCells();

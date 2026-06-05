@@ -172,19 +172,93 @@ class BAS_Admin_Page {
 			<!-- ── Header secțiune evenimente + filtru ───────────────── -->
 			<div class="bas-section-header">
 				<h2 class="bas-section-title" style="margin:0; border:none; padding:0;">Evenimente viitoare</h2>
-				<div class="bas-filter-bar">
-					<span class="bas-filter-label">Artist:</span>
-					<select class="bas-filter-select"
-						@change="filterEvents(parseInt($event.target.value) || 0)"
-						x-model.number="artistFilter">
-						<option value="0">Toți artiștii</option>
-						<?php foreach ( $artists as $artist ) : ?>
-							<option value="<?php echo esc_attr( $artist['id'] ); ?>">
-								<?php echo esc_html( $artist['name'] ); ?>
-							</option>
-						<?php endforeach; ?>
-					</select>
+				<button class="bas-filter-toggle" :class="{ 'is-open': filtersOpen }" @click="filtersOpen = !filtersOpen">
+					<span class="bas-filter-toggle-icon">⚲</span>
+					<span>Filtre</span>
+					<span class="bas-filter-count" x-show="activeFilterCount > 0" x-text="activeFilterCount" style="display:none"></span>
+				</button>
+			</div>
+
+			<!-- ── Panou filtre ──────────────────────────────────────── -->
+			<div class="bas-filter-panel" x-show="filtersOpen" x-transition style="display:none">
+				<div class="bas-filter-grid">
+
+					<!-- Artist -->
+					<div class="bas-filter-field">
+						<label class="bas-filter-label">Artist</label>
+						<select class="bas-filter-input" x-model.number="filters.artist" @change="applyFilters()">
+							<option value="0">Toți artiștii</option>
+							<?php foreach ( $artists as $artist ) : ?>
+								<option value="<?php echo esc_attr( $artist['id'] ); ?>">
+									<?php echo esc_html( $artist['name'] ); ?>
+								</option>
+							<?php endforeach; ?>
+						</select>
+					</div>
+
+					<!-- Status -->
+					<div class="bas-filter-field">
+						<label class="bas-filter-label">Status</label>
+						<select class="bas-filter-input" x-model="filters.status" @change="applyFilters()">
+							<option value="">Toate statusurile</option>
+							<option value="confirmed">Confirmat</option>
+							<option value="pending">Cerere client</option>
+							<option value="vacation">Vacanță</option>
+							<option value="canceled">Anulat</option>
+						</select>
+					</div>
+
+					<!-- Nume client -->
+					<div class="bas-filter-field">
+						<label class="bas-filter-label">Nume client</label>
+						<input type="text" class="bas-filter-input" x-model="filters.client"
+							@input.debounce.250ms="applyFilters()" placeholder="Caută după client...">
+					</div>
+
+					<!-- Interval dată -->
+					<div class="bas-filter-field bas-filter-field-dates">
+						<label class="bas-filter-label">Interval dată</label>
+						<div class="bas-filter-date-row">
+							<input type="date" class="bas-filter-input" x-model="filters.dateFrom"
+								:disabled="filters.useWeek" @change="filters.useWeek = false; applyFilters()">
+							<span class="bas-filter-date-sep">→</span>
+							<input type="date" class="bas-filter-input" x-model="filters.dateTo"
+								:disabled="filters.useWeek" @change="filters.useWeek = false; applyFilters()">
+						</div>
+						<label class="bas-filter-check">
+							<input type="checkbox" x-model="filters.useWeek" @change="toggleWeek()">
+							<span>Săptămâna afișată (<?php echo esc_html( $week_label ); ?>)</span>
+						</label>
+					</div>
+
+					<!-- Tip eveniment -->
+					<div class="bas-filter-field bas-filter-field-types">
+						<label class="bas-filter-label">Tip eveniment</label>
+						<div class="bas-filter-chips">
+							<?php foreach ( $event_types as $opt ) : ?>
+								<label class="bas-filter-chip">
+									<input type="checkbox" value="<?php echo esc_attr( strtolower( $opt['value'] ) ); ?>"
+										x-model="filters.types" @change="applyFilters()">
+									<span><?php echo esc_html( $opt['label'] ); ?></span>
+								</label>
+							<?php endforeach; ?>
+						</div>
+					</div>
+
+				</div><!-- .bas-filter-grid -->
+
+				<div class="bas-filter-actions">
+					<span class="bas-filter-result" x-show="activeFilterCount > 0"
+						x-text="visibleCount + (visibleCount === 1 ? ' eveniment' : ' evenimente')" style="display:none"></span>
+					<button class="bas-btn-reset-filters" @click="resetFilters()" :disabled="activeFilterCount === 0">
+						Resetează filtrele
+					</button>
 				</div>
+			</div><!-- .bas-filter-panel -->
+
+			<!-- Mesaj fără rezultate -->
+			<div class="bas-no-results" x-show="filtersOpen && visibleCount === 0 && activeFilterCount > 0" style="display:none">
+				Niciun eveniment pentru filtrele selectate.
 			</div>
 
 			<!-- ── Formular adaugă eveniment ─────────────────────────── -->
@@ -333,9 +407,18 @@ class BAS_Admin_Page {
 							$__current_year = $__ev_year;
 						endif;
 					?>
+					<?php
+					$__cli  = $ev['client'] !== '—' ? mb_strtolower( $ev['client'] ) : '';
+					$__dend = $ev['fields']['data_end'] ?: $ev['fields']['data_start'];
+					?>
 					<tbody
 						class="bas-event-tbody"
 						data-artist-id="<?php echo esc_attr( $ev['artist_id'] ); ?>"
+						data-start="<?php echo esc_attr( $ev['fields']['data_start'] ); ?>"
+						data-end="<?php echo esc_attr( $__dend ); ?>"
+						data-type="<?php echo esc_attr( $ev['type'] ); ?>"
+						data-status="<?php echo esc_attr( $status ); ?>"
+						data-client="<?php echo esc_attr( $__cli ); ?>"
 						x-data="{ status: '<?php echo esc_js( $status ); ?>', open: false, addArtistId: '', fields: <?php echo esc_attr( wp_json_encode( $ev['fields'] ) ); ?>, groupMembers: <?php echo esc_attr( wp_json_encode( $ev['group_members'] ) ); ?> }">
 
 					<tr class="bas-row bas-row-<?php echo esc_attr( $status ); ?>"
