@@ -801,44 +801,85 @@
 	.bas-wrap {
 		padding: 16px 12px;
 		margin-left: 0;
+		overflow-x: hidden;
 	}
 
-	/* Tabelul de evenimente devine block pe mobil */
-	.bas-events-table,
-	.bas-events-table thead,
-	.bas-events-table tbody,
-	.bas-events-table tr {
+	/* Tabelul de evenimente → listă de carduri ───────────────────── */
+	.bas-events-table {
 		display: block;
 		width: 100%;
+		border: none;
 	}
 	.bas-events-table thead { display: none; }
-	.bas-events-table td {
+
+	/* Fiecare eveniment (un tbody) devine un card */
+	.bas-event-tbody {
 		display: block;
 		width: 100%;
+		background: #121212;
+		border: 1px solid #1f1f1f;
+		border-radius: 12px;
+		margin-bottom: 12px;
+		padding: 14px;
+		box-sizing: border-box;
+		overflow: hidden;
+	}
+	/* Separatorul de an rămâne simplu, nu card */
+	.bas-year-sep-tbody { display: block; width: 100%; }
+	.bas-year-sep-tbody td { display: block; width: 100%; }
+
+	.bas-event-tbody tr {
+		display: block;
+		width: 100%;
+	}
+	.bas-event-tbody td {
+		display: block;
+		width: 100%;
+		padding: 0;
+		border: none;
 		box-sizing: border-box;
 	}
+	.bas-events-table tr:hover td { background: transparent; }
 
-	/* Celula data/info — mai puțin padding în jos */
-	.bas-events-table .bas-data-cell { padding-bottom: 4px; }
-
-	/* Celula status — fără border-top, lipită sub info */
-	.bas-events-table .bas-status-cell {
-		padding-top: 2px !important;
-		border-top: none;
+	/* Celula info — rândurile 1/2 cu wrap (deja flex) */
+	.bas-event-tbody .bas-data-cell {
+		padding-bottom: 12px;
 	}
+	.bas-row-l1 { font-size: 14px; }
+	.bas-row-l2 { font-size: 12.5px; }
 
-	/* Status inner: orizontal, cu wrap */
+	/* Bara de status — separată vizibil sub info */
+	.bas-event-tbody .bas-status-cell {
+		border-top: 1px solid #1f1f1f;
+		padding-top: 12px;
+	}
 	.bas-sc-inner {
 		flex-direction: row;
 		flex-wrap: wrap;
 		align-items: center;
-		justify-content: flex-start;
+		justify-content: space-between;
+		width: 100%;
+		gap: 10px;
+	}
+	.bas-status-badge {
+		display: inline-block;
+		margin: 0;
+	}
+	.bas-sc-buttons {
+		flex-wrap: nowrap;
+		justify-content: flex-end;
 		gap: 6px;
 	}
-	.bas-status-badge { margin-bottom: 0; }
-	.bas-sc-buttons {
-		flex-wrap: wrap;
-		justify-content: flex-start;
+	.bas-status-select { padding: 6px 8px; }
+	.bas-btn-save-inline { padding: 6px 12px; }
+
+	/* Rândul de detalii (expand) în interiorul cardului */
+	.bas-event-tbody .bas-detail-row td { padding: 0; }
+	.bas-detail-cell {
+		padding: 16px 0 4px;
+		margin-top: 12px;
+		border-top: 1px solid #1f1f1f;
+		border-bottom: none;
 	}
 
 	/* Grilele de detalii — o singură coloană */
@@ -850,6 +891,8 @@
 		flex-direction: column;
 		align-items: flex-start;
 	}
+	.bas-filter-select { min-width: 0; width: 100%; }
+	.bas-filter-bar { width: 100%; }
 
 	/* Navigare săptămână — wrap */
 	.bas-week-nav { flex-wrap: wrap; gap: 8px; }
