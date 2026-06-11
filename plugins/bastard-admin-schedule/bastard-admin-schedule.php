@@ -2,13 +2,18 @@
 /**
  * Plugin Name: Bastard Admin Schedule
  * Description: Pagină admin pentru calendar rezidențiat și lista evenimente.
- * Version: 1.0.0
+ * Version: 1.6.1
  * Author: The Bastards Agency
  */
 
 defined( 'ABSPATH' ) || exit;
 
 define( 'BAS_PATH', plugin_dir_path( __FILE__ ) );
+
+// Versiune asset-uri — sursă unică de adevăr pentru cache-busting CSS/JS.
+// Trebuie urcată ori de câte ori se modifică admin-schedule.js / .css,
+// altfel browserele (în special mobil) servesc fișierele vechi din cache.
+define( 'BAS_VERSION', '1.6.1' );
 
 // ID-ul relației JetEngine: artist (parent) → evenimente (child)
 // Stocat în wp4u_jet_rel_default.rel_id — verificat în DB, mereu '8' pentru acest site.
@@ -51,7 +56,7 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
 		'bas-admin',
 		BAS_URL . 'assets/admin-schedule.css',
 		[ 'bas-google-fonts' ],
-		'1.6.0'
+		BAS_VERSION
 	);
 
 	// bas-admin se încarcă primul (înregistrează ascultătorul alpine:init)
@@ -60,7 +65,7 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
 		'bas-admin',
 		BAS_URL . 'assets/admin-schedule.js',
 		[],
-		'1.6.0',
+		BAS_VERSION,
 		true // footer
 	);
 
@@ -105,9 +110,9 @@ add_action( 'wp_enqueue_scripts', function () {
 		[],
 		null
 	);
-	wp_register_style( 'bas-admin', BAS_URL . 'assets/admin-schedule.css', [ 'bas-google-fonts' ], '1.5.0' );
+	wp_register_style( 'bas-admin', BAS_URL . 'assets/admin-schedule.css', [ 'bas-google-fonts' ], BAS_VERSION );
 	// bas-admin se înregistrează fără dependință de Alpine (trebuie să se încarce primul)
-	wp_register_script( 'bas-admin', BAS_URL . 'assets/admin-schedule.js', [], '1.5.0', true );
+	wp_register_script( 'bas-admin', BAS_URL . 'assets/admin-schedule.js', [], BAS_VERSION, true );
 	// bas-alpine depinde de bas-admin → se încarcă după
 	wp_register_script( 'bas-alpine', BAS_URL . 'assets/alpine.min.js', [ 'bas-admin' ], '3.14.1', true );
 } );
