@@ -197,7 +197,8 @@ if ( ! function_exists( 'tba_co_render_buttons' ) ) {
 		$html .= '<div style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:12px;">Acțiuni rapide</div>';
 		$html .= '<a href="' . $vcf_url . '" style="' . $btn_base . 'background:#1a1a1a;color:#ffffff;">📇 Salvează contact</a>';
 		if ( $wa_url ) {
-			$html .= '<a href="' . esc_url( $wa_url ) . '" style="' . $btn_base . 'background:#25D366;color:#ffffff;">💬 Deschide WhatsApp</a>';
+			// esc_attr (nu esc_url): esc_url sterge %0A din WhatsApp -> textul si-ar pierde randurile.
+			$html .= '<a href="' . esc_attr( $wa_url ) . '" style="' . $btn_base . 'background:#25D366;color:#ffffff;">💬 Deschide WhatsApp</a>';
 		}
 		$html .= '</div>';
 
