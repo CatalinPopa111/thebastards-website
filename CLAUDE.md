@@ -55,8 +55,8 @@
 - Shortcode link_ical_final
 - MixCloud player shortcode
 
-## mu-plugins (cod versionat în git)
-- `mu-plugins/cerere-oferta-butoane.php` — adaugă în email-ul admin de la `Formular Cerere Oferta` un buton WhatsApp (wa.me, text precompletat) și un buton "Salvează contact" (link semnat HMAC → endpoint `?tba_vcard=1` care livrează un `.vcf` cu detaliile cererii în câmpul NOTE). Hook: `jet-engine/forms/booking/email/message_content`. Gating pe `field_nume_artist` + `field_telefon` (nu afectează formularul de vacanță).
+## Pluginuri proprii
+- `plugins/cerere-oferta-butoane/` — adaugă în email-ul admin de la `Formular Cerere Oferta` un buton WhatsApp (wa.me, text precompletat) și un buton "Salvează contact" (link semnat HMAC → endpoint `?tba_vcard=1` care livrează un `.vcf` cu detaliile cererii în câmpul NOTE). Hook: `jet-engine/forms/booking/email/message_content`. Gating pe `field_nume_artist` + `field_telefon` (nu afectează formularul de vacanță). Necesită activare din admin (plugin normal, nu mu-plugin — deploy-ul Git nu crea foldere noi de nivel înalt sub wp-content).
 
 ## Plugin nou în dezvoltare
 `bastard-admin-schedule` — pagină admin frontend pentru:

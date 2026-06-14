@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name: The Bastards — Cerere Oferta: Butoane WhatsApp + Salvează Contact
+ * Plugin Name: Cerere Oferta — Butoane WhatsApp + Salvează Contact
  * Description: Adaugă în email-ul admin de la "Formular Cerere Oferta" un buton WhatsApp (wa.me, text precompletat) și un buton "Salvează contact" (link semnat HMAC → endpoint care livrează un .vcf cu detaliile cererii în câmpul NOTE).
  * Author: The Bastards Agency
  * Version: 1.0.0
  *
  * Hook principal: jet-engine/forms/booking/email/message_content
- * Înlocuiește fostul Code Snippet cu același nume (mutat în mu-plugin pt versionare git).
+ * Gating pe field_nume_artist + field_telefon (formularul de vacanță nu e afectat).
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
