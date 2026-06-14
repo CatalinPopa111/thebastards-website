@@ -1,4 +1,7 @@
 ---
 deployment:
   tasks:
-    - /usr/bin/rsync -a --no-o --no-g --exclude=.git --exclude=.cpanel.yml --exclude=.gitignore --exclude=.claude --exclude=99backup --exclude=updraft --exclude=docs --exclude=uploads --exclude=cache ./ /home/bastard/public_html/wp-content/
+    - /bin/mkdir -p /home/bastard/public_html/wp-content/plugins/bastard-admin-schedule
+    - /bin/cp -Rf plugins/bastard-admin-schedule/. /home/bastard/public_html/wp-content/plugins/bastard-admin-schedule/
+    - /bin/mkdir -p /home/bastard/public_html/wp-content/plugins/cerere-oferta-butoane
+    - /bin/cp -Rf plugins/cerere-oferta-butoane/. /home/bastard/public_html/wp-content/plugins/cerere-oferta-butoane/
