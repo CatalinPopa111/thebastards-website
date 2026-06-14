@@ -1,4 +1,4 @@
 ---
 deployment:
   tasks:
-    - /usr/bin/rsync -a --no-o --no-g --exclude='.git' --exclude='.cpanel.yml' --exclude='.gitignore' --exclude='.claude' --exclude='99backup' --exclude='updraft' --exclude='docs' --exclude='uploads' --exclude='cache' ./ /home/bastard/public_html/wp-content/
+    - /usr/bin/rsync -a --no-o --no-g --exclude=.git --exclude=.cpanel.yml --exclude=.gitignore --exclude=.claude --exclude=99backup --exclude=updraft --exclude=docs --exclude=uploads --exclude=cache ./ /home/bastard/public_html/wp-content/
