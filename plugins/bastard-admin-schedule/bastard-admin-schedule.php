@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Bastard Admin Schedule
  * Description: Pagină admin pentru calendar rezidențiat și lista evenimente.
- * Version: 1.6.1
+ * Version: 1.7.0
  * Author: The Bastards Agency
  */
 
@@ -13,7 +13,7 @@ define( 'BAS_PATH', plugin_dir_path( __FILE__ ) );
 // Versiune asset-uri — sursă unică de adevăr pentru cache-busting CSS/JS.
 // Trebuie urcată ori de câte ori se modifică admin-schedule.js / .css,
 // altfel browserele (în special mobil) servesc fișierele vechi din cache.
-define( 'BAS_VERSION', '1.6.1' );
+define( 'BAS_VERSION', '1.7.0' );
 
 // ID-ul relației JetEngine: artist (parent) → evenimente (child)
 // Stocat în wp4u_jet_rel_default.rel_id — verificat în DB, mereu '8' pentru acest site.
@@ -27,6 +27,7 @@ require_once BAS_PATH . 'includes/class-admin-page.php';
 require_once BAS_PATH . 'includes/class-vacation-request.php';
 require_once BAS_PATH . 'includes/class-booking-sync.php';
 require_once BAS_PATH . 'includes/class-artist-events.php';
+require_once BAS_PATH . 'includes/class-lifecycle.php';
 
 add_action( 'admin_menu', function () {
 	add_menu_page(
@@ -94,8 +95,27 @@ BAS_Vacation_Request::register();
 // Sincronizare universală booking ↔ status-eveniment
 BAS_Booking_Sync::register();
 
+// Ciclul de viață al cererilor (auto-cancel 7z → trash 30z → delete 90z + marcaje timp)
+BAS_Lifecycle::register();
+
 // Shortcode și AJAX pentru lista de evenimente a artistului
 BAS_Artist_Events::register();
+
+// ── Punctul 2: cererile pending nu blochează calendarul ────────────
+// Booking-urile cu status 'pending' devin „neutre": ignorate de toate verificările
+// de disponibilitate JetBooking (folosesc invalid_statuses) și excluse din exportul
+// iCal (folosește valid_statuses). Astfel mai mulți clienți pot cere aceeași dată;
+// abia la confirmare (→ 'completed') data devine blocată.
+add_filter( 'jet-booking/statuses/invalid', function ( $statuses ) {
+	$statuses[] = 'pending';
+	return array_values( array_unique( $statuses ) );
+} );
+add_filter( 'jet-booking/statuses/valid', function ( $statuses ) {
+	return array_values( array_diff( $statuses, [ 'pending' ] ) );
+} );
+add_filter( 'jet-booking/statuses/in-progress', function ( $statuses ) {
+	return array_values( array_diff( $statuses, [ 'pending' ] ) );
+} );
 
 // ── Shortcode frontend [bas_schedule] ──────────────────────────
 

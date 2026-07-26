@@ -460,6 +460,20 @@ class BAS_Admin_Page {
 								?>
 							</div>
 							<?php endif; ?>
+							<?php
+							// ── Info subtil: zile de la depunere (pending) / data acceptării (confirmed) ──
+							$info = '';
+							if ( 'pending' === $status && ! empty( $ev['created_ts'] ) ) {
+								$days = (int) floor( ( current_time( 'timestamp' ) - $ev['created_ts'] ) / DAY_IN_SECONDS );
+								$info = $days <= 0
+									? 'depusă azi'
+									: ( 1 === $days ? 'depusă acum 1 zi' : "depusă acum {$days} zile" );
+							} elseif ( 'confirmed' === $status && ! empty( $ev['confirmed_ts'] ) ) {
+								$info = 'acceptată ' . date_i18n( 'j M Y', $ev['confirmed_ts'] );
+							}
+							if ( $info ) : ?>
+							<div class="bas-row-info" style="margin-top:3px;font-size:11px;color:#6a6a6a;font-style:italic;"><?php echo esc_html( $info ); ?></div>
+							<?php endif; ?>
 						</td>
 						<td class="bas-status-cell">
 							<div class="bas-sc-inner">
@@ -868,6 +882,8 @@ class BAS_Admin_Page {
 				'type'          => strtolower( $type ),
 				'type_label'    => $type_label,
 				'status'        => $status ?: 'pending',
+				'created_ts'    => strtotime( $post->post_date ),
+				'confirmed_ts'  => (int) get_post_meta( $post->ID, 'bas_confirmed_at', true ),
 				'group_id'      => $group_id,
 				'group_count'   => $group_count,
 				'group_members' => $group_members,

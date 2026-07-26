@@ -3,7 +3,7 @@
  * Plugin Name: Cerere Oferta — Butoane WhatsApp + Salvează Contact
  * Description: Adaugă în email-ul admin de la "Formular Cerere Oferta" un buton WhatsApp (wa.me, text precompletat) și un buton "Salvează contact" (link semnat HMAC → endpoint care livrează un .vcf cu detaliile cererii în câmpul NOTE).
  * Author: The Bastards Agency
- * Version: 1.0.0
+ * Version: 1.1.0
  *
  * Hook principal: jet-engine/forms/booking/email/message_content
  * Gating pe field_nume_artist + field_telefon (formularul de vacanță nu e afectat).
@@ -267,4 +267,236 @@ add_action(
 		exit;
 	},
 	1
+);
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  Anti-dublare submit + email de confirmare către client
+// ═══════════════════════════════════════════════════════════════════════════
+
+if ( ! function_exists( 'tba_co_is_offer_form' ) ) {
+	/** Doar formularul de cerere ofertă are aceste câmpuri (nu și cel de vacanță). */
+	function tba_co_is_offer_form( $data ) {
+		return '' !== tba_co_get_field( $data, 'field_nume_artist' )
+		    && '' !== tba_co_get_field( $data, 'field_telefon' );
+	}
+}
+
+if ( ! function_exists( 'tba_co_dedup_key' ) ) {
+	/** Cheie idempotentă pe email + dată + artist. */
+	function tba_co_dedup_key( $data ) {
+		$parts = strtolower( tba_co_get_field( $data, 'field_email' ) )
+		       . '|' . tba_co_get_field( $data, 'field_data' )
+		       . '|' . strtolower( tba_co_get_field( $data, 'field_nume_artist' ) );
+		return 'tba_co_lock_' . md5( $parts );
+	}
+}
+
+// ── Backstop server-side: oprește cererile duplicate (dublu/triplu-click) ──
+// redirect() închide request-ul (wp_send_json / die), deci a doua cerere identică
+// primită în fereastra de blocare NU mai creează postare/booking; clientul vede „success".
+add_action(
+	'jet-engine/forms/handler/before-send',
+	function ( $handler ) {
+		$data = ( isset( $handler->form_data ) && is_array( $handler->form_data ) ) ? $handler->form_data : array();
+
+		if ( ! tba_co_is_offer_form( $data ) ) {
+			return;
+		}
+
+		$key = tba_co_dedup_key( $data );
+
+		if ( get_transient( $key ) ) {
+			// Duplicat în fereastra de 60s → răspunde success fără a re-procesa.
+			$handler->redirect( array( 'status' => 'success' ) );
+			return; // redirect() oricum termină request-ul
+		}
+
+		set_transient( $key, 1, 60 );
+	},
+	5,
+	1
+);
+
+// ── Email de confirmare către client (cu rezumatul datelor introduse) ──
+add_action(
+	'jet-engine/forms/handler/after-send',
+	function ( $handler, $success ) {
+		$data = ( isset( $handler->form_data ) && is_array( $handler->form_data ) ) ? $handler->form_data : array();
+
+		if ( ! tba_co_is_offer_form( $data ) ) {
+			return;
+		}
+
+		// Dacă trimiterea a eșuat, eliberăm lock-ul ca un retry legitim să fie posibil imediat.
+		if ( true !== $success ) {
+			delete_transient( tba_co_dedup_key( $data ) );
+			return;
+		}
+
+		$email = tba_co_get_field( $data, 'field_email' );
+		if ( ! $email || ! is_email( $email ) ) {
+			return;
+		}
+
+		tba_co_send_client_confirmation( $data, $email );
+	},
+	20,
+	2
+);
+
+if ( ! function_exists( 'tba_co_send_client_confirmation' ) ) {
+	/** Trimite clientului confirmarea de primire + rezumatul cererii. */
+	function tba_co_send_client_confirmation( $data, $email ) {
+		$nume = tba_co_get_field( $data, 'field_nume' );
+
+		// Rezumatul datelor introduse (doar câmpurile completate)
+		$rows_def = array(
+			'Artist / cerere' => tba_co_get_field( $data, 'field_nume_artist' ),
+			'Tip eveniment'   => tba_co_get_field( $data, 'field_select_tip_eveniment' ),
+			'Data'            => tba_co_get_field( $data, 'field_data' ),
+			'Ora început'     => tba_co_get_field( $data, 'field_ora_inceput' ),
+			'Durata'          => tba_co_get_field( $data, 'field_durata_prestatie' ),
+			'Oraș'            => tba_co_get_field( $data, 'field_oras' ),
+			'Locația'         => tba_co_get_field( $data, 'field_locatie' ),
+			'Sonorizare'      => tba_co_get_field( $data, 'field_sonorizare' ),
+			'Nr. persoane'    => tba_co_get_field( $data, 'field_persoane' ),
+		);
+
+		$rows_client = array(
+			'Nume'    => $nume,
+			'Email'   => tba_co_get_field( $data, 'field_email' ),
+			'Telefon' => tba_co_get_field( $data, 'field_telefon' ),
+		);
+
+		$row_html = function ( $label, $value ) {
+			if ( '' === trim( (string) $value ) ) {
+				return '';
+			}
+			return '<tr>'
+				. '<td style="padding:9px 16px 9px 0;border-bottom:1px solid #f5f5f5;color:#888;font-size:12px;white-space:nowrap;vertical-align:top;width:130px;">' . esc_html( $label ) . '</td>'
+				. '<td style="padding:9px 0;border-bottom:1px solid #f5f5f5;color:#1a1a1a;font-size:13px;font-weight:500;">' . esc_html( $value ) . '</td>'
+				. '</tr>';
+		};
+
+		$det = '';
+		foreach ( $rows_def as $label => $value ) {
+			$det .= $row_html( $label, $value );
+		}
+
+		$cli = '';
+		foreach ( $rows_client as $label => $value ) {
+			$cli .= $row_html( $label, $value );
+		}
+
+		$mesaj      = tba_co_get_field( $data, 'field_mesaj' );
+		$mesaj_html = '';
+		if ( '' !== $mesaj ) {
+			$mesaj_html = '<tr><td colspan="2" style="padding:20px 0 10px;">'
+				. '<div style="font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;color:#aaa;border-top:1px solid #f0f0f0;padding-top:16px;">Mesajul tău</div>'
+				. '</td></tr>'
+				. '<tr><td colspan="2" style="padding:8px 0;color:#444;font-size:13px;line-height:1.6;">' . nl2br( esc_html( $mesaj ) ) . '</td></tr>';
+		}
+
+		$greet = $nume ? 'Salut, ' . esc_html( $nume ) . '!' : 'Salut!';
+
+		$content = '
+			<div style="display:inline-block;background:#fff3e0;color:#e65100;font-size:12px;font-weight:bold;padding:5px 14px;border-radius:20px;margin-bottom:16px;">
+				✓ Cerere primită
+			</div>
+			<h2 style="margin:0 0 12px;font-size:20px;color:#1a1a1a;font-weight:bold;">' . $greet . '</h2>
+			<p style="margin:0 0 22px;color:#444;font-size:14px;line-height:1.6;">
+				Am primit cererea ta de ofertă și revenim în cel mai scurt timp cu un răspuns.
+				Mai jos ai un rezumat al datelor pe care le-ai completat.
+			</p>
+			<table width="100%" cellpadding="0" cellspacing="0">
+				' . $det . '
+				<tr><td colspan="2" style="padding:20px 0 10px;">
+					<div style="font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;color:#aaa;border-top:1px solid #f0f0f0;padding-top:16px;">Datele tale de contact</div>
+				</td></tr>
+				' . $cli . '
+				' . $mesaj_html . '
+			</table>
+			<p style="margin:24px 0 0;color:#888;font-size:12px;line-height:1.6;">
+				Dacă vreun detaliu este greșit, poți răspunde direct la acest email.
+			</p>
+		';
+
+		$subject = 'Am primit cererea ta — The Bastards Agency';
+		$html    = tba_co_email_wrapper( $content );
+
+		$headers = array(
+			'Content-Type: text/html; charset=UTF-8',
+			'From: The Bastards Agency <hello@thebastards.ro>',
+			'Reply-To: The Bastards Agency <hello@thebastards.ro>',
+		);
+
+		wp_mail( $email, $subject, $html, $headers );
+	}
+}
+
+if ( ! function_exists( 'tba_co_email_wrapper' ) ) {
+	/** Șablon email brandat, self-contained (fără dependință de alt plugin). */
+	function tba_co_email_wrapper( $content ) {
+		return '<!DOCTYPE html><html lang="ro"><head><meta charset="UTF-8">'
+			. '<meta name="viewport" content="width=device-width, initial-scale=1.0"></head>'
+			. '<body style="margin:0;padding:0;background-color:#f2f2f2;font-family:Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased;">'
+			. '<table width="100%" cellpadding="0" cellspacing="0" style="background:#f2f2f2;padding:32px 16px;"><tr><td align="center">'
+			. '<table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08);">'
+			. '<tr><td style="background:#111111;padding:22px 32px;"><span style="color:#FF6A00;font-size:18px;font-weight:bold;letter-spacing:-0.3px;font-family:Arial,sans-serif;">The Bastards Agency</span></td></tr>'
+			. '<tr><td style="padding:32px;">' . $content . '</td></tr>'
+			. '<tr><td style="background:#f9f9f9;padding:16px 32px;border-top:1px solid #eeeeee;"><span style="color:#bbb;font-size:11px;">The Bastards Agency &bull; <a href="https://thebastards.ro" style="color:#bbb;text-decoration:none;">thebastards.ro</a></span></td></tr>'
+			. '</table></td></tr></table></body></html>';
+	}
+}
+
+// ── Blocare buton la submit (anti dublu/triplu-click, front-end) ──
+add_action(
+	'wp_footer',
+	function () {
+		if ( is_admin() ) {
+			return;
+		}
+		?>
+<script>
+(function () {
+	// Formularele JetEngine de tip „reload" fac submit nativ — blocăm re-trimiterea.
+	document.addEventListener('submit', function (e) {
+		var f = e.target;
+		if (!f || !f.classList || !f.classList.contains('jet-form')) return;
+		if (f.dataset.tbaSubmitting === '1') { e.preventDefault(); e.stopImmediatePropagation(); return false; }
+		f.dataset.tbaSubmitting = '1';
+		var btns = f.querySelectorAll('button[type=submit], input[type=submit], .jet-form__submit');
+		btns.forEach(function (b) {
+			b.disabled = true;
+			b.style.opacity = '0.6';
+			if (b.tagName === 'BUTTON') {
+				if (!b.dataset.tbaLabel) b.dataset.tbaLabel = b.innerHTML;
+				b.innerHTML = 'Se trimite…';
+			}
+		});
+		// Fallback de siguranță (ex. eroare de validare fără reload)
+		setTimeout(function () {
+			f.dataset.tbaSubmitting = '';
+			btns.forEach(function (b) {
+				b.disabled = false;
+				b.style.opacity = '';
+				if (b.tagName === 'BUTTON' && b.dataset.tbaLabel) b.innerHTML = b.dataset.tbaLabel;
+			});
+		}, 8000);
+	}, true);
+
+	// Formularele de tip „ajax" folosesc click pe buton — blocăm click-urile rapide repetate.
+	document.addEventListener('click', function (e) {
+		var b = e.target.closest ? e.target.closest('.jet-form__submit.submit-type-ajax') : null;
+		if (!b) return;
+		var f = b.closest('.jet-form');
+		if (!f) return;
+		if (f.dataset.tbaClicking === '1') { e.preventDefault(); e.stopImmediatePropagation(); return false; }
+		f.dataset.tbaClicking = '1';
+		setTimeout(function () { f.dataset.tbaClicking = ''; }, 8000);
+	}, true);
+})();
+</script>
+		<?php
+	}
 );

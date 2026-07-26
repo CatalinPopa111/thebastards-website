@@ -452,8 +452,8 @@ class BAS_Artist_Events {
 
 	private static function status_badge( string $status ): array {
 		return match ( $status ) {
-			'confirmed'        => [ 'Confirmat',              'background:#0f2d0f;color:#6fcf6f;' ],
-			'pending'          => [ 'Cerere client',          'background:#2d2200;color:#e6c000;' ],
+			'confirmed'        => [ 'Accepted',               'background:#0f2d0f;color:#6fcf6f;' ],
+			'pending'          => [ 'New',                    'background:#3a1e00;color:#ff9d3c;font-weight:600;' ],
 			'vacation'         => [ 'Vacanță',                'background:#0a1a2d;color:#5b9bd5;' ],
 			'vacation_pending' => [ 'Vacanță în așteptare',   'background:#0a1a2d;color:#5b9bd5;' ],
 			'canceled'         => [ 'Anulat',                 'background:#2a0a0a;color:#eb5757;' ],

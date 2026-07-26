@@ -27,11 +27,18 @@
 - `mesaj-detalii`
 - `tip-eveniment-intern` — flag special (ex: `rezidentiat`)
 - `locatie-rezidentiat` — ID postare CPT `locatie`
+- `bas_confirmed_at` — timestamp setat la trecerea în `confirmed` (data acceptării)
+- `bas_canceled_at` — timestamp setat la trecerea în `canceled` (pornește ciclul de ștergere; se șterge dacă iese din canceled)
 
 ## CPT `locatie` (de creat)
 - `zile-active` — checkboxes zile săptămână
 - `culoare-locatie` — color picker
 - `slug-locatie` — text
+
+## Ciclul de viață cereri (bastard-admin-schedule ≥ 1.7.0)
+- **Pending nu blochează calendarul**: filtre pe `jet-booking/statuses/{invalid,valid,in-progress}` fac status booking `pending` neutru (ignorat de toate verificările de disponibilitate + exclus din iCal). Mai mulți clienți pot cere aceeași dată; abia confirmarea (→ `completed`) blochează.
+- **Cron zilnic `bas_daily_lifecycle`** (`class-lifecycle.php`): (a) `pending` mai vechi de 7 zile după `post_date` → `canceled`; (b) `canceled` mai vechi de 30 zile după `bas_canceled_at` → trash; (c) trash mai vechi de 90 zile după `_wp_trash_meta_time` → ștergere definitivă.
+- **Curățare lanț** pe `before_delete_post` (evenimente): șterge relația JetEngine `jet_rel_default` + curăță `bas_event_group_id`. Booking-ul e șters de Snippet 22 (before_delete/wp_trash).
 
 ## JetBooking
 - Tabel: `wp4u_jet_apartment_bookings`
@@ -57,6 +64,7 @@
 
 ## Pluginuri proprii
 - `plugins/cerere-oferta-butoane/` — adaugă în email-ul admin de la `Formular Cerere Oferta` un buton WhatsApp (wa.me, text precompletat) și un buton "Salvează contact" (link semnat HMAC → endpoint `?tba_vcard=1` care livrează un `.vcf` cu detaliile cererii în câmpul NOTE). Hook: `jet-engine/forms/booking/email/message_content`. Gating pe `field_nume_artist` + `field_telefon` (nu afectează formularul de vacanță). Necesită activare din admin (plugin normal, nu mu-plugin — deploy-ul Git nu crea foldere noi de nivel înalt sub wp-content).
+  - **≥ 1.1.0**: anti-dublare submit (guard idempotent transient 60s pe `before-send`, cheie email+dată+artist, eliberat la eșec în `after-send`) + JS blocare buton la submit + email de confirmare către client cu rezumatul cererii (`after-send`, formular `jet-engine-booking` ID 1263).
 
 ## Plugin nou în dezvoltare
 `bastard-admin-schedule` — pagină admin frontend pentru:
